@@ -40,15 +40,15 @@ class MyGuiInterface  {
         boxFolder.open()
         
         const data = {  
-            'diffuse color': this.contents.diffusePlaneColor,
-            'specular color': this.contents.specularPlaneColor,
+            'diffuse color': this.contents.house.diffusePlaneColor,
+            'specular color': this.contents.house.specularPlaneColor,
         };
 
         // adds a folder to the gui interface for the plane
         const planeFolder = this.datgui.addFolder( 'Plane' );
-        planeFolder.addColor( data, 'diffuse color' ).onChange( (value) => { this.contents.updateDiffusePlaneColor(value) } );
-        planeFolder.addColor( data, 'specular color' ).onChange( (value) => { this.contents.updateSpecularPlaneColor(value) } );
-        planeFolder.add(this.contents, 'planeShininess', 0, 1000).name("shininess").onChange( (value) => { this.contents.updatePlaneShininess(value) } );
+        planeFolder.addColor( data, 'diffuse color' ).onChange( (value) => { this.contents.house.updateDiffusePlaneColor(value) } );
+        planeFolder.addColor( data, 'specular color' ).onChange( (value) => { this.contents.house.updateSpecularPlaneColor(value) } );
+        planeFolder.add(this.contents.house, 'planeShininess', 0, 1000).name("shininess").onChange( (value) => { this.contents.house.updatePlaneShininess(value) } );
         planeFolder.open();
 
         // adds a folder to the gui interface for the camera
@@ -57,6 +57,11 @@ class MyGuiInterface  {
         // note that we are using a property from the app 
         cameraFolder.add(this.app.activeCamera.position, 'x', 0, 10).name("x coord")
         cameraFolder.open()
+
+        const houseFolder = this.datgui.addFolder( 'House' );
+  
+        houseFolder.add(this.contents, 'houseEnabled', true).name("enabled");
+        houseFolder.open()
     }
 }
 
