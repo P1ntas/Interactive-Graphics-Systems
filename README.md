@@ -1,10 +1,11 @@
 # SGI 2023/2024
 
-## Group T0xG0y
-| Name             | Number    | E-Mail             |
-| ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+## Group T06G02
+
+| Name             | Number    | E-Mail                   |
+| ---------------- | --------- | ------------------------ |
+| Afonso Pinto     | 202008014 | up202008014@edu.fe.up.pt |
+| Inês Oliveira    | 202103343 | up202103343@edu.fe.up.pt |
 
 ----
 

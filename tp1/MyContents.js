@@ -50,6 +50,14 @@ class MyContents  {
 
     }
 
+    buildTable() {
+        this.table = new MyTable(2,3,3, this);
+
+        this.table.init();
+        this.app.scene.add(this.table.group);
+
+    }
+
     /**
      * initializes the contents
      */
@@ -81,8 +89,7 @@ class MyContents  {
         
         this.buildHouse();
 
-        this.table = new MyTable(10, this)
-        this.app.scene.add(this.table.group)
+        this.buildTable();
 
     }
     
