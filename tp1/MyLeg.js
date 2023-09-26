@@ -9,20 +9,30 @@ class MyLeg  {
        constructs the object
        @param {MyLeg} app The application object
     */ 
-    constructor(x,y,z, scene) {
+    constructor(x,y,z,type, scene) {
         this.x = x
         this.y = y
         this.z = z
         this.scene = scene
         this.mesh
+        this.type = type
     }
 
     /**
      * initializes the contents
      */
     init() {
-        let leg = new THREE.CylinderGeometry(0.5,0.5,8,32);
-        let legMaterial = new THREE.MeshPhongMaterial({ color: "#4b3621"});
+        let leg;
+        let legMaterial;
+        if (this.type === "leg") {
+            leg = new THREE.CylinderGeometry(0.5,0.5,8,32);
+            legMaterial = new THREE.MeshPhongMaterial({ color: "#4b3621"});
+        }
+        else if (this.type === "plate") {
+            leg = new THREE.CylinderGeometry(0.5,0.5,0.1,32);
+            legMaterial = new THREE.MeshPhongMaterial({ color: "#FFFFFF"});
+        }
+        
         this.mesh = new THREE.Mesh(leg, legMaterial);
         
         this.mesh.position.set(this.x,this.y, this.z);
