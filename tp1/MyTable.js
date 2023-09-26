@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MyLeg } from './MyLeg.js';
+import { MyCake } from './MyCake.js';
 
 /**
  *  This class contains the contents of out application
@@ -35,18 +36,22 @@ class MyTable  {
         let myLeg3= new MyLeg(3,1.5,-1.5,"leg", this.scene);
         let myLeg4= new MyLeg(-3,1.5,1.5,"leg", this.scene);
         let myLeg5= new MyLeg(0,5.55,0,"plate", this.scene);
-
+        let myCake= new MyCake(0,5.56,0, this.scene);
+        
+        
         myLeg1.init();
         myLeg2.init();
         myLeg3.init();
         myLeg4.init();
         myLeg5.init();
+        myCake.init();
 
         this.group.add(myLeg1.mesh);
         this.group.add(myLeg2.mesh);
         this.group.add(myLeg3.mesh);
         this.group.add(myLeg4.mesh);
         this.group.add(myLeg5.mesh);
+        this.group.add(myCake.mesh);
 
     }
 }
