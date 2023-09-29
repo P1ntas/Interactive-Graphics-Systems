@@ -46,7 +46,7 @@ class MyTable  {
         myLeg4.init();
         myLeg5.init();
         myCake.init();
-        myCakeInner.init()
+        myCakeInner.init();
 
         this.group.add(myLeg1.mesh);
         this.group.add(myLeg2.mesh);
@@ -55,14 +55,12 @@ class MyTable  {
         this.group.add(myLeg5.mesh);
         this.group.add(myCake.mesh);
         this.group.add(myCake.candleMesh);
-        this.group.add(myCake.fireMesh)
-        this.group.add(myCake.fireMesh2)
-
+        this.group.add(myCake.fireMesh);
+        this.group.add(myCake.fireMesh2);
+        this.group.add(myCake.leftPlaneMesh);
+        this.group.add(myCake.rightPlaneMesh);
 
     }
 }
 
 export { MyTable };
-
-
-
