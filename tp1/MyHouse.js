@@ -21,7 +21,7 @@ class MyHouse  {
         this.specularPlaneColor = "#777777"
         this.planeShininess = 30
         this.planeMaterial = new THREE.MeshPhongMaterial({ color: this.diffusePlaneColor, 
-            specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess, side: THREE.DoubleSide })
+            specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
     }
 
     /**

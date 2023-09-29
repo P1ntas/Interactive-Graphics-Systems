@@ -43,13 +43,13 @@ class MyCake  {
         let leftPlane = new THREE.PlaneGeometry(2, 1);
         this.leftPlaneMesh = new THREE.Mesh(leftPlane, cakeMaterial);
         this.leftPlaneMesh.rotateY(Math.PI*0.5);
-        this.leftPlaneMesh.position.set(this.x, this.y-0.02, this.z);
+        this.leftPlaneMesh.position.set(this.x, this.y, this.z);
     
 
         let rightPlane = new THREE.PlaneGeometry(2, 1);
         this.rightPlaneMesh = new THREE.Mesh(rightPlane, cakeMaterial);
         this.rightPlaneMesh.rotateY(Math.PI*0.75);
-        this.rightPlaneMesh.position.set(this.x, this.y-0.02, this.z);
+        this.rightPlaneMesh.position.set(this.x, this.y, this.z);
 
         let myCandle = new THREE.CylinderGeometry(
             0.1, 0.1, 0.8,
