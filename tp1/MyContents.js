@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyHouse } from './MyHouse.js';
 import { MyTable } from './MyTable.js';
+import { MyPainting } from './MyPainting.js';
 
 /**
  *  This class contains the contents of out application
@@ -102,6 +103,12 @@ class MyContents  {
         this.buildHouse();
 
         this.buildTable();
+
+        this.painting = new MyPainting(0, 5, -10, this);
+
+        this.painting.init();
+        this.app.scene.add(this.painting.mesh);
+        this.app.scene.add(this.painting.pmesh);
 
     }
     
