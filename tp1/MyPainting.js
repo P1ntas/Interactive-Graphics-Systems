@@ -26,7 +26,7 @@ class MyPainting  {
         let frameMaterial = new THREE.MeshPhongMaterial({ color: "#ffffff", specular: "#ffffff", emissive: "#e8e4c9", shininess: 100});
 
         let painting = new THREE.BoxGeometry(7.6,3.6,0.1);
-        let paintingMaterial = new THREE.MeshPhongMaterial({ color: "#000000", specular: "#ffffff", shininess: 100});
+        let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
 
         this.mesh = new THREE.Mesh(frame, frameMaterial);
         this.pmesh = new THREE.Mesh(painting, paintingMaterial);

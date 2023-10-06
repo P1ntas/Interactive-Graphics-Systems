@@ -19,8 +19,8 @@ class MyHouse  {
         // plane related attributes
         this.diffusePlaneColor = "#00ffff"
         this.specularPlaneColor = "#777777"
-        this.planeShininess = 30
-        this.planeMaterial = new THREE.MeshPhongMaterial({ color: "#e4d5b7", 
+        this.planeShininess = 40
+        this.planeMaterial = new THREE.MeshPhongMaterial({ color: "#FFFFFF", 
             specular: "#FFe9ec", emissive: "#000000", shininess: this.planeShininess })
     }
 
@@ -34,7 +34,7 @@ class MyHouse  {
         
         let plane = new THREE.PlaneGeometry( this.size * 2, this.size * 2 );
         this.floorTexture = new THREE.TextureLoader().load( 'img/floor.png' );
-        this.floorMaterial = new THREE.MeshPhongMaterial({map : this.floorTexture});
+        this.floorMaterial = new THREE.MeshPhongMaterial({map : this.floorTexture, color: "#ffffff"});
         this.planeMesh = new THREE.Mesh( plane, this.floorMaterial );
         this.planeMesh.rotation.x = -Math.PI / 2;
         this.planeMesh.position.y = -0;
