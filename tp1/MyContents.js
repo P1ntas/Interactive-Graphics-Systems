@@ -71,7 +71,7 @@ class MyContents  {
         }
 
         // add a point light on top of the model
-        const pointLight = new THREE.PointLight( 0xffffff, 500, 0 );
+        const pointLight = new THREE.PointLight( 0xd3d3d3, 500, 30 );
         pointLight.position.set( 0, 20, 0 );
         this.app.scene.add( pointLight );
 
@@ -79,6 +79,18 @@ class MyContents  {
         const sphereSize = 0.5;
         const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
         this.app.scene.add( pointLightHelper );
+
+        this.spotColor = 0xfdfa72;
+        this.spotLight = new THREE.SpotLight( this.spotColor, 5, 6, Math.PI / 3, 1, 0);
+        this.spotLight.position.set(0, 10, 0)
+        this.app.scene.add( this.spotLight );
+        this.spotLight.target.position.set(0, 6.66, 1)
+        this.app.scene.add(this.spotLight.target)
+
+        // add a point light helper for the previous point light
+        const spotLightHelper = new THREE.SpotLightHelper( this.spotLight);
+        this.app.scene.add( spotLightHelper )
+
 
         // add an ambient light
         const ambientLight = new THREE.AmbientLight( 0x555555 );

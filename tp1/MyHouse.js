@@ -20,8 +20,8 @@ class MyHouse  {
         this.diffusePlaneColor = "#00ffff"
         this.specularPlaneColor = "#777777"
         this.planeShininess = 30
-        this.planeMaterial = new THREE.MeshPhongMaterial({ color: this.diffusePlaneColor, 
-            specular: this.diffusePlaneColor, emissive: "#000000", shininess: this.planeShininess })
+        this.planeMaterial = new THREE.MeshPhongMaterial({ color: "#e4d5b7", 
+            specular: "#FFe9ec", emissive: "#000000", shininess: this.planeShininess })
     }
 
     /**
@@ -33,7 +33,9 @@ class MyHouse  {
         // Create a Plane Mesh with basic material
         
         let plane = new THREE.PlaneGeometry( this.size * 2, this.size * 2 );
-        this.planeMesh = new THREE.Mesh( plane, this.planeMaterial );
+        this.floorTexture = new THREE.TextureLoader().load( 'img/floor.png' );
+        this.floorMaterial = new THREE.MeshPhongMaterial({map : this.floorTexture});
+        this.planeMesh = new THREE.Mesh( plane, this.floorMaterial );
         this.planeMesh.rotation.x = -Math.PI / 2;
         this.planeMesh.position.y = -0;
         this.scene.app.scene.add( this.planeMesh );

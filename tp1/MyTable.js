@@ -19,6 +19,8 @@ class MyTable  {
 
         this.group = new THREE.Group()
 
+        this.tableTexture = new THREE.TextureLoader().load( 'img/table.png' );
+
     }
 
     /**
@@ -26,7 +28,7 @@ class MyTable  {
      */
     init() {
         let table = new THREE.BoxGeometry(9,1,5);
-        let tableMaterial = new THREE.MeshPhongMaterial({ color: "#4b3621"});
+        let tableMaterial = new THREE.MeshPhongMaterial({map : this.tableTexture});
         this.tableMesh = new THREE.Mesh(table, tableMaterial);
         this.tableMesh.position.set(0,5,0);
         this.group.add(this.tableMesh)

@@ -26,7 +26,7 @@ class MyLeg  {
         let legMaterial;
         if (this.type === "leg") {
             leg = new THREE.CylinderGeometry(0.5,0.5,4.6,32);
-            legMaterial = new THREE.MeshPhongMaterial({ color: "#4b3621"});
+            legMaterial = new THREE.MeshPhongMaterial({ color: "#A1662F", specular: "#ffffff", shininess: 100});
         }
         else if (this.type === "plate") {
             leg = new THREE.CylinderGeometry(0.5,1.3,0.1,32);
