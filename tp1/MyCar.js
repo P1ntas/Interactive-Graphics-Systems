@@ -9,10 +9,7 @@ class MyCar  {
        constructs the object
        @param {MyCar} app The application object
     */ 
-    constructor(x,y,z,scene) {
-        this.x = x
-        this.y = y
-        this.z = z
+    constructor(scene) {
         this.scene = scene
 
         this.group = new THREE.Group()

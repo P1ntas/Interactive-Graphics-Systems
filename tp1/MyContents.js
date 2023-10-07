@@ -114,7 +114,7 @@ class MyContents  {
         this.door = new MyDoor(-9.9, 4.3, 5, this);
         this.tarpet =  new MyTarpet(0, 0.1, 0, this);
         this.paintingCar = new MyPainting(-9.8, 7, -2.5, this, paiTexture, "car");
-        this.car = new MyCar(0, 0, 0, this);
+        this.car = new MyCar(this);
 
         
 
