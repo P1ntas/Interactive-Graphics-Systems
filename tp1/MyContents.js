@@ -6,6 +6,7 @@ import { MyPainting } from './MyPainting.js';
 import { MyDoor } from './MyDoor.js';
 import { MyTarpet } from './MyTarpet.js';
 import { MyCar } from './MyCar.js'
+import { MySpring } from './MySpring.js';
 
 /**
  *  This class contains the contents of out application
@@ -115,6 +116,7 @@ class MyContents  {
         this.tarpet =  new MyTarpet(0, 0.1, 0, this);
         this.paintingCar = new MyPainting(-9.8, 7, -2.5, this, paiTexture, "car");
         this.car = new MyCar(this);
+        this.spring = new MySpring(this);
 
         
 
@@ -123,6 +125,7 @@ class MyContents  {
         this.door.init();
         this.tarpet.init();
         this.car.init()
+        this.spring.init();
 
         this.car.group.translateY(-0.45)
 
@@ -132,6 +135,7 @@ class MyContents  {
         this.app.scene.add(this.door.mesh);
         this.app.scene.add(this.tarpet.tarpetMesh);
         this.app.scene.add(this.mesh)
+        this.app.scene.add(this.spring.group)
 
 
     }
