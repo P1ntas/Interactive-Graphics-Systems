@@ -9,13 +9,13 @@ class MyPainting  {
        constructs the object
        @param {MyPainting} app The application object
     */ 
-    constructor(x,y,z,scene) {
+    constructor(x,y,z,scene, texture) {
         this.x = x
         this.y = y
         this.z = z
         this.scene = scene
 
-        this.paintingTexture = new THREE.TextureLoader().load('img/paisagem.jpg');
+        this.paintingTexture = texture;
     }
 
     /**

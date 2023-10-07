@@ -103,7 +103,9 @@ class MyContents  {
         this.buildHouse();
         this.buildTable();
 
-        this.painting = new MyPainting(0, 5, -9.9, this);
+        let paiTexture = new THREE.TextureLoader().load('img/paisagem.jpg');
+
+        this.painting = new MyPainting(0, 5, -9.9, this, paiTexture);
         this.door = new MyDoor(-9.9, 4.3, 5, this);
         this.tarpet =  new MyTarpet(0, 1, 0, this);
 
@@ -115,6 +117,7 @@ class MyContents  {
         this.app.scene.add(this.painting.pmesh);
         this.app.scene.add(this.door.mesh);
         this.app.scene.add(this.tarpet.tarpetMesh);
+        this.app.scene.add(this.mesh)
 
     }
     
