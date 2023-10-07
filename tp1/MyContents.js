@@ -5,6 +5,7 @@ import { MyTable } from './MyTable.js';
 import { MyPainting } from './MyPainting.js';
 import { MyDoor } from './MyDoor.js';
 import { MyTarpet } from './MyTarpet.js';
+import { MyCar } from './MyCar.js'
 
 /**
  *  This class contains the contents of out application
@@ -63,6 +64,10 @@ class MyContents  {
     /**
      * initializes the contents
      */
+
+
+
+    
     init() {
        
         // create once 
@@ -107,17 +112,27 @@ class MyContents  {
 
         this.painting = new MyPainting(0, 5, -9.9, this, paiTexture);
         this.door = new MyDoor(-9.9, 4.3, 5, this);
-        this.tarpet =  new MyTarpet(0, 1, 0, this);
+        this.tarpet =  new MyTarpet(0, 0.1, 0, this);
+        this.paintingCar = new MyPainting(-9.8, 7, -2.5, this, paiTexture, "car");
+        this.car = new MyCar(0, 0, 0, this);
+
+        
 
         this.painting.init();
+        this.paintingCar.init();
         this.door.init();
         this.tarpet.init();
+        this.car.init()
 
-        this.app.scene.add(this.painting.mesh);
-        this.app.scene.add(this.painting.pmesh);
+        this.car.group.translateY(-0.45)
+
+        this.app.scene.add(this.painting.group);
+        this.app.scene.add(this.paintingCar.mesh);
+        this.app.scene.add(this.car.group);
         this.app.scene.add(this.door.mesh);
         this.app.scene.add(this.tarpet.tarpetMesh);
         this.app.scene.add(this.mesh)
+
 
     }
     

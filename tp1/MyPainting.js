@@ -9,13 +9,15 @@ class MyPainting  {
        constructs the object
        @param {MyPainting} app The application object
     */ 
-    constructor(x,y,z,scene, texture) {
+    constructor(x,y,z,scene, texture, type) {
         this.x = x
         this.y = y
         this.z = z
         this.scene = scene
+        this.type = type
 
         this.paintingTexture = texture;
+        this.group = new THREE.Group()
     }
 
     /**
@@ -30,9 +32,16 @@ class MyPainting  {
 
         this.mesh = new THREE.Mesh(frame, frameMaterial);
         this.pmesh = new THREE.Mesh(painting, paintingMaterial);
+
+        if (this.type == "car") this.mesh.rotateY(Math.PI / 2)
         
         this.mesh.position.set(this.x,this.y, this.z);
         this.pmesh.position.set(this.x,this.y,this.z+0.18);
+
+        this.group.add(this.mesh)
+        this.group.add(this.pmesh)
+
+        
     }
 }
 
