@@ -3,6 +3,8 @@ import { MyAxis } from './MyAxis.js';
 import { MyHouse } from './MyHouse.js';
 import { MyTable } from './MyTable.js';
 import { MyPainting } from './MyPainting.js';
+import { MyDoor } from './MyDoor.js';
+import { MyTarpet } from './MyTarpet.js';
 
 /**
  *  This class contains the contents of out application
@@ -32,7 +34,7 @@ class MyContents  {
      */
     buildBox() {    
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#ffff77", 
-        specular: "#000000", emissive: "#000000", shininess: 90 })
+        specular: "#000000", shininess: 90 })
 
         // Create a Cube Mesh with basic material
         let box = new THREE.BoxGeometry(  this.boxMeshSize,  this.boxMeshSize,  this.boxMeshSize );
@@ -53,7 +55,6 @@ class MyContents  {
 
     buildTable() {
         this.table = new MyTable(2,3,3, this);
-
         this.table.init();
         this.app.scene.add(this.table.group);
 
@@ -99,16 +100,21 @@ class MyContents  {
 
         this.buildBox()
         
-        
         this.buildHouse();
-
         this.buildTable();
 
-        this.painting = new MyPainting(0, 5, -10, this);
+        this.painting = new MyPainting(0, 5, -9.9, this);
+        this.door = new MyDoor(-9.9, 4.3, 5, this);
+        this.tarpet =  new MyTarpet(0, 1, 0, this);
 
         this.painting.init();
+        this.door.init();
+        this.tarpet.init();
+
         this.app.scene.add(this.painting.mesh);
         this.app.scene.add(this.painting.pmesh);
+        this.app.scene.add(this.door.mesh);
+        this.app.scene.add(this.tarpet.tarpetMesh);
 
     }
     

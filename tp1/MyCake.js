@@ -51,27 +51,25 @@ class MyCake  {
         this.rightPlaneMesh.rotateY(Math.PI*0.75);
         this.rightPlaneMesh.position.set(this.x, this.y, this.z);
 
-        let myCandle = new THREE.CylinderGeometry(
-            0.1, 0.1, 0.8,
-            12);
+        let myCandle = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 12);
 
         let candleMaterial = new THREE.MeshPhongMaterial({ color: "#FFFFFF"});
         
         this.candleMesh = new THREE.Mesh(myCandle, candleMaterial);        
-        this.candleMesh.position.set(this.x,this.y + 0.9, this.z);
+        this.candleMesh.position.set(this.x,this.y + 0.75, this.z);
 
-        let halfSphere = new THREE.SphereGeometry( 0.1, 10, 5, 0, Math.PI * 2, 0, Math.PI / 2 );
+        let halfSphere = new THREE.SphereGeometry(0.1, 10, 5, 0, Math.PI * 2, 0, Math.PI / 2);
         let fireMaterial = new THREE.MeshPhongMaterial({ color: "#E25822", side: THREE.DoubleSide});
         
         this.fireMesh = new THREE.Mesh(halfSphere, fireMaterial);   
         this.fireMesh.rotateX(Math.PI)
-        this.fireMesh.position.set(this.x,this.y + 1.4, this.z);
+        this.fireMesh.position.set(this.x,this.y + 1.2, this.z);
 
         let cone = new THREE.ConeGeometry( 0.1, 0.4, 16 );
         
         this.fireMesh2 = new THREE.Mesh(cone, fireMaterial);   
         //this.fireMesh.rotateX(Math.PI)
-        this.fireMesh2.position.set(this.x,this.y + 1.6, this.z);
+        this.fireMesh2.position.set(this.x,this.y + 1.4, this.z);
        
     }
 }
