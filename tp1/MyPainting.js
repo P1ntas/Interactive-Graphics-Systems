@@ -24,24 +24,52 @@ class MyPainting  {
      * initializes the contents
      */
     init() {
-        let frame = new THREE.BoxGeometry(8,4,0.4);
-        let frameMaterial = new THREE.MeshPhongMaterial({ color: "#383838", specular: "#ffffff", shininess: 100});
+        if (this.type === "painting") {
+            let window = new THREE.BoxGeometry(4, 4, 0.1);
+            let windowMaterial = new THREE.MeshPhongMaterial({ map: this.paintingTexture });
+            this.windowMesh = new THREE.Mesh(window, windowMaterial);
+            this.windowMesh.position.set(this.x, this.y, this.z);
 
-        let painting = new THREE.BoxGeometry(7.6,3.6,0.1);
-        let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
+            this.group.add(this.windowMesh);
 
-        this.mesh = new THREE.Mesh(frame, frameMaterial);
-        this.pmesh = new THREE.Mesh(painting, paintingMaterial);
-
-        if (this.type == "car") this.mesh.rotateY(Math.PI / 2)
+        } else if (this.type === "car") {
         
-        this.mesh.position.set(this.x,this.y, this.z);
-        this.pmesh.position.set(this.x,this.y,this.z+0.18);
+            let frame = new THREE.BoxGeometry(8,4,0.4);
+            let frameMaterial = new THREE.MeshPhongMaterial({ color: "#383838", specular: "#ffffff", shininess: 100});
 
-        this.group.add(this.mesh)
-        this.group.add(this.pmesh)
+            let painting = new THREE.BoxGeometry(7.6,3.6,0.1);
+            let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
 
-        
+            this.mesh = new THREE.Mesh(frame, frameMaterial);
+            this.pmesh = new THREE.Mesh(painting, paintingMaterial);
+
+            if (this.type === "car") this.mesh.rotateY(Math.PI / 2)
+            
+            this.mesh.position.set(this.x,this.y, this.z);
+            this.pmesh.position.set(this.x,this.y,this.z+0.18);
+
+            this.group.add(this.mesh)
+            this.group.add(this.pmesh)
+        }
+
+        else if (this.type === "window") {
+            this.windowTexture = new THREE.TextureLoader().load('img/paisagem.jpg');
+
+            let frame = new THREE.BoxGeometry(9,4.5,0.05);
+            let frameMaterial = new THREE.MeshPhongMaterial({map: this.windowTexture});
+
+            let painting = new THREE.BoxGeometry(7.6,3.6,0.1);
+            let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
+
+            this.mesh = new THREE.Mesh(frame, frameMaterial);
+            this.pmesh = new THREE.Mesh(painting, paintingMaterial);
+            
+            this.mesh.position.set(this.x,this.y, this.z);
+            this.pmesh.position.set(this.x,this.y,this.z+0.18);
+
+            this.group.add(this.mesh)
+            this.group.add(this.pmesh)
+        }
     }
 }
 

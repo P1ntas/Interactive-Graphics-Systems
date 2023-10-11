@@ -109,9 +109,14 @@ class MyContents  {
         this.buildHouse();
         this.buildTable();
 
+        let afonsoTexture = new THREE.TextureLoader().load('img/afonso.png');
+        let inesTexture = new THREE.TextureLoader().load('img/ines.png');
         let paiTexture = new THREE.TextureLoader().load('img/paisagem.jpg');
 
-        this.painting = new MyPainting(0, 5, -9.9, this, paiTexture);
+
+        this.paintingWindow = new MyPainting(0, 5, -9.9, this, paiTexture, "window");
+        this.painting1 = new MyPainting(-4, 5, 9.9, this, inesTexture, "painting");
+        this.painting2 = new MyPainting(4, 5, 9.9, this, afonsoTexture, "painting");
         this.door = new MyDoor(-9.9, 4.3, 5, this);
         this.tarpet =  new MyTarpet(0, 0.1, 0, this);
         this.paintingCar = new MyPainting(-9.8, 7, -2.5, this, paiTexture, "car");
@@ -120,8 +125,10 @@ class MyContents  {
 
         
 
-        this.painting.init();
+        this.paintingWindow.init();
         this.paintingCar.init();
+        this.painting1.init();
+        this.painting2.init();
         this.door.init();
         this.tarpet.init();
         this.car.init()
@@ -129,8 +136,10 @@ class MyContents  {
 
         this.car.group.translateY(-0.45)
 
-        this.app.scene.add(this.painting.group);
+        this.app.scene.add(this.paintingWindow.group);
         this.app.scene.add(this.paintingCar.mesh);
+        this.app.scene.add(this.painting1.group);
+        this.app.scene.add(this.painting2.group);
         this.app.scene.add(this.car.group);
         this.app.scene.add(this.door.mesh);
         this.app.scene.add(this.tarpet.tarpetMesh);
