@@ -19,6 +19,7 @@ class MyDoor  {
     /**
      * initializes the contents
      */
+    
     init() {
         this.doorTexture = new THREE.TextureLoader().load('img/door.jpg');
         this.doorTexture.wrapS = THREE.RepeatWrapping

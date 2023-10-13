@@ -50,7 +50,7 @@ class MyTable  {
         let myLeg2 = new MyLeg(3,-1.45,1.5,"leg", this.scene);
         let myLeg3 = new MyLeg(3,-1.45,-1.5,"leg", this.scene);
         let myLeg4 = new MyLeg(-3,-1.45,1.5,"leg", this.scene);
-        let myLeg5 = new MyLeg(0,5.55,0,"plate", this.scene);
+        let myLeg5 = new MyLeg(0,0.4,0,"plate", this.scene);
         let myCake = new MyCake(0,0.8,0, this.scene);
         let myCakeInner = new MyCake(0,0.8,0, this.scene);
         
