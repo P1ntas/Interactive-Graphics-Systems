@@ -17,6 +17,8 @@ class MyTable  {
         this.z = z
         this.scene = scene
 
+        this.myCake = null
+
         this.group = new THREE.Group()
 
     }
@@ -51,7 +53,7 @@ class MyTable  {
         let myLeg3 = new MyLeg(3,-1.45,-1.5,"leg", this.scene);
         let myLeg4 = new MyLeg(-3,-1.45,1.5,"leg", this.scene);
         let myLeg5 = new MyLeg(0,0.4,0,"plate", this.scene);
-        let myCake = new MyCake(0,0.8,0, this.scene);
+        this.myCake = new MyCake(0,0.8,0, this.scene);
         let myCakeInner = new MyCake(0,0.8,0, this.scene);
         
         
@@ -60,20 +62,22 @@ class MyTable  {
         myLeg3.init();
         myLeg4.init();
         myLeg5.init();
-        myCake.init();
+        this.myCake.init();
         myCakeInner.init();
+
+        this.tableMesh.receiveShadow = true;
 
         this.tableMesh.add(myLeg1.mesh);
         this.tableMesh.add(myLeg2.mesh);
         this.tableMesh.add(myLeg3.mesh);
         this.tableMesh.add(myLeg4.mesh);
         this.tableMesh.add(myLeg5.mesh);
-        this.tableMesh.add(myCake.mesh);
-        this.tableMesh.add(myCake.candleMesh);
-        this.tableMesh.add(myCake.fireMesh);
-        this.tableMesh.add(myCake.fireMesh2);
-        this.tableMesh.add(myCake.leftPlaneMesh);
-        this.tableMesh.add(myCake.rightPlaneMesh);
+        this.tableMesh.add(this.myCake.mesh);
+        this.tableMesh.add(this.myCake.candleMesh);
+        this.tableMesh.add(this.myCake.fireMesh);
+        this.tableMesh.add(this.myCake.fireMesh2);
+        this.tableMesh.add(this.myCake.leftPlaneMesh);
+        this.tableMesh.add(this.myCake.rightPlaneMesh);
 
     }
 }

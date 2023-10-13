@@ -39,17 +39,23 @@ class MyCake  {
         
         this.mesh = new THREE.Mesh(myCake, cakeMaterial);        
         this.mesh.position.set(this.x,this.y, this.z);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
 
         let leftPlane = new THREE.PlaneGeometry(2, 1);
         this.leftPlaneMesh = new THREE.Mesh(leftPlane, cakeMaterial);
         this.leftPlaneMesh.rotateY(Math.PI*0.5);
         this.leftPlaneMesh.position.set(this.x, this.y, this.z);
+        this.leftPlaneMesh.castShadow = true;
+        this.leftPlaneMesh.receiveShadow = true;
     
 
         let rightPlane = new THREE.PlaneGeometry(2, 1);
         this.rightPlaneMesh = new THREE.Mesh(rightPlane, cakeMaterial);
         this.rightPlaneMesh.rotateY(Math.PI*0.75);
         this.rightPlaneMesh.position.set(this.x, this.y, this.z);
+        this.rightPlaneMesh.castShadow = true;
+        this.rightPlaneMesh.receiveShadow = true;
 
         let myCandle = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 12);
 
@@ -57,6 +63,8 @@ class MyCake  {
         
         this.candleMesh = new THREE.Mesh(myCandle, candleMaterial);        
         this.candleMesh.position.set(this.x,this.y + 0.75, this.z);
+        this.candleMesh.castShadow = true;
+        this.candleMesh.receiveShadow = true;
 
         let halfSphere = new THREE.SphereGeometry(0.1, 10, 5, 0, Math.PI * 2, 0, Math.PI / 2);
         let fireMaterial = new THREE.MeshPhongMaterial({ color: "#E25822", side: THREE.DoubleSide});
@@ -64,12 +72,16 @@ class MyCake  {
         this.fireMesh = new THREE.Mesh(halfSphere, fireMaterial);   
         this.fireMesh.rotateX(Math.PI)
         this.fireMesh.position.set(this.x,this.y + 1.2, this.z);
+        this.leftPlaneMesh.castShadow = true;
+        this.leftPlaneMesh.receiveShadow = true;
 
         let cone = new THREE.ConeGeometry( 0.1, 0.4, 16 );
         
         this.fireMesh2 = new THREE.Mesh(cone, fireMaterial);   
         //this.fireMesh.rotateX(Math.PI)
         this.fireMesh2.position.set(this.x,this.y + 1.4, this.z);
+        this.fireMesh2.castShadow = true;
+        this.fireMesh2.receiveShadow = true;
        
     }
 }

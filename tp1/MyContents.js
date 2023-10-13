@@ -89,10 +89,18 @@ class MyContents  {
         this.app.scene.add( pointLightHelper );
 
         this.spotColor = 0xfdfa72;
-        this.spotLight = new THREE.SpotLight( this.spotColor, 5, 6, Math.PI / 3, 1, 0);
-        this.spotLight.position.set(0, 10, 0)
+        this.spotLight = new THREE.SpotLight( this.spotColor, 4, 10, Math.PI / 3, 1, 0);
+        this.spotLight.position.set(3, 7, 0)
         this.app.scene.add( this.spotLight );
-        this.spotLight.target.position.set(0, 6.66, 1)
+        this.spotLight.target.position.set(0, 6,0)
+
+        this.spotLight.castShadow = true;
+        this.spotLight.shadow.mapSize.width = 4096;
+        this.spotLight.shadow.mapSize.height = 4096;
+        this.spotLight.shadow.camera.near = 0.5;
+        this.spotLight.shadow.camera.far = 100;
+        this.spotLight.shadow.camera.top = 15;
+
         this.app.scene.add(this.spotLight.target)
 
         // add a point light helper for the previous point light
