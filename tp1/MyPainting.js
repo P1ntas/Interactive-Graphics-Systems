@@ -59,21 +59,13 @@ class MyPainting  {
         }
 
         else if (this.type === "window") {
-            this.windowTexture = new THREE.TextureLoader().load('img/windowFrame.jpg');
 
-            let frame = new THREE.BoxGeometry(9,4.5,0.05);
-            let frameMaterial = new THREE.MeshPhongMaterial({map: this.windowTexture});
-
-            let painting = new THREE.BoxGeometry(7.6,3.6,0.05);
+            let painting = new THREE.BoxGeometry(9.5,6,0.01);
             let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
 
-            this.mesh = new THREE.Mesh(frame, frameMaterial);
             this.pmesh = new THREE.Mesh(painting, paintingMaterial);
-            
-            this.mesh.position.set(this.x,this.y, this.z);
-            this.pmesh.position.set(this.x,this.y,this.z+0.20);
+            this.pmesh.position.set(this.x,this.y, this.z);
 
-            this.group.add(this.mesh)
             this.group.add(this.pmesh)
         }
     }
