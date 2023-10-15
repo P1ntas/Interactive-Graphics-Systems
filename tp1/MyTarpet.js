@@ -25,6 +25,7 @@ class MyTarpet  {
         let tarpet = new THREE.PlaneGeometry(15, 10);
         this.tarpetMaterial = new THREE.MeshPhongMaterial({color: "#ffffff", map : this.tarpetTexture});
         this.tarpetMesh = new THREE.Mesh(tarpet, this.tarpetMaterial);
+        this.tarpetMesh.receiveShadow = true;
         this.tarpetMesh.rotation.x = -Math.PI / 2;
         this.tarpetMesh.position.set(this.x,this.y, this.z);
     }

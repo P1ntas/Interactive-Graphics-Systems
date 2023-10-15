@@ -27,6 +27,9 @@ class MyFlower {
         this.center.rotation.x = Math.PI / 2; // Rotate it to be horizontal
         this.center.position.y = 0.05;
 
+        this.center.castShadow = true;
+        this.center.receiveShadow = true;
+
         this.group.add(this.center);
 
         for (let i = 0; i < numPetals; i++) {
@@ -37,6 +40,9 @@ class MyFlower {
             this.petalGeometry = new THREE.CylinderGeometry(0, this.petalRadius, this.petalHeight, 16, 1);
             this.petal = new THREE.Mesh(this.petalGeometry, this.petalMaterial);
             this.petal.position.set(x, this.petalHeight / 2, z);
+
+            this.petal.castShadow = true;
+            this.petal.receiveShadow = true;
 
             this.group.add(this.petal);
         }
@@ -54,7 +60,8 @@ class MyFlower {
         const stemMaterial = new THREE.MeshLambertMaterial({ color: "#5ced73" });
         const stem = new THREE.Line(stemGeometry, stemMaterial);
 
-        // Add the flower components to the group.
+        
+
         this.group.add(stem);
 
         // Position the flower group within the jar.

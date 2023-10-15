@@ -36,12 +36,14 @@ class MyHouse  {
         this.planeMesh = new THREE.Mesh( plane, this.floorMaterial );
         this.planeMesh.rotation.x = -Math.PI / 2;
         this.planeMesh.position.y = -0;
+        this.planeMesh.receiveShadow = true;
         this.scene.app.scene.add( this.planeMesh );
 
         let wLeft = new THREE.PlaneGeometry( this.size * 2, this.size );
         this.planeMeshLeft = new THREE.Mesh( wLeft, this.planeMaterial );
         this.planeMeshLeft.position.z = -5 * 2;
         this.planeMeshLeft.position.y = 5;
+        this.planeMeshLeft.receiveShadow = true;
         this.scene.app.scene.add( this.planeMeshLeft );
 
         let wRight = new THREE.PlaneGeometry( this.size * 2, this.size );
@@ -49,6 +51,7 @@ class MyHouse  {
         this.planeMeshRight.rotation.y = Math.PI;
         this.planeMeshRight.position.z = 5 * 2;
         this.planeMeshRight.position.y = 5;
+        this.planeMeshRight.receiveShadow = true;
         this.scene.app.scene.add( this.planeMeshRight );
 
         let wTop = new THREE.PlaneGeometry( this.size * 2, this.size );
@@ -56,6 +59,7 @@ class MyHouse  {
         this.planeMeshTop.rotation.y = -Math.PI / 2;
         this.planeMeshTop.position.x = 5 * 2;
         this.planeMeshTop.position.y = 5;
+        this.planeMeshTop.receiveShadow = true;
         this.scene.app.scene.add( this.planeMeshTop );
 
         let wDown = new THREE.PlaneGeometry( this.size * 2, this.size );
@@ -63,6 +67,7 @@ class MyHouse  {
         this.planeMeshDown.rotation.y = Math.PI / 2;
         this.planeMeshDown.position.x = -5 * 2;
         this.planeMeshDown.position.y = 5;
+        this.planeMeshDown.receiveShadow = true;
         this.scene.app.scene.add(this.planeMeshDown);
 
         this.group.add(this.planeMesh)

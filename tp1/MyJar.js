@@ -54,6 +54,10 @@ class MyJar {
         this.right = new THREE.Mesh(nurb_geometry, this.material);
         this.left = new THREE.Mesh(nurb_geometry, this.material);
         this.left.scale.set(1,1,-1);
+        this.left.receiveShadow = true;
+        this.right.receiveShadow = true;
+        this.left.castShadow = true;
+        this.right.castShadow = true;
         this.group.add(this.right);
         this.group.add(this.left); 
 

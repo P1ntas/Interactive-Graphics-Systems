@@ -66,6 +66,7 @@ class MyTable  {
         myCakeInner.init();
 
         this.tableMesh.receiveShadow = true;
+        this.tableMesh.castShadow = true;
 
         this.tableMesh.add(myLeg1.mesh);
         this.tableMesh.add(myLeg2.mesh);
