@@ -26,11 +26,19 @@ class MyPainting  {
     init() {
         if (this.type === "painting") {
             let painting = new THREE.BoxGeometry(3, 3, 0.1);
-            let paintingMaterial = new THREE.MeshPhongMaterial({ map: this.paintingTexture });
+            let paintingMaterial = new THREE.MeshPhongMaterial({ map: this.paintingTexture, side:THREE.FrontSide });
             let frame = new THREE.BoxGeometry(3.5, 3.5, 0.1);
-            let frameMaterial = new THREE.MeshPhongMaterial({ color: "#000000"});
-            this.frameMesh = new THREE.Mesh(frame, frameMaterial);
-            this.paintingMesh = new THREE.Mesh(painting, paintingMaterial);
+            let frameMaterial = new THREE.MeshPhongMaterial({ color: "#000000", side: THREE.FrontSide});
+
+            let tMaterial = new THREE.MeshPhongMaterial({opacity: 0, transparent: true});
+
+            var materials = [tMaterial, tMaterial, tMaterial, tMaterial, tMaterial, frameMaterial]
+
+            this.frameMesh = new THREE.Mesh(frame, materials);
+
+            var materials1 = [tMaterial, tMaterial, tMaterial, tMaterial, tMaterial, paintingMaterial]
+
+            this.paintingMesh = new THREE.Mesh(painting, materials1);
             this.paintingMesh.position.set(this.x, this.y, this.z-0.03);
             this.frameMesh.position.set(this.x, this.y, this.z);
 
@@ -45,6 +53,10 @@ class MyPainting  {
 
             let painting = new THREE.BoxGeometry(7.6,3.6,0.1);
             let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
+
+            let tMaterial = new THREE.MeshPhongMaterial({opacity: 0, transparent: true});
+
+            var materials = [tMaterial, tMaterial, tMaterial, tMaterial, paintingMaterial, tMaterial]
 
             this.mesh = new THREE.Mesh(frame, frameMaterial);
             this.pmesh = new THREE.Mesh(painting, paintingMaterial);
@@ -62,8 +74,11 @@ class MyPainting  {
 
             let painting = new THREE.BoxGeometry(9.5,6,0.01);
             let paintingMaterial = new THREE.MeshPhongMaterial({map: this.paintingTexture});
+            let tMaterial = new THREE.MeshPhongMaterial({opacity: 0, transparent: true});
 
-            this.pmesh = new THREE.Mesh(painting, paintingMaterial);
+            var materials = [tMaterial, tMaterial, tMaterial, tMaterial, paintingMaterial, tMaterial]
+
+            this.pmesh = new THREE.Mesh(painting, materials);
             this.pmesh.position.set(this.x,this.y, this.z);
 
             this.group.add(this.pmesh)

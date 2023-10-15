@@ -60,8 +60,6 @@ class MyFlower {
         const stemMaterial = new THREE.MeshLambertMaterial({ color: "#5ced73" });
         const stem = new THREE.Line(stemGeometry, stemMaterial);
 
-        
-
         this.group.add(stem);
 
         // Position the flower group within the jar.

@@ -34,9 +34,6 @@ class MyLeg  {
         }
         
         this.mesh = new THREE.Mesh(leg, legMaterial);
-
-        this.mesh.castShadow = true;
-        this.mesh.receiveShadow = true;
         
         this.mesh.position.set(this.x,this.y, this.z);
     }
