@@ -12,7 +12,7 @@ class MyJar {
 
     init() {
         this.jarTexture = new THREE.TextureLoader().load('img/jarTexture.jpg');
-        this.material = new THREE.MeshLambertMaterial({map: this.jarTexture});
+        this.material = new THREE.MeshLambertMaterial({map: this.jarTexture, side: THREE.DoubleSide});
         this.meshes = [];
         this.samplesU = 16;
         this.samplesV = 16;
@@ -20,40 +20,25 @@ class MyJar {
     }
 
     createNurbsSurfaces() {
-        let orderU = 4;
+        let orderU = 2;
         let orderV = 2;
         const myNurbsBuilder = new MyNurbsBuilder();
 
         const controlVertexes = [
-            // U = 0
             [
-                [-0.5, -2, 0, 1],
-                [0, -2, 1, 1],
-                [0.5, -2, 0, 1],
+                [-0.4, 0, 0],
+                [-0.4, 1, 0],
+                [-0.2, 5, 0]
             ],
-            // U = 1
             [
-                [-0.25, -1.5, 0, 1],
-                [0, -1.5, 0, 1],
-                [0.25, -1.5, 0, 1],
+                [0, 0, 1],
+                [0, 1, 2],
+                [0, 5, 0.5]
             ],
-            // U = 2
             [
-                [-1, -0.5, 0, 1],
-                [0, -0.5, 3.5, 1],
-                [1, -0.5, 0, 1],
-            ],
-            // U = 3
-            [
-                [-0.25, 0, 0, 1],
-                [0, 0, -0.5, 1],
-                [0.25, 0, 0, 1],
-            ],
-            // U = 4
-            [
-                [-0.25, 0.25, 0, 1],
-                [0, 0.25, 0.5, 1],
-                [0.25, 0.25, 0, 1],
+                [0.4, 0, 0],
+                [0.4, 1, 0],
+                [0.2, 5, 0]
             ]
         ];
 
@@ -66,11 +51,16 @@ class MyJar {
             this.material
         );
 
-        this.mesh = new THREE.Mesh(nurb_geometry, this.material);
+        this.right = new THREE.Mesh(nurb_geometry, this.material);
+        this.left = new THREE.Mesh(nurb_geometry, this.material);
+        this.left.scale.set(1,1,-1);
+        this.group.add(this.right);
+        this.group.add(this.left); 
 
-        this.mesh.position.set(this.x, this.y, this.z); 
-        this.group.add(this.mesh); 
+        this.group.position.set(this.x, this.y, this.z); 
+        this.group.scale.set(1,0.8,1);
     }
 }
 
 export { MyJar };
+

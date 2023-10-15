@@ -8,6 +8,7 @@ import { MyTarpet } from './MyTarpet.js';
 import { MyCar } from './MyCar.js'
 import { MyJar } from './MyJar.js'
 import { MySpring } from './MySpring.js';
+import { MyFlower } from './MyFlower.js';
 
 /**
  *  This class contains the contents of out application
@@ -66,9 +67,6 @@ class MyContents  {
     /**
      * initializes the contents
      */
-
-
-
     
     init() {
        
@@ -130,12 +128,11 @@ class MyContents  {
         this.tarpet =  new MyTarpet(0, 0.1, 0, this);
         this.paintingCar = new MyPainting(-9.8, 7, -2.5, this, paiTexture, "car");
         this.car = new MyCar(this);
-        this.jarleft = new MyJar(-7,2,-7,this);
-        this.jarright = new MyJar(-7,2,-6,this);
+        this.jar = new MyJar(-7,0,-7.5,this);
         this.spring = new MySpring(this);
+        this.flower = new MyFlower(-7.2,5.5,-7.5,this);
 
         
-
         this.paintingWindow.init();
         this.paintingCar.init();
         this.painting1.init();
@@ -143,12 +140,11 @@ class MyContents  {
         this.door.init();
         this.tarpet.init();
         this.car.init();
-        this.jarleft.init();
-        this.jarright.init();
+        this.jar.init();
         this.spring.init();
+        this.flower.init();
 
         this.car.group.translateY(-0.45);
-        this.jarright.group.rotateY(Math.PI / 2);
 
 
         this.app.scene.add(this.paintingWindow.group);
@@ -156,13 +152,12 @@ class MyContents  {
         this.app.scene.add(this.painting1.group);
         this.app.scene.add(this.painting2.group);
         this.app.scene.add(this.car.group);
-        this.app.scene.add(this.jarleft.group);
-        this.app.scene.add(this.jarright.group);
+        this.app.scene.add(this.jar.group);
         this.app.scene.add(this.door.mesh);
         this.app.scene.add(this.tarpet.tarpetMesh);
-        this.app.scene.add(this.mesh)
-        this.app.scene.add(this.spring.group)
-
+        this.app.scene.add(this.mesh);
+        this.app.scene.add(this.spring.group);
+        this.app.scene.add(this.flower.group);
 
     }
     
