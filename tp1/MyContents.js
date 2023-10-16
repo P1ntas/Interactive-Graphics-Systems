@@ -10,6 +10,7 @@ import { MyJar } from './MyJar.js'
 import { MySpring } from './MySpring.js';
 import { MyFlower } from './MyFlower.js';
 import { MyChair } from './MyChair.js';
+import { MyBookshelf } from './MyBookshelf.js';
 
 /**
  *  This class contains the contents of out application
@@ -140,6 +141,7 @@ class MyContents  {
         this.spring = new MySpring(this);
         this.flower = new MyFlower(-7.2,5.5,-7.5,this);
         this.chair = new MyChair(-2,2,2,this);
+        this.bookshelf = new MyBookshelf(8.5, 6, 0, this);
 
         
         this.paintingWindow.init();
@@ -153,6 +155,7 @@ class MyContents  {
         this.spring.init();
         this.flower.init();
         this.chair.init();
+        this.bookshelf.init();
 
         this.car.group.translateY(-0.45);
 
@@ -169,6 +172,7 @@ class MyContents  {
         this.app.scene.add(this.spring.group);
         this.app.scene.add(this.flower.group);
         this.app.scene.add(this.chair.mesh);
+        this.app.scene.add(this.bookshelf.group);
 
     }
     
