@@ -147,7 +147,7 @@ class MyContents  {
         this.spring = new MySpring(this);
         this.flower = new MyFlower(-7.2,5.5,-7.5,this);
         this.chair = new MyChair(-2,2,2,this);
-        this.bookshelf = new MyBookshelf(8.5, 6, 0, this);
+        this.bookshelf = new MyBookshelf(9, 6, 0, this);
 
         
         this.paintingWindow.init();

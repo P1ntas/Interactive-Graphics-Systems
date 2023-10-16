@@ -22,7 +22,7 @@ class MyBookshelf {
 
     init() {
         // Create the bookshelf geometry.
-        let box = new THREE.BoxGeometry(10, 1, 3);
+        let box = new THREE.BoxGeometry(8, 1, 3);
 
         // Load the wood texture for the bookshelf.
         let wood = new THREE.TextureLoader().load('img/bookshelf_wood.jpeg');
@@ -42,7 +42,7 @@ class MyBookshelf {
         this.mesh.position.set(this.x, this.y, this.z);
 
         // Create the books' geometry.
-        let books = new THREE.BoxGeometry(6, 2, 2);
+        let books = new THREE.BoxGeometry(4, 2, 1.5);
 
         // Load a texture for the book covers.
         let book = new THREE.TextureLoader().load('img/book.png');
@@ -59,7 +59,7 @@ class MyBookshelf {
 
         // Rotate and position the books on the bookshelf.
         this.mesh1.rotateY(-Math.PI / 2);
-        this.mesh1.position.set(this.x, this.y + 1.5, this.z);
+        this.mesh1.position.set(this.x + 0.3, this.y + 1.5, this.z);
 
         // Add the bookshelf and books to the Three.js group.
         this.group.add(this.mesh);
