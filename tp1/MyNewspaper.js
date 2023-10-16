@@ -12,6 +12,20 @@ class MyNewspaper {
 
     init() {
         this.journalTexture = new THREE.TextureLoader().load('img/journalTexture.jpg');
+        this.journalTexture.wrapS = THREE.RepeatWrapping
+        this.journalTexture.wrapT = THREE.RepeatWrapping
+
+        let planeSizeU = 2;
+        let planeSizeV = 1;
+        let planeUVRate = planeSizeV/planeSizeU;
+        let planeTextureUVRate = 4558/6546; 
+        let planeTextureRepeatU = 1;
+        let planeTextureRepeatV = planeTextureRepeatU * planeUVRate * planeTextureUVRate;
+        this.journalTexture.repeat.set(planeTextureRepeatU, planeTextureRepeatV );
+        this.journalTexture.rotation = 0;
+        this.journalTexture.offset = new THREE.Vector2(0,0);
+
+
         this.material = new THREE.MeshLambertMaterial({map: this.journalTexture, side: THREE.DoubleSide});
         this.samplesU = 24;
         this.samplesV = 24;

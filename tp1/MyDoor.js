@@ -26,7 +26,7 @@ class MyDoor  {
         this.doorTexture.wrapT = THREE.RepeatWrapping
 
         let planeSizeU = 4;
-        let planeSizeV = 9;
+        let planeSizeV = 9.6;
         let planeUVRate = planeSizeV/planeSizeU;
         let planeTextureUVRate = 373/900; 
         let planeTextureRepeatU = 1;
