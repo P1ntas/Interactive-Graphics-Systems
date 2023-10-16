@@ -13,15 +13,10 @@ class MyJar {
     init() {
         this.jarTexture = new THREE.TextureLoader().load('img/jarTexture.jpg');
         this.material = new THREE.MeshLambertMaterial({map: this.jarTexture, side: THREE.DoubleSide});
-        this.meshes = [];
         this.samplesU = 16;
         this.samplesV = 16;
-        this.createNurbsSurfaces();
-    }
-
-    createNurbsSurfaces() {
-        let orderU = 2;
-        let orderV = 2;
+        this.orderU = 2;
+        this.orderV = 2;
         const myNurbsBuilder = new MyNurbsBuilder();
 
         const controlVertexes = [
@@ -44,8 +39,8 @@ class MyJar {
 
         let nurb_geometry = myNurbsBuilder.build(
             controlVertexes,
-            orderU,
-            orderV,
+            this.orderU,
+            this.orderV,
             this.samplesU,
             this.samplesV,
             this.material
@@ -64,7 +59,7 @@ class MyJar {
         this.group.position.set(this.x, this.y, this.z); 
         this.group.scale.set(1,0.8,1);
     }
+
 }
 
 export { MyJar };
-

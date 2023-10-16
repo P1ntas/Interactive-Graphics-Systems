@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { MyLeg } from './MyLeg.js';
 import { MyCake } from './MyCake.js';
+import { MyNewspaper } from './MyNewspaper.js';
+
 
 /**
  *  This class contains the contents of out application
@@ -55,6 +57,8 @@ class MyTable  {
         let myLeg5 = new MyLeg(0,0.4,0,"plate", this.scene);
         this.myCake = new MyCake(0,0.8,0, this.scene);
         let myCakeInner = new MyCake(0,0.8,0, this.scene);
+        this.newspaper = new MyNewspaper(-3,0.2,1.3,this.scene);
+
         
         
         myLeg1.init();
@@ -64,6 +68,9 @@ class MyTable  {
         myLeg5.init();
         this.myCake.init();
         myCakeInner.init();
+        this.newspaper.init();
+
+
 
         this.tableMesh.receiveShadow = true;
         this.tableMesh.castShadow = true;
@@ -79,6 +86,8 @@ class MyTable  {
         this.tableMesh.add(this.myCake.fireMesh2);
         this.tableMesh.add(this.myCake.leftPlaneMesh);
         this.tableMesh.add(this.myCake.rightPlaneMesh);
+        this.tableMesh.add(this.newspaper.group);
+
 
     }
 }

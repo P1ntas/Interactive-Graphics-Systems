@@ -150,7 +150,6 @@ class MyContents  {
         this.jar.init();
         this.spring.init();
         this.flower.init();
-
         this.car.group.translateY(-0.45);
 
 

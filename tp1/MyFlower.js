@@ -10,22 +10,16 @@ class MyFlower {
     }
 
     init() {
-        // Create the rose-like flower with a circular center and petals.
-        this.createRoseFlower();
-    }
-
-    createRoseFlower() {
-        const numPetals = 12; // Number of petals in the "rose."
+        const numPetals = 12;
         this.petalRadius = 0.15;
         this.petalHeight = 0.05;
         this.petalMaterial = new THREE.MeshLambertMaterial({ color: "#cd7c8d" }); 
 
-        // Create the circular center of the rose.
         this.centerGeometry = new THREE.CircleGeometry(this.petalRadius * 0.5, 16);
         this.centerMaterial = new THREE.MeshLambertMaterial({ color: "#ffff00", side: THREE.DoubleSide});
         this.center = new THREE.Mesh(this.centerGeometry, this.centerMaterial);
         this.center.rotation.x = Math.PI / 2; // Rotate it to be horizontal
-        this.center.position.y = 0.05;
+        this.center.position.y = 0.03;
 
         this.center.castShadow = true;
         this.center.receiveShadow = true;
@@ -47,7 +41,6 @@ class MyFlower {
             this.group.add(this.petal);
         }
 
-        // Create the stem using a CubicBezierCurve3.
         const stemCurve = new THREE.CubicBezierCurve3(
             new THREE.Vector3(0, 0, 0), // Start point
             new THREE.Vector3(0.3, -0.7, 0), // Control point 1
@@ -62,7 +55,6 @@ class MyFlower {
 
         this.group.add(stem);
 
-        // Position the flower group within the jar.
         this.group.position.set(this.x, this.y, this.z);
 
     }
