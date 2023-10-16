@@ -19,31 +19,29 @@ class MySpring  {
      * initializes the contents
      */
     init() {
-        // Define the control points for the Quadratic Bezier Curve
-        const points = []; // Initialize an array to store the coordinates of the spiral spring
+        const points = [];
 
-        // Parameters for the spiral spring
-        const numLevels = 7; // Number of levels
-        const numSegmentsPerLevel = 30; // Number of segments per level
-        const radius = 0.3; // Radius of the spiral
-        const heightPerLevel = 0.2; // Height increment per level
+        
+        const numLevels = 7;
+        const numSegmentsPerLevel = 30; 
+        const radius = 0.3;
+        const heightPerLevel = 0.2;
 
-        // Loop through the levels and segments to calculate the coordinates
         for (let level = 0; level < numLevels; level++) {
             for (let segment = 0; segment < numSegmentsPerLevel; segment++) {
-                const t = (segment / numSegmentsPerLevel) * Math.PI * 2; // Angle parameter
-                const r = radius // Decreasing radius for each level
+                const t = (segment / numSegmentsPerLevel) * Math.PI * 2;
+                const r = radius
                 const x = r * Math.cos(t);
                 const y = r * Math.sin(t);
-                const z = level * heightPerLevel; // Increase in height for each level
+                const z = level * heightPerLevel;
                 
-                points.push(new THREE.Vector3(x, y, z)); // Add the coordinates to the points array
+                points.push(new THREE.Vector3(x, y, z)); 
             }
         }
 
         const curve = new THREE.CatmullRomCurve3(points);
 
-        const curveGeometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(10000)); // Adjust the number of points for smoothness
+        const curveGeometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(10000)); 
         const curveMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
 
         this.curveObject = new THREE.Line(curveGeometry, curveMaterial);
