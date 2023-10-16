@@ -6,9 +6,9 @@ import * as THREE from 'three';
 class MySpring  {
 
     /**
-       constructs the object
-       @param {MySpring} app The application object
-    */ 
+     * Constructor for the MySpring class
+     * @param {THREE.Scene} scene - The scene in which the spring will be rendered
+     */
     constructor(scene) {
         this.scene = scene
 
@@ -27,6 +27,7 @@ class MySpring  {
         const radius = 0.3;
         const heightPerLevel = 0.2;
 
+        // Create points for the spring based on coils and segments
         for (let level = 0; level < numLevels; level++) {
             for (let segment = 0; segment < numSegmentsPerLevel; segment++) {
                 const t = (segment / numSegmentsPerLevel) * Math.PI * 2;
@@ -39,17 +40,21 @@ class MySpring  {
             }
         }
 
+        // Create a Catmull-Rom curve using the points
         const curve = new THREE.CatmullRomCurve3(points);
 
+        // Create geometry for the curve
         const curveGeometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(10000)); 
         const curveMaterial = new THREE.LineBasicMaterial({ color: 0x808080 });
-
+ 
+        // Create a line object to represent the spring
         this.curveObject = new THREE.Line(curveGeometry, curveMaterial);
-        
-        this.curveObject.rotateX(Math.PI / 2)
-        this.curveObject.position.set(3.5,4.56,0)
-
-
+ 
+        // Rotate and position the spring object
+        this.curveObject.rotateX(Math.PI / 2); // Rotate the spring to stand upright
+        this.curveObject.position.set(3.5, 4.56, 0); // Position the spring in the scene
+ 
+        // Add the spring object to the group
         this.group.add(this.curveObject);
 
     }

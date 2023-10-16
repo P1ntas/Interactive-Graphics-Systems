@@ -2,6 +2,14 @@ import * as THREE from 'three';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 
 class MyNewspaper {
+
+    /**
+     * Constructor for the MyNewspaper class
+     * @param {number} x - X position of the newspaper in 3D space
+     * @param {number} y - Y position of the newspaper in 3D space
+     * @param {number} z - Z position of the newspaper in 3D space
+     * @param {THREE.Scene} scene - The scene in which the newspaper will be rendered
+     */
     constructor(x,y,z,scene) {
         this.x = x;
         this.y = y;
@@ -11,6 +19,7 @@ class MyNewspaper {
     }
 
     init() {
+        // Set texture properties such as wrapping and repetition.
         this.journalTexture = new THREE.TextureLoader().load('img/journalTexture.jpg');
         this.journalTexture.wrapS = THREE.RepeatWrapping
         this.journalTexture.wrapT = THREE.RepeatWrapping
@@ -33,7 +42,8 @@ class MyNewspaper {
         this.orderV = 1;
         const myNurbsBuilder = new MyNurbsBuilder();
 
-        const controlVertexes = [
+        // Define control vertexes to create the newspaper shape.
+        const controlPoints = [
             [ // Row 1
                 [0.25, 0, 0.5, 1],
                 [0.25, 0, -0.5, 1],
@@ -60,10 +70,9 @@ class MyNewspaper {
             ]
         ];
             
-        
-
+        // Build the NURBS geometry for the newspaper.
         let nurb_geometry = myNurbsBuilder.build(
-            controlVertexes,
+            controlPoints,
             this.orderU, 
             this.orderV, 
             this.samplesU,

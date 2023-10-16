@@ -2,6 +2,14 @@ import * as THREE from 'three';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 
 class MyJar {
+
+    /**
+     * Constructor for the MyJar class
+     * @param {number} x - X position of the jar in 3D space
+     * @param {number} y - Y position of the jar in 3D space
+     * @param {number} z - Z position of the jar in 3D space
+     * @param {THREE.Scene} scene - The scene in which the jar will be rendered
+     */
     constructor(x,y,z,scene) {
         this.x = x;
         this.y = y;
@@ -19,7 +27,8 @@ class MyJar {
         this.orderV = 2;
         const myNurbsBuilder = new MyNurbsBuilder();
 
-        const controlVertexes = [
+        // Define control points positions for the NURBS surface.
+        const controlPoints = [
             [
                 [-0.4, 0, 0],
                 [-0.4, 1, 0],
@@ -37,8 +46,9 @@ class MyJar {
             ]
         ];
 
+        // Build the NURBS geometry for the jar using control vertex positions and other parameters.
         let nurb_geometry = myNurbsBuilder.build(
-            controlVertexes,
+            controlPoints,
             this.orderU,
             this.orderV,
             this.samplesU,
@@ -46,6 +56,7 @@ class MyJar {
             this.material
         );
 
+        // Create two mesh instances, one for the right side and one for the left side of the jar.
         this.right = new THREE.Mesh(nurb_geometry, this.material);
         this.left = new THREE.Mesh(nurb_geometry, this.material);
         this.left.scale.set(1,1,-1);

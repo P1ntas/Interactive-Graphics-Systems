@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 
 class MyFlower {
+
+    /**
+     * Constructor for the MyFlower class
+     * @param {number} x - X position of the flower in 3D space
+     * @param {number} y - Y position of the flower in 3D space
+     * @param {number} z - Z position of the flower in 3D space
+     * @param {THREE.Scene} scene - The scene in which the flower will be rendered
+     */
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -15,6 +23,7 @@ class MyFlower {
         this.petalHeight = 0.05;
         this.petalMaterial = new THREE.MeshLambertMaterial({ color: "#cd7c8d" }); 
 
+        // Create the flower center
         this.centerGeometry = new THREE.CircleGeometry(this.petalRadius * 0.5, 16);
         this.centerMaterial = new THREE.MeshLambertMaterial({ color: "#ffff00", side: THREE.DoubleSide});
         this.center = new THREE.Mesh(this.centerGeometry, this.centerMaterial);
@@ -31,6 +40,7 @@ class MyFlower {
             const x = this.petalRadius * Math.cos(angle);
             const z = this.petalRadius * Math.sin(angle);
 
+            // Create a petal
             this.petalGeometry = new THREE.CylinderGeometry(0, this.petalRadius, this.petalHeight, 16, 1);
             this.petal = new THREE.Mesh(this.petalGeometry, this.petalMaterial);
             this.petal.position.set(x, this.petalHeight / 2, z);
@@ -41,6 +51,7 @@ class MyFlower {
             this.group.add(this.petal);
         }
 
+        // Create the stem
         const stemCurve = new THREE.CubicBezierCurve3(
             new THREE.Vector3(0, 0, 0), // Start point
             new THREE.Vector3(0.3, -0.7, 0), // Control point 1
@@ -54,7 +65,8 @@ class MyFlower {
         const stem = new THREE.Line(stemGeometry, stemMaterial);
 
         this.group.add(stem);
-
+        
+        // Set the position of the flower group
         this.group.position.set(this.x, this.y, this.z);
 
     }

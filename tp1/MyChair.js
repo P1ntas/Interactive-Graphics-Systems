@@ -1,8 +1,12 @@
 import * as THREE from 'three';
 
 /**
- * Classe que representa uma cadeira melhorada.
- */
+* Constructor for the MyChair class
+* @param {number} x - X position of the chair in 3D space
+* @param {number} y - Y position of the chair in 3D space
+* @param {number} z - Z position of the chair in 3D space
+* @param {THREE.Scene} scene - The scene in which the chair will be rendered
+*/
 class MyChair {
   constructor(x, y, z, scene) {
     this.x = x;
@@ -13,7 +17,7 @@ class MyChair {
   }
 
   init() {
-    // Pernas da cadeira
+    // Create chair legs
     const legGeometry = new THREE.CylinderGeometry(0.15, 0.15, 1.5, 32);
     const legMaterial = new THREE.MeshPhongMaterial({ color: '#000000', shininess: 100 });
 
@@ -27,7 +31,7 @@ class MyChair {
       }
     }
 
-    // assento da cadeira 
+    // Create chair seat
     const seatGeometry = new THREE.BoxGeometry(3, 0.2, 2.5);
     const seatTexture = new THREE.TextureLoader().load('img/chairTexture.jpg'); 
     seatTexture.wrapS = THREE.RepeatWrapping;
@@ -36,12 +40,13 @@ class MyChair {
     const seat = new THREE.Mesh(seatGeometry, seatMaterial);
     seat.position.set(0, 0, 0);
 
-    //encosto da cedeira
+    //Create chair backrest
     const backrestGeometry = new THREE.BoxGeometry(3, 2.8, 0.2);
     const backrestMaterial = new THREE.MeshPhongMaterial({ map: seatTexture });
     const backrest = new THREE.Mesh(backrestGeometry, backrestMaterial);
     backrest.position.set(0, 1.3, 1.3);
 
+    // Enable shadows for the chair components
     seat.castShadow = true;
     seat.receiveShadow = true;
 
@@ -51,11 +56,13 @@ class MyChair {
     legMaterial.castShadow = true;
     legMaterial.receiveShadow = true;
 
+    // Create a group to hold the chair components
     this.mesh = new THREE.Group();
     this.mesh.add(legs);
     this.mesh.add(seat);
     this.mesh.add(backrest);
 
+    // Position and rotate the chair in 3D space
     this.mesh.position.set(this.x+1, this.y-0.5, this.z+0.5);
     this.mesh.rotateY(-Math.PI / 8);
 

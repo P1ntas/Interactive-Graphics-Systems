@@ -6,9 +6,9 @@ import * as THREE from 'three';
 class MyCar  {
 
     /**
-       constructs the object
-       @param {MyCar} app The application object
-    */ 
+     * Constructor for the MyCar class
+     * @param {THREE.Scene} scene - The scene in which the car will be rendered
+     */
     constructor(scene) {
         this.scene = scene
 
@@ -25,16 +25,17 @@ class MyCar  {
         const controlPoint_2 = new THREE.Vector3(0.9987, 0.55, 0); // Adjust the control point coordinates
         const endPoint = new THREE.Vector3(1, 0, 0);
 
+        // Create Bezier curves and geometries.
         const curve = new THREE.CubicBezierCurve3(startPoint, controlPoint, controlPoint_2, endPoint);
-        const curve1 = new THREE.CubicBezierCurve3(startPoint, controlPoint, controlPoint_2, endPoint);
-
         const curveGeometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)); // Adjust the number of points for smoothness
-        const curveGeometry1 = new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)); // Adjust the number of points for smoothness
         const curveMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 
+        // Create line objects for the curves.
         this.curveObject = new THREE.Line(curveGeometry, curveMaterial);
         this.curveObject1 = new THREE.Line(curveGeometry, curveMaterial);
-        
+    
+        // Adjust positions and rotations of the curve objects.
+
         this.curveObject.rotateY(Math.PI / 2)
         this.curveObject1.rotateY(-Math.PI / 2)
         this.curveObject.position.set(-9.6,5.5,-0)
@@ -107,7 +108,7 @@ class MyCar  {
         this.curveObject5.rotateY(-Math.PI / 2)
         this.curveObject5.position.set(-9.6,5.5,-3.2)
 
-
+        // Add the curve objects to the Three.js group.
         this.group.add(this.curveObject);
         this.group.add(this.curveObject1);
         this.group.add(this.curveObject2);

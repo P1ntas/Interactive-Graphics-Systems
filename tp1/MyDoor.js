@@ -6,9 +6,12 @@ import * as THREE from 'three';
 class MyDoor  {
 
     /**
-       constructs the object
-       @param {MyDoor} app The application object
-    */ 
+     * Constructor for the MyDoor class
+     * @param {number} x - X position of the door in 3D space
+     * @param {number} y - Y position of the door in 3D space
+     * @param {number} z - Z position of the door in 3D space
+     * @param {THREE.Scene} scene - The scene in which the door will be rendered
+     */
     constructor(x,y,z,scene) {
         this.x = x
         this.y = y
@@ -21,10 +24,12 @@ class MyDoor  {
      */
     
     init() {
+        // Load the door texture
         this.doorTexture = new THREE.TextureLoader().load('img/door.jpg');
         this.doorTexture.wrapS = THREE.RepeatWrapping
         this.doorTexture.wrapT = THREE.RepeatWrapping
 
+        // Set texture properties
         let planeSizeU = 4;
         let planeSizeV = 9.6;
         let planeUVRate = planeSizeV/planeSizeU;
@@ -35,7 +40,10 @@ class MyDoor  {
         this.doorTexture.rotation = 0;
         this.doorTexture.offset = new THREE.Vector2(0,0);
 
+        // Create the door geometry
         let door = new THREE.BoxGeometry(4,9,0.1);
+
+        // Create the door mesh
         let doorMaterial = new THREE.MeshPhongMaterial({color: "#ffffff", map: this.doorTexture });
         this.mesh = new THREE.Mesh(door, doorMaterial);
         this.mesh.rotateY(-Math.PI / 2);

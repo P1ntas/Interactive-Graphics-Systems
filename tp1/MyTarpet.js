@@ -6,9 +6,12 @@ import * as THREE from 'three';
 class MyTarpet  {
 
     /**
-       constructs the object
-       @param {MyTarpet} app The application object
-    */ 
+    * Constructor for the MyTarpet class
+    * @param {number} x - X position of the tarpet in 3D space
+    * @param {number} y - Y position of the tarpet in 3D space
+    * @param {number} z - Z position of the tarpet in 3D space
+    * @param {THREE.Scene} scene - The scene in which the tarpet will be rendered
+    */
     constructor(x,y,z,scene) {
         this.x = x
         this.y = y
@@ -22,6 +25,7 @@ class MyTarpet  {
      * initializes the contents
      */
     init() {
+        // Create a carpet plane geometry and apply the carpet texture.
         let tarpet = new THREE.PlaneGeometry(15, 10);
         this.tarpetMaterial = new THREE.MeshPhongMaterial({color: "#ffffff", map : this.tarpetTexture});
         this.tarpetMesh = new THREE.Mesh(tarpet, this.tarpetMaterial);

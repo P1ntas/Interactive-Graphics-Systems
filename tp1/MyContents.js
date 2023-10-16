@@ -18,9 +18,9 @@ import { MyBookshelf } from './MyBookshelf.js';
 class MyContents  {
 
     /**
-       constructs the object
-       @param {MyApp} app The application object
-    */ 
+     * Constructor for the MyContents class.
+     * @param {MyApp} app - The application object.
+     */
     constructor(app) {
         this.app = app
         this.axis = null
@@ -36,7 +36,7 @@ class MyContents  {
     }
 
     /**
-     * builds the box mesh with material assigned
+     * Builds the box mesh with the assigned material.
      */
     buildBox() {    
         let boxMaterial = new THREE.MeshPhongMaterial({ color: "#ffff77", 
@@ -49,6 +49,9 @@ class MyContents  {
         this.boxMesh.position.y = this.boxDisplacement.y;
     }
 
+    /**
+     * Builds the 3D house object and initializes it.
+     */
     buildHouse() {
         this.house = new MyHouse(10, this);
         this.houseEnabled = true
@@ -59,6 +62,9 @@ class MyContents  {
 
     }
 
+    /**
+     * Builds the 3D table object and initializes it.
+     */
     buildTable() {
         this.table = new MyTable(2,3,3, this);
         this.table.init();
@@ -67,9 +73,8 @@ class MyContents  {
     }
 
     /**
-     * initializes the contents
-     */
-    
+    * Initializes the contents of the scene.
+    */  
     init() {
        
         // create once 
@@ -125,11 +130,12 @@ class MyContents  {
         this.buildHouse();
         this.buildTable();
 
+        // Load textures
         let afonsoTexture = new THREE.TextureLoader().load('img/afonso.png');
         let inesTexture = new THREE.TextureLoader().load('img/ines.png');
         let paiTexture = new THREE.TextureLoader().load('img/paisagem.jpg');
 
-
+        // Create and initialize various objects
         this.paintingWindow = new MyPainting(0, 5, -9.9, this, paiTexture, "window");
         this.painting1 = new MyPainting(-4, 5, 9.9, this, inesTexture, "painting");
         this.painting2 = new MyPainting(4, 5, 9.9, this, afonsoTexture, "painting");
@@ -159,7 +165,7 @@ class MyContents  {
 
         this.car.group.translateY(-0.45);
 
-
+        // Add objects to the scene
         this.app.scene.add(this.paintingWindow.group);
         this.app.scene.add(this.paintingCar.mesh);
         this.app.scene.add(this.painting1.group);

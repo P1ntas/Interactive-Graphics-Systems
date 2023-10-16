@@ -7,9 +7,10 @@ import * as THREE from 'three';
 class MyHouse  {
 
     /**
-       constructs the object
-       @param {MyHouse} app The application object
-    */ 
+     * Constructor for the MyHouse class
+     * @param {number} size  
+     * @param {THREE.Scene} scene - The scene in which the house will be rendered
+     */
     constructor(size, scene) {
         this.size = size
         this.scene = scene
@@ -28,17 +29,19 @@ class MyHouse  {
      * initializes the contents
      */
     init() {
-        // Create a Plane Mesh with basic material
-        
+        // Create a Plane Mesh with a texture
         let plane = new THREE.PlaneGeometry( this.size * 2, this.size * 2 );
         this.floorTexture = new THREE.TextureLoader().load('img/floor.png');
-        this.floorMaterial = new THREE.MeshPhongMaterial({color: "#ffffff", map : this.floorTexture, emissive: "#010101"});
+        this.floorMaterial = new THREE.MeshPhongMaterial({map : this.floorTexture, emissive: "#010101"});
+
+        // Create floor plane
         this.planeMesh = new THREE.Mesh( plane, this.floorMaterial );
         this.planeMesh.rotation.x = -Math.PI / 2;
         this.planeMesh.position.y = -0;
         this.planeMesh.receiveShadow = true;
         this.scene.app.scene.add( this.planeMesh );
-
+        
+        // Create walls
         let wLeft = new THREE.PlaneGeometry( this.size * 2, this.size );
         this.planeMeshLeft = new THREE.Mesh( wLeft, this.planeMaterial );
         this.planeMeshLeft.position.z = -5 * 2;
@@ -70,6 +73,7 @@ class MyHouse  {
         this.planeMeshDown.receiveShadow = true;
         this.scene.app.scene.add(this.planeMeshDown);
 
+        // Add planes to the group
         this.group.add(this.planeMesh)
         this.group.add(this.planeMeshLeft)
         this.group.add(this.planeMeshRight)
@@ -79,24 +83,26 @@ class MyHouse  {
     }
     
     /**
-     * updates the diffuse plane color and the material
-     * @param {THREE.Color} value 
+     * Updates the diffuse plane color and material.
+     * @param {THREE.Color} value - The new color value.
      */
     updateDiffusePlaneColor(value) {
         this.diffusePlaneColor = value
         this.planeMaterial.color.set(this.diffusePlaneColor)
     }
+
     /**
-     * updates the specular plane color and the material
-     * @param {THREE.Color} value 
+     * Updates the specular plane color and material.
+     * @param {THREE.Color} value - The new color value.
      */
     updateSpecularPlaneColor(value) {
         this.specularPlaneColor = value
         this.planeMaterial.specular.set(this.specularPlaneColor)
     }
+    
     /**
-     * updates the plane shininess and the material
-     * @param {number} value 
+     * Updates the plane shininess and material.
+     * @param {number} value - The new shininess value.
      */
     updatePlaneShininess(value) {
         this.planeShininess = value
