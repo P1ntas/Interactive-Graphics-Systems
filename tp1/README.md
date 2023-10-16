@@ -15,7 +15,13 @@ The walls are decorated with two photographs of students, a painting of a car an
 On the floor, there is a vase with a pink flower. 
 Finally, we have a spotlight pointed at our cake, as well as the point light provided to us. Both produce shadows from the cake, it’s candle, the table, the vase and its flower.
 
-
 ## Issues/Problems
 
 We found designing and implementing curved geometry somewhat difficult.
+
+
+![Screenshot 1](screenshots/Screenshot_1.png)
+
+![Screenshot 2](screenshots/Screenshot_2.png)
+
+![Screenshot 3](screenshots/Screenshot_3.png)
