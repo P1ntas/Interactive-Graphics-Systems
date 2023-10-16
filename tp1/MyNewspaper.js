@@ -20,29 +20,29 @@ class MyNewspaper {
         const myNurbsBuilder = new MyNurbsBuilder();
 
         const controlVertexes = [
-            [
-                [0, 0, 0.5, 1],
-                [-0.5, 0.25, -0.5, 1],
+            [ // Row 1
+                [0.25, 0, 0.5, 1],
+                [0.25, 0, -0.5, 1],
             ],
-            [
-                [0, 0.25, 0.5, 1],
-                [0, 0.25, -0.5, 1],
+            [ // Row 2
+                [0.25, 0.25, 0.5, 1],
+                [0.25, 0.25, -0.5, 1],
             ],
-            [
-                [0, 0.5, 0.5, 1],
-                [0, 0.5, -0.5, 1],
+            [ // Row 3
+                [0.25, 0.5, 0.5, 1],
+                [0.25, 0.5, -0.5, 1],
             ],
-            [
-                [0.5, 0.5, 0.5, 1],
-                [0.5, 0.5, -0.5, 1],
+            [ // Row 4 (Cylinder-like shape)
+                [0.5, 1, 0.5, 3],
+                [0.5, 1, -0.5, 3],
             ],
-            [
+            [ // Row 5 (Cylinder-like shape)
                 [0.5, 0.25, 0.5, 1],
                 [0.5, 0.25, -0.5, 1],
             ],
-            [
-                [1, 0.25, 0.5, 1],
-                [1, 0.25, -0.5, 1],
+            [ // Row 6 (Cylinder-like shape)
+                [0.5, 0, 0.5, 1],
+                [0.5, 0, -0.5, 1],
             ]
         ];
             
@@ -58,6 +58,14 @@ class MyNewspaper {
         )
 
         this.journalMesh = new THREE.Mesh(nurb_geometry, this.material);
+
+        this.journalMesh.rotateZ(Math.PI / 1.7);
+
+        this.journalMesh.translateX(-0.02);
+
+        this.journalMesh.receiveShadow = true;
+        this.journalMesh.castShadow = true;
+
         this.group.add(this.journalMesh);
 
         this.group.position.set(this.x, this.y, this.z); 
