@@ -169,7 +169,7 @@ class MyApp  {
 
     /**
     * the main render function. Called in a requestAnimationFrame loop
-    */
+    */ 
     render () {
         this.stats.begin()
         this.updateCameraIfRequired()
