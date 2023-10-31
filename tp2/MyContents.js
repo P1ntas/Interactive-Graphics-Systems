@@ -15,7 +15,10 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");		
+		this.reader.open("scenes/demo/demo.xml");	
+        
+        this.cameras = [];
+        this.materials = [];
     }
 
     /**
@@ -94,8 +97,6 @@ class MyContents  {
 
         let textures = {};
 
-        let materials = [];
-
         for (var key in data.textures) {
 
             let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
@@ -109,16 +110,15 @@ class MyContents  {
                                         specular: key.specular, shininess: key.shininess, 
                                         map: textures[key.textureref] });
             
-            // textlength_s and textlength_t
+            material.map.repeat.set(key.texlength_s, key.texlength_t);
             // twosided, wireframe and shading sometimes
             
+            this.materials.push(material);
         }
         
     }
 
     setupCameras(data) {
-
-        let cameras = [];
  
         for (var key in data.cameras) {
             let cameraData = data.cameras[key];
@@ -137,7 +137,7 @@ class MyContents  {
                     if(cameraData.target) {
                         camera.lookAt(new THREE.Vector3(cameraData.target.x, cameraData.target.y, cameraData.target.z));
                     }
-                    cameras.push(camera);
+                    this.cameras.push(camera);
                     break;
 
                 case "orthogonal":
@@ -150,7 +150,7 @@ class MyContents  {
                     if(cameraData.target) {
                         camera.lookAt(new THREE.Vector3(cameraData.target.x, cameraData.target.y, cameraData.target.z));
                     }
-                    cameras.push(camera);
+                    this.cameras.push(camera);
                     break;
 
                 default:
