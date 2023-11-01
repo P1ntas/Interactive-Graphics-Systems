@@ -88,9 +88,40 @@ class MyContents  {
             }
         }
 
-    this.setupMaterials(data);
+        this.setupMaterials(data);
 
-    this.setupCameras(data);
+        this.setupCameras(data);
+
+        for (var node in data.nodes) {
+            this.traverseNode(data, node, 1);
+        }
+    }
+
+    traverseNode(data, nodeId, depth=0) {
+        let node = data.nodes[nodeId];
+
+        console.log(new Array(depth * 4).join(' ') + "- " + nodeId);
+
+        if (!node) return;
+        
+        for (let i = 0; i < node.children.length; i++) {
+            let child = node.children[i];
+
+            if (child.type === "primitive") {
+                if (child.subtype == "rectangle") {
+                    let rectangle = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
+                        child.representations[0].xy2[1] - child.representations[0].xy1[1])
+                }
+                if (child.subtype === "nurbs") {
+                    console.log(new Array((depth + 2) * 4).join(' ') + "- " + child.representations[0].controlpoints.length + " control points");
+                }
+                //this.createPrimitive(child); // Create the primitive in Three.js
+            } else if (child.type === "noderef") {
+                this.traverseNode(child.id, depth + 1);
+            } else if (["pointlight", "spotlight", "directionallight"].includes(child.type)) {
+                //this.createLight(child); // Create the light in Three.js
+            }
+        }
     }
 
     setupMaterials(data) {
