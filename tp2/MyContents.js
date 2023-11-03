@@ -16,7 +16,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/scene.xml");	
+		this.reader.open("scenes/demo/demo.xml");	
 
         this.materials = {};
         this.lights = [];
@@ -194,6 +194,27 @@ class MyContents  {
                                 
                         
                             break;
+
+                        case "triangle":
+                        
+                        pri = new THREE.PlaneGeometry(child.representations[0].xyz1, child.representations[0].xyz2,
+                                                    child.representations[0].xyz3)
+
+
+                                //console.log(this.materials[node.materialIds[0]])
+                                
+                                mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                mesh.position.x += (child.representations[0].xyz2[0] + child.representations[0].xyz1[0] 
+                                    + child.representations[0].xyz3[0]) / 3;
+                                mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1] 
+                                    + child.representations[0].xyz3[1]) / 3;
+                                mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2] 
+                                    + child.representations[0].xyz3[2]) / 3;
+                                if (node.loaded) group.add(mesh);
+                                
+                            
+                    
+                        break;
 
                         case "cylinder":
                             pri = new THREE.CylinderGeometry(child.representations[0].top, 
