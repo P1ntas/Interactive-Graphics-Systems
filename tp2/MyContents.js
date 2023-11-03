@@ -16,7 +16,7 @@ class MyContents  {
         this.axis = null
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");	
+		this.reader.open("scenes/scene.xml");	
 
         this.materials = {};
         this.lights = [];
@@ -227,6 +227,19 @@ class MyContents  {
                                 
                             
                             break;
+                        
+                        case "sphere":
+                            pri = new THREE.SphereGeometry(child.representations[0].radius, 
+                                child.representations[0].slices, child.representations[0].stacks,child.representations[0].phistart * Math.PI / 180,
+                                child.representations[0].philength * Math.PI / 180,
+                                child.representations[0].thetastart * Math.PI / 180, child.representations[0].thetalength * Math.PI / 180)
+
+                                    //console.log(this.materials[node.materialIds[0]])
+                                    
+                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
+
+                                    if (node.loaded) group.add(mesh);
+                            break;
         
                         case "nurbs":
                             pri = new MyNurbsBuilder(this.app);
@@ -330,8 +343,8 @@ class MyContents  {
         for (var key in data.textures) {
 
             let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
-            texture.wrapS = THREE.RepeatWrapping
-            texture.wrapT = THREE.RepeatWrapping
+            texture.wrapS = THREE.ClampToEdgeWrapping
+            texture.wrapT = THREE.ClampToEdgeWrapping
     
 
             textures[key] = texture;
