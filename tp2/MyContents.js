@@ -118,6 +118,14 @@ class MyContents  {
                         case "rectangle":
                             pri = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
                                 child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x)
+
+                                if (node.materialIds.length > 0) {
+                                    //console.log(this.materials[node.materialIds[0]])
+                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    mesh.position.x = (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
+                                    mesh.position.y = (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
+                                    if (node.loaded) group.add(mesh);
+                                }
                             break;
 
                         case "cylinder":
@@ -125,6 +133,11 @@ class MyContents  {
                                 child.representations[0].base, child.representations[0].height,
                                 child.representations[0].slices, child.representations[0].stacks,child.representations[0].capsclose,
                                 child.representations[0].thetastart, child.representations[0].thetalength)
+                                if (node.materialIds.length > 0) {
+                                    //console.log(this.materials[node.materialIds[0]])
+                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    if (node.loaded) group.add(mesh);
+                                }
                             break;
                         
                         case "box":
@@ -132,6 +145,14 @@ class MyContents  {
                                 child.representations[0].xyz2[1] - child.representations[0].xyz1[1],
                                 child.representations[0].xyz2[2] - child.representations[0].xyz1[2],
                                 child.representations[0].parts_x, child.representations[0].parts_y, child.representations[0].parts_z)
+                                if (node.materialIds.length > 0) {
+                                    //console.log(this.materials[node.materialIds[0]])
+                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    mesh.position.x = (child.representations[0].xyz2[0] + child.representations[0].xyz1[0]) / 2;
+                                    mesh.position.y = (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
+                                    mesh.position.z = (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
+                                    if (node.loaded) group.add(mesh);
+                                }
                             break;
         
                         case "nurbs":
@@ -149,15 +170,15 @@ class MyContents  {
                             pri.build(controlPoints, 
                                 child.representations[0].degree_u, child.representations[0].degree_v, 
                                 child.representations[0].parts_u, child.representations[0].parts_v)
+
+                                if (node.materialIds.length > 0) {
+                                    //console.log(this.materials[node.materialIds[0]])
+                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    if (node.loaded) group.add(mesh);
+                                }
                             break;
                         default:
                             break;
-                    }
-
-                    if (node.materialIds.length > 0) {
-                        //console.log(this.materials[node.materialIds[0]])
-                        mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                        if (node.loaded) group.add(mesh);
                     }
                     break;
 
