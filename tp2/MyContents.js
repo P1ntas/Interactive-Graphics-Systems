@@ -94,23 +94,27 @@ class MyContents  {
         this.setupMaterials(data);
 
         this.setupCameras(data);
-
+        //console.log(data.nodes)
         for (var node in data.nodes) {
-            this.traverseNode(data, node, 1);
+            if (data.nodes[node].id === "scene") {
+                this.traverseNode(data, node, 1);
+            }
         }
     }
 
     traverseNode(data, nodeId, depth=0) {
+        
         let node = data.nodes[nodeId];
-
+        
         if (!node) return;
-
+        //console.log(node)
         let group = new THREE.Group();
         
         for (let i = 0; i < node.children.length; i++) {
             let child = node.children[i];
 
             let pri, mesh;
+            //console.log(child)
 
             switch (child.type) {
                 case "primitive":
@@ -119,13 +123,15 @@ class MyContents  {
                             pri = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
                                 child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x)
 
-                                if (node.materialIds.length > 0) {
+
                                     //console.log(this.materials[node.materialIds[0]])
                                     mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    mesh.position.x = (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
-                                    mesh.position.y = (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
+                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
+                                    mesh.position.x += (child.representations[0].xy2[0] - child.representations[0].xy1[0]) / 2;
+                                    mesh.position.y += (child.representations[0].xy2[1] - child.representations[0].xy1[1]) / 2;
                                     if (node.loaded) group.add(mesh);
-                                }
+                                
+                        
                             break;
 
                         case "cylinder":
@@ -133,11 +139,13 @@ class MyContents  {
                                 child.representations[0].base, child.representations[0].height,
                                 child.representations[0].slices, child.representations[0].stacks,child.representations[0].capsclose,
                                 child.representations[0].thetastart, child.representations[0].thetalength)
-                                if (node.materialIds.length > 0) {
+                              
                                     //console.log(this.materials[node.materialIds[0]])
                                     mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
                                     if (node.loaded) group.add(mesh);
-                                }
+                                
+                                
                             break;
                         
                         case "box":
@@ -145,14 +153,16 @@ class MyContents  {
                                 child.representations[0].xyz2[1] - child.representations[0].xyz1[1],
                                 child.representations[0].xyz2[2] - child.representations[0].xyz1[2],
                                 child.representations[0].parts_x, child.representations[0].parts_y, child.representations[0].parts_z)
-                                if (node.materialIds.length > 0) {
+                               
                                     //console.log(this.materials[node.materialIds[0]])
                                     mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    mesh.position.x = (child.representations[0].xyz2[0] + child.representations[0].xyz1[0]) / 2;
-                                    mesh.position.y = (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
-                                    mesh.position.z = (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
+                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
+                                    //mesh.position.x += (child.representations[0].xyz2[0] - child.representations[0].xyz1[0]) / 2;
+                                    //mesh.position.y += (child.representations[0].xyz2[1] - child.representations[0].xyz1[1]) / 2;
+                                    //mesh.position.z += (child.representations[0].xyz2[2] - child.representations[0].xyz1[2]) / 2;
                                     if (node.loaded) group.add(mesh);
-                                }
+                                
+                            
                             break;
         
                         case "nurbs":
@@ -174,16 +184,23 @@ class MyContents  {
                                 if (node.materialIds.length > 0) {
                                     //console.log(this.materials[node.materialIds[0]])
                                     mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
+                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
+                                    
                                     if (node.loaded) group.add(mesh);
-                                }
-                            break;
-                        default:
+                                } 
+                                break;
+                        default: 
                             break;
                     }
-                    break;
+                    
+                    
+                
 
-                case "noderef":
-                    this.traverseNode(child.id, depth + 1);
+                case "node":
+                       
+                    const childGroup = this.traverseNode(data, child.id, depth + 1);
+                    if (childGroup) group.add(childGroup);
+                    
                     break;
                 case "pointlight":
                     const pointLight = new THREE.PointLight(child.color, child.intensity, child.distance, 
@@ -234,9 +251,14 @@ class MyContents  {
                 default:
                     break;
             }
+            
+        }
+            
+        if (node.transformations) {
+            //console.log(node.transformations[0])
             if (node.transformations) {
-                if ((node.transformations.length === 0)) continue;
-                else if (node.transformations.length === 1) {
+                if (node.transformations.length === 1) {
+                    //console.log(node.transformations[0])
                     if (node.transformations[0].type === 'T') {
                         group.translateX(node.transformations[0].translate[0]);
                         group.translateY(node.transformations[0].translate[1]);
@@ -248,11 +270,11 @@ class MyContents  {
                         group.rotateZ(node.transformations[0].rotation[2] * Math.PI / 180);
                     }
                     else if (node.transformations[0].type === 'S') {
-                        //console.log(node.transformations[0])
+                
                         group.scale.set(node.transformations[0][0], node.transformations[0][1], node.transformations[0][2]);
                     }
                 }
-                else {
+                else if (node.transformations.length > 1) {
                     for (let k = 0; k < node.transformations.length; k++) {
                         if (node.transformations[k].type === 'T') {
                             group.translateX(node.transformations[k].translate[0]);
@@ -270,9 +292,10 @@ class MyContents  {
                     }
                 }
             }
-
-            this.app.scene.add(group) 
         }
+        if (depth === 1) this.app.scene.add(group);
+
+        return group;
     }
 
     setupMaterials(data) {
@@ -287,19 +310,22 @@ class MyContents  {
         for (var key in data.textures) {
 
             let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
+            texture.wrapS = THREE.RepeatWrapping
+            texture.wrapT = THREE.RepeatWrapping
+    
 
             textures[key] = texture;
+            //console.log(key);
         }
-        
         for (var key in data.materials) {
-            //console.log(data.materials[key]);
+            //console.log(textures[data.materials[key].textureref]);
             let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
                                         emissive: data.materials[key].emissive, 
                                         specular: data.materials[key].specular, 
                                         shininess: data.materials[key].shininess,
                                         map: textures[data.materials[key].textureref] });
-            
-            material.map.repeat.set(key.texlength_s, key.texlength_t);
+
+            if (material.map) material.map.repeat.set(data.materials[key].texlength_s || 1, data.materials[key].texlength_t || 1);
 
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;
             if (data.materials[key].wireframe) material.wireframe = data.materials[key].wireframe;
