@@ -102,34 +102,95 @@ class MyContents  {
         }
     }
 
-    traverseNode(data, nodeId, depth=0) {
+    traverseNode(data, nodeId, depth=0, materialId = null) {
         
         let node = data.nodes[nodeId];
         
         if (!node) return;
         //console.log(node)
         let group = new THREE.Group();
+        //console.log(node.materialIds)
+        if (node.materialIds && node.materialIds.length > 0) {
+            materialId = node.materialIds[0];
+        }
+        if (materialId) {
+            const material = this.materials[materialId];
+            if (material) {
+                group.material = material;
+            }
+        }
+    
+        if (node.transformations) {
+            //console.log(node.transformations[0])
+            if (node.transformations.length > 0) {
+                
+                if (node.transformations.length === 1) {
+                    //console.log(node.transformations[0])
+                    if (node.transformations[0].type === 'T') {
+                        group.translateX(node.transformations[0].translate[0]);
+                        group.translateY(node.transformations[0].translate[1]);
+                        group.translateZ(node.transformations[0].translate[2]);
+                    }
+                    else if (node.transformations[0].type === 'R') {
+                        group.rotateX(node.transformations[0].rotation[0] * Math.PI / 180);
+                        group.rotateY(node.transformations[0].rotation[1] * Math.PI / 180);
+                        group.rotateZ(node.transformations[0].rotation[2] * Math.PI / 180);
+                    }
+                    else if (node.transformations[0].type === 'S') {
+                
+                        group.scale.set(node.transformations[0].scale[0], node.transformations[0].scale[1], node.transformations[0].scale[2]);
+                    }
+                }
+                else if (node.transformations.length > 1) {
+                    for (let k = 0; k < node.transformations.length; k++) {
+                        if (node.transformations[k].type === 'T') {
+                            group.translateX(node.transformations[k].translate[0]);
+                            group.translateY(node.transformations[k].translate[1]);
+                            group.translateZ(node.transformations[k].translate[2]);
+                        }
+                        else if (node.transformations[k].type === 'R') {
+                            group.rotateX(node.transformations[k].rotation[0] * Math.PI / 180);
+                            group.rotateY(node.transformations[k].rotation[1] * Math.PI / 180);
+                            group.rotateZ(node.transformations[k].rotation[2] * Math.PI / 180);
+                        }
+                        else if (node.transformations[k].type === 'S') {
+                            group.scale.set(node.transformations[k].scale[0], node.transformations[k].scale[1], node.transformations[k].scale[2]);
+                        }
+                    }
+                }
+            }
+        }
         
         for (let i = 0; i < node.children.length; i++) {
             let child = node.children[i];
 
             let pri, mesh;
-            //console.log(child)
-
+            //if (child.id === 'leg') console.log(child.type)
             switch (child.type) {
+                case "node":
+                    if (!child.materialIds) {
+                        child.materialIds = []
+                        child.materialIds.push(node[materialIds[0]])
+                    }
+                    const childGroup = this.traverseNode(data, child.id, depth + 1, materialId);
+                    if (childGroup) group.add(childGroup);
+                    
+                    break;
                 case "primitive":
                     switch (child.subtype) {
                         case "rectangle":
+                            
                             pri = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
                                 child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x)
 
 
                                     //console.log(this.materials[node.materialIds[0]])
-                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
-                                    mesh.position.x += (child.representations[0].xy2[0] - child.representations[0].xy1[0]) / 2;
-                                    mesh.position.y += (child.representations[0].xy2[1] - child.representations[0].xy1[1]) / 2;
+                                    
+                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                    mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
+                                    mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
                                     if (node.loaded) group.add(mesh);
+                                    
                                 
                         
                             break;
@@ -141,25 +202,27 @@ class MyContents  {
                                 child.representations[0].thetastart, child.representations[0].thetalength)
                               
                                     //console.log(this.materials[node.materialIds[0]])
-                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
+                                    
+                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     if (node.loaded) group.add(mesh);
                                 
                                 
                             break;
                         
                         case "box":
+                            //console.log(child)
                             pri = new THREE.BoxGeometry(child.representations[0].xyz2[0] - child.representations[0].xyz1[0],
                                 child.representations[0].xyz2[1] - child.representations[0].xyz1[1],
                                 child.representations[0].xyz2[2] - child.representations[0].xyz1[2],
                                 child.representations[0].parts_x, child.representations[0].parts_y, child.representations[0].parts_z)
                                
                                     //console.log(this.materials[node.materialIds[0]])
-                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
-                                    //mesh.position.x += (child.representations[0].xyz2[0] - child.representations[0].xyz1[0]) / 2;
-                                    //mesh.position.y += (child.representations[0].xyz2[1] - child.representations[0].xyz1[1]) / 2;
-                                    //mesh.position.z += (child.representations[0].xyz2[2] - child.representations[0].xyz1[2]) / 2;
+                                    
+                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                    mesh.position.x += (child.representations[0].xyz2[0] + child.representations[0].xyz1[0]) / 2;
+                                    mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
+                                    mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
+
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -183,25 +246,17 @@ class MyContents  {
 
                                 if (node.materialIds.length > 0) {
                                     //console.log(this.materials[node.materialIds[0]])
-                                    mesh = new THREE.Mesh(pri, this.materials[node.materialIds[0]]);
-                                    if (child.materialIds) mesh = new THREE.Mesh(pri, this.materials[child.materialIds[0]]);
                                     
+                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     if (node.loaded) group.add(mesh);
                                 } 
+                                
                                 break;
                         default: 
                             break;
                     }
-                    
-                    
-                
-
-                case "node":
-                       
-                    const childGroup = this.traverseNode(data, child.id, depth + 1);
-                    if (childGroup) group.add(childGroup);
-                    
                     break;
+
                 case "pointlight":
                     const pointLight = new THREE.PointLight(child.color, child.intensity, child.distance, 
                         child.decay);
@@ -248,55 +303,20 @@ class MyContents  {
                     this.lights.push(directionalLight);
                     break;
 
+                
+
                 default:
                     break;
             }
             
         }
             
-        if (node.transformations) {
-            //console.log(node.transformations[0])
-            if (node.transformations) {
-                if (node.transformations.length === 1) {
-                    //console.log(node.transformations[0])
-                    if (node.transformations[0].type === 'T') {
-                        group.translateX(node.transformations[0].translate[0]);
-                        group.translateY(node.transformations[0].translate[1]);
-                        group.translateZ(node.transformations[0].translate[2]);
-                    }
-                    else if (node.transformations[0].type === 'R') {
-                        group.rotateX(node.transformations[0].rotation[0] * Math.PI / 180);
-                        group.rotateY(node.transformations[0].rotation[1] * Math.PI / 180);
-                        group.rotateZ(node.transformations[0].rotation[2] * Math.PI / 180);
-                    }
-                    else if (node.transformations[0].type === 'S') {
-                
-                        group.scale.set(node.transformations[0][0], node.transformations[0][1], node.transformations[0][2]);
-                    }
-                }
-                else if (node.transformations.length > 1) {
-                    for (let k = 0; k < node.transformations.length; k++) {
-                        if (node.transformations[k].type === 'T') {
-                            group.translateX(node.transformations[k].translate[0]);
-                            group.translateY(node.transformations[k].translate[1]);
-                            group.translateZ(node.transformations[k].translate[2]);
-                        }
-                        else if (node.transformations[k].type === 'R') {
-                            group.rotateX(node.transformations[k].rotation[0] * Math.PI / 180);
-                            group.rotateY(node.transformations[k].rotation[1] * Math.PI / 180);
-                            group.rotateZ(node.transformations[k].rotation[2] * Math.PI / 180);
-                        }
-                        else if (node.transformations[k].type === 'S') {
-                            group.scale.set(node.transformations[k][0], node.transformations[k][1], node.transformations[k][2]);
-                        }
-                    }
-                }
-            }
-        }
+        
         if (depth === 1) this.app.scene.add(group);
 
         return group;
     }
+
 
     setupMaterials(data) {
 
