@@ -184,6 +184,7 @@ class MyContents  {
         
         for (let i = 0; i < node.children.length; i++) {
             let child = node.children[i];
+            //console.log(child.type)
 
             let pri, mesh;
             //if (child.id === 'leg') console.log(child.type)
@@ -197,6 +198,15 @@ class MyContents  {
                     if (childGroup) group.add(childGroup);
                     
                     break;
+
+                case "lod":
+                    //console.log(child)
+                    let lod = new THREE.LOD();
+                    const lodGroup = this.traverseNode(data, child.id, depth + 1, materialId);
+                    //lod.addLevel(lodGroup, this.lodDistances[3]);
+                    //if (loddGroup) group.add(childGroup);
+                    break;
+
                 case "primitive":
                     switch (child.subtype) {
                         case "rectangle":
@@ -383,13 +393,12 @@ class MyContents  {
 
         let skybox = new THREE.BoxGeometry(data.skyboxes["default"].size[0], data.skyboxes["default"].size[1], 
                                             data.skyboxes["default"].size[2])  
-
-        //let skyMaterial2 = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide});
-        //console.log(data.skyboxes["default"].emissive)
+        
+        //console.log(data.skyboxes["default"])
         let skyMaterial = [new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
                 new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].top), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].bottom), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
                 new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
                 new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide})];
 
