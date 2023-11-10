@@ -15,12 +15,11 @@ class MyContents  {
         this.app = app
         this.axis = null
 
-        this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");	
-
         this.materials = {};
         this.lights = [];
-        this.data1 = null;
+
+        this.reader = new MyFileReader(app, this, this.onSceneLoaded);
+		this.reader.open("scenes/demo/demo.xml");	
     }
 
     /**
@@ -40,7 +39,6 @@ class MyContents  {
      * @param {MySceneData} data the entire scene data object
      */
     onSceneLoaded(data) {
-        this.data1 = data;
         console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
     }
@@ -55,6 +53,9 @@ class MyContents  {
         // to see the data structure for each item
 
         /*this.output(data.options)
+
+        // first and only skybox is called "default"
+        this.output(data.skyboxes["default"])
         console.log("textures:")
         for (var key in data.textures) {
             let texture = data.textures[key]
@@ -77,6 +78,9 @@ class MyContents  {
         for (var key in data.nodes) {
             let node = data.nodes[key]
             this.output(node, 1)
+            if (node.loaded === false) {
+                console.error("" + new Array(2 * 4).join(' ') + " not loaded. Possibly refered as a node child but not defined in scene.")
+            }
             for (let i=0; i< node.children.length; i++) {
                 let child = node.children[i]
                 if (child.type === "primitive") {
@@ -85,9 +89,26 @@ class MyContents  {
                         console.log("" + new Array(3 * 4).join(' ') + " - " + child.representations[0].controlpoints.length + " control points")
                     }
                 }
+                else
+                if (child.type === "lodref") {
+                    console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + ", id "  + child.id)                    
+                }
                 else {
                     this.output(child, 2)
                 }
+            }
+        }
+
+        console.log("lods:")
+        for (var key in data.lods) {
+            let lod = data.lods[key]
+            this.output(lod, 1)
+            if (lod.loaded === false) {
+                console.error("" + new Array(2 * 4).join(' ') + " not loaded. Possibly refered as a node child but not defined in scene.")
+            }
+            for (let i=0; i< lod.children.length; i++) {
+                let child = lod.children[i]
+                console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + " "  + child.node.id + ", min distance: " + child.mindist)
             }
         }*/
 
@@ -353,11 +374,30 @@ class MyContents  {
 
 
     setupMaterials(data) {
-
         this.app.scene.background = data.options.background;
         const light1 = new THREE.AmbientLight( data.options.ambient );
         this.app.scene.add( light1 );
         this.app.scene.fog = new THREE.Fog(data.fog.color, data.fog.near, data.fog.far);
+
+        //console.log(data.skyboxes["default"])
+
+        let skybox = new THREE.BoxGeometry(data.skyboxes["default"].size[0], data.skyboxes["default"].size[1], 
+                                            data.skyboxes["default"].size[2])  
+
+        //let skyMaterial2 = new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide});
+        //console.log(data.skyboxes["default"].emissive)
+        let skyMaterial = [new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].top), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].bottom), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
+                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide})];
+
+        let skyMesh = new THREE.Mesh(skybox, skyMaterial);
+
+        skyMesh.position.set(data.skyboxes["default"].center[0], data.skyboxes["default"].center[1], data.skyboxes["default"].center[2]);
+
+        this.app.scene.add(skyMesh);
 
         let textures = {};
 
@@ -372,7 +412,7 @@ class MyContents  {
             //console.log(key);
         }
         for (var key in data.materials) {
-            //console.log(textures[data.materials[key].textureref]);
+            //console.log(data.materials[key]);
             let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
                                         emissive: data.materials[key].emissive, 
                                         specular: data.materials[key].specular, 
@@ -383,8 +423,7 @@ class MyContents  {
 
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;
             if (data.materials[key].wireframe) material.wireframe = data.materials[key].wireframe;
-            if (data.materials[key].shading === "flat") material.flatShading = THREE.DoubleSide;
-            
+            if (data.materials[key].shading === "flat") material.flatShading = true;
             this.materials[data.materials[key].id] = material;
         }
         
