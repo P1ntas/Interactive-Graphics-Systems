@@ -112,6 +112,8 @@ class MyContents  {
             }
         }*/
 
+        console.log(data.lods)
+
         this.setupMaterials(data);
 
         this.setupCameras(data);
@@ -197,14 +199,6 @@ class MyContents  {
                     const childGroup = this.traverseNode(data, child.id, depth + 1, materialId);
                     if (childGroup) group.add(childGroup);
                     
-                    break;
-
-                case "lod":
-                    //console.log(child)
-                    let lod = new THREE.LOD();
-                    const lodGroup = this.traverseNode(data, child.id, depth + 1, materialId);
-                    //lod.addLevel(lodGroup, this.lodDistances[3]);
-                    //if (loddGroup) group.add(childGroup);
                     break;
 
                 case "primitive":
