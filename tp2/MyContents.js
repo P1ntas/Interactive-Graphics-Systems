@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
+import { MyPolygon } from './MyPolygon.js';
 /**
  *  This class contains the contents of out application
  */
@@ -19,7 +20,7 @@ class MyContents  {
         this.lights = [];
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/scene.xml");	
+		this.reader.open("scenes/demo/demo.xml");	
     }
 
     /**
@@ -219,6 +220,14 @@ class MyContents  {
                                 
                         
                             break;
+
+                        case "polygon":
+                            console.log(child)
+                            pri = new MyPolygon(child.representations[0].radius, child.representations[0].slices, child.representations[0].stacks)
+                            let color6 = new THREE.MeshPhongMaterial({ color: 0xffffff})
+                            mesh = new THREE.Mesh(pri, color6);
+                            if (node.loaded) group.add(mesh);
+                            break
 
                         case "triangle":
                         
