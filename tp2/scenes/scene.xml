@@ -32,6 +32,8 @@
         <texture id="ballTex" filepath="scenes/textures/ball.jpg" />
     </textures> 
 
+    <skybox size="150 150 150" center="0 0 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/demo/textures/pine.jpg" down="./scenes/demo/textures/pine.jpg" left="./scenes/demo/textures/pine.jpg" right="./scenes/demo/textures/pine.jpg" front="./scenes/demo/textures/pine.jpg" back="./scenes/demo/textures/pine.jpg"/>
+
     <materials> 
 		
 		<material id="floorApp" 
