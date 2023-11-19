@@ -40,15 +40,15 @@
 		<texture id="tapeSupportTex" filepath="scenes/demo/textures/lamp.png" />
 		<texture id="pineTex" filepath="scenes/demo/textures/pine.png" />
 		<texture id="vaseTex" filepath="scenes/demo/textures/vase.png" />
-        <texture id="demo" filepath="scenes/demo/textures/demo.png" 
-            mipmap0="scenes/demo/textures/demo1024.png"
-            mipmap1="scenes/demo/textures/demo512.png"
-            mipmap2="scenes/demo/textures/demo256.png"
-            mipmap3="scenes/demo/textures/demo128.png"
-            mipmap4="scenes/demo/textures/demo64.png"
-            mipmap5="scenes/demo/textures/demo32.png"
-            mipmap6="scenes/demo/textures/demo16.png"
-            mipmap7="scenes/demo/textures/demo8.png"
+        <texture id="demo" filepath="scenes/demo/textures/demo.jpg" 
+            mipmap0="scenes/demo/textures/demo1024.jpg"
+            mipmap1="scenes/demo/textures/demo512.jpg"
+            mipmap2="scenes/demo/textures/demo256.jpg"
+            mipmap3="scenes/demo/textures/demo128.jpg"
+            mipmap4="scenes/demo/textures/demo64.jpg"
+            mipmap5="scenes/demo/textures/demo32.jpg"
+            mipmap6="scenes/demo/textures/demo16.jpg"
+            mipmap7="scenes/demo/textures/demo8.jpg"
         />
     </textures> 
 
@@ -148,10 +148,8 @@
 
     <graph rootid="scene"> 
         <lod id="demo" near="0" far="1000" > 
-            <noderef id="rectangle2" mindist="5" />
-            <noderef id="rectangle2" mindist="10"/>
-            <noderef id="rectangle2" mindist="100"/>
-            <noderef id="rectangle2" mindist="500"/>
+            <noderef id="rectangle1" mindist="10" />
+            <noderef id="sphere" mindist="20"/>
         </lod>
 		
 		<node id="scene" castshadows = "true" receiveshadows="true"> 
@@ -165,6 +163,7 @@
 				<noderef id="policeWarning1" /> 
 				<noderef id="policeWarning2" />
 				<noderef id="crimeWeapon" />
+                <lodref id="demo" />
 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 0.8 1" 
@@ -212,6 +211,17 @@
                     position="2 2 4" 
                 /> 
             </children> 
+        </node>
+
+        <node id="sphere">
+            <transforms>
+                <translate value3="0 0 0.5" />
+            </transforms>
+            <children>
+                <primitive>
+                    <sphere radius="1" slices="32" stacks="32" />
+                </primitive>
+            </children>
         </node>
 		
 		<node id="rectangle1"> 

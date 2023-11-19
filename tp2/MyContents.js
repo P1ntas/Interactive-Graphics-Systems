@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
-import { MyPolygon } from './MyPolygon.js';
 /**
  *  This class contains the contents of out application
  */
@@ -33,6 +32,7 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
+
     }
 
     /**
@@ -195,7 +195,7 @@ class MyContents  {
                 case "node":
                     if (!child.materialIds) {
                         child.materialIds = []
-                        child.materialIds.push(node[materialIds[0]])
+                        child.materialIds.push(node.materialIds[0])
                     }
                     const childGroup = this.traverseNode(data, child.id, depth + 1, materialId);
                     if (childGroup) group.add(childGroup);
@@ -221,14 +221,6 @@ class MyContents  {
                         
                             break;
 
-                        case "polygon":
-                            console.log(child)
-                            pri = new MyPolygon(child.representations[0].radius, child.representations[0].slices, child.representations[0].stacks)
-                            let color6 = new THREE.MeshPhongMaterial({ color: 0xffffff})
-                            mesh = new THREE.Mesh(pri, color6);
-                            if (node.loaded) group.add(mesh);
-                            break
-
                         case "triangle":
                         
                         pri = new THREE.PlaneGeometry(child.representations[0].xyz1, child.representations[0].xyz2,
@@ -238,6 +230,7 @@ class MyContents  {
                                 //console.log(this.materials[node.materialIds[0]])
                                 
                                 mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                
                                 mesh.position.x += (child.representations[0].xyz2[0] + child.representations[0].xyz1[0] 
                                     + child.representations[0].xyz3[0]) / 3;
                                 mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1] 
@@ -370,8 +363,25 @@ class MyContents  {
                     if (child.enabled) this.app.scene.add(directionalLight);
                     this.lights.push(directionalLight);
                     break;
-
                 
+                case "lod": 
+                    let lod = new THREE.LOD();
+
+                    for (let childLodIdx in child.children) {
+                        let childLod = child.children[childLodIdx];
+                        
+                        console.log("childLod: ", childLod);
+                        if (childLod.type === 'lodnoderef') {
+                            if (childLod['materialIds'] === undefined || childLod['materialIds'].length === 0) {
+                                childLod['materialIds'] = child['materialIds'];
+                            }
+                            const childMesh = this.traverseNode(data, childLod.node.id, depth + 1, materialId);
+                            lod.addLevel(childMesh, childLod['mindist']);
+                        }
+                    }
+                    
+                    if (lod) group.add(lod);
+                    break;
 
                 default:
                     break;
@@ -379,7 +389,6 @@ class MyContents  {
             
         }
             
-        
         if (depth === 1) this.app.scene.add(group);
 
         return group;
