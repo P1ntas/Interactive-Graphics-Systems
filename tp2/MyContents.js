@@ -113,7 +113,7 @@ class MyContents  {
             }
         }*/
 
-        console.log(data.lods)
+        //console.log(data.lods)
 
         this.setupMaterials(data);
 
@@ -126,7 +126,7 @@ class MyContents  {
         }
     }
 
-    traverseNode(data, nodeId, depth=0, materialId = null) {
+    traverseNode(data, nodeId, depth=0, materialId = null, castShadows = null, receiveShadows) {
         
         let node = data.nodes[nodeId];
         
@@ -137,6 +137,13 @@ class MyContents  {
         if (node.materialIds && node.materialIds.length > 0) {
             materialId = node.materialIds[0];
         }
+        if (node.castShadows !== undefined) {
+            castShadows = node.castShadows
+        }
+        if (node.receiveShadows !== undefined) {
+            receiveShadows = node.receiveShadows
+        }
+
         if (materialId) {
             const material = this.materials[materialId];
             if (material) {
@@ -203,6 +210,7 @@ class MyContents  {
                     break;
 
                 case "primitive":
+                    //console.log(child)
                     switch (child.subtype) {
                         case "rectangle":
                             
@@ -215,6 +223,9 @@ class MyContents  {
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
+                                    mesh.castShadow = castShadows
+                                    mesh.receiveShadow = receiveShadows
+                                    //console.log(node)
                                     if (node.loaded) group.add(mesh);
                                     
                                 
@@ -222,10 +233,36 @@ class MyContents  {
                             break;
 
                         case "polygon":
-                            console.log(child)
+                            //console.log(child)
                             pri = new MyPolygon(child.representations[0].radius, child.representations[0].slices, child.representations[0].stacks)
-                            let color6 = new THREE.MeshPhongMaterial({ color: 0xffffff})
+                            let color6 = new THREE.MeshPhongMaterial({
+                                vertexColors: true,
+                              });
+                            
+                            const vertexCount = pri.getAttribute('position').count;
+                            const colors = [];
+
+                            for (let i = 0; i < vertexCount; i++) {
+                                // Calculate the interpolation factor (between 0 and 1)
+                                const t = i / (vertexCount - 1);
+
+                                // Interpolate between the two colors
+                                const r = child.representations[0].color_c.r + t * (child.representations[0].color_p.r - child.representations[0].color_c.r);
+                                const g = child.representations[0].color_c.g + t * (child.representations[0].color_p.g - child.representations[0].color_c.g);
+                                const b = child.representations[0].color_c.b + t * (child.representations[0].color_p.b - child.representations[0].color_c.b);
+
+                                // Add the color to the array
+                                colors.push(r, g, b);
+                            }
+
+                            pri.setAttribute(
+                                'color',
+                                new THREE.BufferAttribute(new Float32Array(colors), 3)
+                              );
+
                             mesh = new THREE.Mesh(pri, color6);
+                            mesh.castShadow = node.castShadows
+                            mesh.receiveShadow = node.receiveShadows
                             if (node.loaded) group.add(mesh);
                             break
 
@@ -244,7 +281,9 @@ class MyContents  {
                                     + child.representations[0].xyz3[1]) / 3;
                                 mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2] 
                                     + child.representations[0].xyz3[2]) / 3;
-                                if (node.loaded) group.add(mesh);
+                                mesh.castShadow = node.castShadows
+                                mesh.receiveShadow = node.receiveShadows
+                                    if (node.loaded) group.add(mesh);
                                 
                             
                     
@@ -259,6 +298,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                                 
@@ -278,6 +319,8 @@ class MyContents  {
                                     mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
                                     mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
 
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -293,6 +336,8 @@ class MyContents  {
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
 
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                             break;
         
@@ -316,6 +361,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 } 
                                 
