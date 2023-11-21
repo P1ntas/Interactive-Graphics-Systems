@@ -127,8 +127,10 @@ class MyContents  {
     }
 
     traverseNode(data, nodeId, depth=0, materialId = null) {
-        
+        let findLod = false;
         let node = data.nodes[nodeId];
+
+        console.log(node);
         
         if (!node) return;
         //console.log(node)
@@ -366,31 +368,25 @@ class MyContents  {
                 
                 case "lod": 
                     let lod = new THREE.LOD();
-
+                    findLod = true;
                     for (let childLodIdx in child.children) {
-                        let childLod = child.children[childLodIdx];
-                        
-                        console.log("childLod: ", childLod);
-                        if (childLod.type === 'lodnoderef') {
-                            if (childLod['materialIds'] === undefined || childLod['materialIds'].length === 0) {
-                                childLod['materialIds'] = child['materialIds'];
-                            }
-                            const childMesh = this.traverseNode(data, childLod.node.id, depth + 1, materialId);
-                            lod.addLevel(childMesh, childLod['mindist']);
+                        let childLodGroup = new THREE.Group();
+
+                        for(let i in childLodIdx.node.children) {
+                            const childMesh = this.traverseNode(i, i.id, depth + 1, materialId);
+                            childLodGroup.add(childMesh);
                         }
+                        lod.addLevel(childLodGroup, childLod['mindist']);
                     }
                     
-                    if (lod) group.add(lod);
-                    break;
-
+                    group.add(lod);
+                    break;   
+                
                 default:
                     break;
-            }
-            
-        }
-            
+                }
+            }                 
         if (depth === 1) this.app.scene.add(group);
-
         return group;
     }
 
