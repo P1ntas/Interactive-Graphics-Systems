@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 <yaf> 
-
-	<!-- Credits of the original file go to Group 1, class 1 of course LAIG school year 2013/2014, FEUP, University of Porto -->
 	
     <globals background="0 0 0 1" ambient="0 0 0 1" /> 
 
-    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="1000.0" />
+    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
 
     <cameras initial="cam1" > 
         <perspective id="cam1" 
@@ -79,7 +77,11 @@
     </materials> 
 
     <graph rootid="scene"> 
-		
+
+		<lod id="demo" near="0" far="1000" > 
+            <noderef id="ball" mindist="20"/>
+        </lod>
+
 		<node id="scene"> 
             <children> 
 				<noderef id="floor" /> 
@@ -87,8 +89,7 @@
                 <noderef id="goal1" /> 
                 <noderef id="ball" /> 
                 <noderef id="lightSystem" /> 
-               
-
+            
 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 1 1" 

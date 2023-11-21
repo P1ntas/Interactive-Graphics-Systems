@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
+import { MyPolygon } from './MyPolygon.js'
 /**
  *  This class contains the contents of out application
  */
@@ -19,7 +20,7 @@ class MyContents  {
         this.lights = [];
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/demo/demo.xml");	
+		this.reader.open("scenes/scene.xml");	
     }
 
     /**
@@ -459,30 +460,26 @@ class MyContents  {
         this.app.scene.add( light1 );
         this.app.scene.fog = new THREE.Fog(data.fog.color, data.fog.near, data.fog.far);
 
-        //console.log(data.skyboxes["default"])
-
-        let skybox = new THREE.BoxGeometry(data.skyboxes["default"].size[0], data.skyboxes["default"].size[1], 
-                                            data.skyboxes["default"].size[2])  
+        let skybox = new THREE.BoxGeometry(
+            data.skyboxes["default"].size[0],
+            data.skyboxes["default"].size[1], 
+            data.skyboxes["default"].size[2]
+        )
         
-        //console.log(data.skyboxes["default"])
+        
+        console.log(data.skyboxes["default"]);
 
-        /*let skyTexture = new THREE.CubeTextureLoader().load(data.skyboxes["default"].right, data.skyboxes["default"].left, data.skyboxes["default"].up, data.skyboxes["default"].down,
-                                data.skyboxes["default"].front, data.skyboxes["default"].back)
+        let skyMaterial = [
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide}),
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
+            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
+        ];
 
-        let skyMaterial = new THREE.MeshPhongMaterial({envMap: skyTexture, side: THREE.BackSide});
-
-        let skyMesh = new THREE.Mesh(skybox, skyMaterial);*/
-
-        let skyMaterial = [new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide})];
-
+        console.log(skyMaterial);
         let skyMesh = new THREE.Mesh(skybox, skyMaterial);
-
-        //skyMesh.position.set(data.skyboxes["default"].center[0], data.skyboxes["default"].center[1], data.skyboxes["default"].center[2]);
 
         this.app.scene.add(skyMesh);
 
