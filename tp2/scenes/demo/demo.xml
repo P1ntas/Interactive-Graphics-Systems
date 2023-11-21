@@ -148,12 +148,14 @@
 
     <graph rootid="scene"> 
         <lod id="demo" near="0" far="1000" > 
-            <noderef id="rectangle1" mindist="10" />
-            <noderef id="sphere" mindist="20"/>
+            <noderef id="sphere" mindist="5"/>
+            <noderef id="rectangle2" mindist="20" />
         </lod>
 		
 		<node id="scene" castshadows = "true" receiveshadows="true"> 
             <children> 
+
+                <noderef id="test" />
                 <!-- <noderef id="leftWall" /> 
 				<noderef id="rightWall" /> 
 				<noderef id="floor" /> 
@@ -213,6 +215,13 @@
             </children> 
         </node>
 
+        <node id="test">
+            <children>
+                <lodref id="demo" />
+            </children>
+            
+        </node>
+
         <node id="sphere">
             <transforms>
                 <translate value3="0 0 0.5" />
@@ -235,7 +244,7 @@
                 <primitive>          
                     <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
                 </primitive> 
-                <lodref id="demo" />
+                
             </children> 
         </node>
 		

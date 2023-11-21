@@ -19,7 +19,7 @@ class MyContents  {
         this.lights = [];
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/scene.xml");	
+		this.reader.open("scenes/demo/demo.xml");	
     }
 
     /**
@@ -140,10 +140,10 @@ class MyContents  {
             materialId = node.materialIds[0];
         }
         if (node.castShadows !== undefined) {
-            castShadows = node.castShadows
+            //castShadows = node.castShadows
         }
         if (node.receiveShadows !== undefined) {
-            receiveShadows = node.receiveShadows
+            //receiveShadows = node.receiveShadows
         }
 
         if (materialId) {
@@ -225,8 +225,8 @@ class MyContents  {
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
-                                    mesh.castShadow = castShadows
-                                    mesh.receiveShadow = receiveShadows
+                                    //mesh.castShadow = castShadows
+                                    //mesh.receiveShadow = receiveShadows
                                     //console.log(node)
                                     if (node.loaded) group.add(mesh);
                                     
@@ -424,15 +424,19 @@ class MyContents  {
                 case "lod": 
                     let lod = new THREE.LOD();
                     findLod = true;
-                    for (let childLodIdx in child.children) {
+                    console.log(child.children);
+                    child.children?.forEach(nodeChildren => {
                         let childLodGroup = new THREE.Group();
 
-                        for(let i in childLodIdx.node.children) {
-                            const childMesh = this.traverseNode(i, i.id, depth + 1, materialId);
+                        nodeChildren.node.children.forEach( i => {
+                            console.log(nodeChildren.node);
+                            const childMesh = this.traverseNode(data, nodeChildren.node.id, depth + 1, materialId);
+                            console.log(childMesh);
                             childLodGroup.add(childMesh);
-                        }
-                        lod.addLevel(childLodGroup, childLod['mindist']);
-                    }
+                        })
+                        console.log(childLodGroup, nodeChildren.mindist);
+                        lod.addLevel(childLodGroup, nodeChildren.mindist);
+                    })
                     
                     group.add(lod);
                     break;   
@@ -441,7 +445,10 @@ class MyContents  {
                     break;
                 }
             }                 
-        if (depth === 1) this.app.scene.add(group);
+        if (depth === 1){
+            console.log(group);
+            this.app.scene.add(group);
+        }
         return group;
     }
 
