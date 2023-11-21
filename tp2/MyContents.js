@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
-import { MyPolygon } from './MyPolygon.js';
+import { MyPolygon } from './MyPolygon.js'
 /**
  *  This class contains the contents of out application
  */
@@ -33,6 +33,7 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
+
     }
 
     /**
@@ -126,9 +127,11 @@ class MyContents  {
         }
     }
 
-    traverseNode(data, nodeId, depth=0, materialId = null, castShadows = null, receiveShadows) {
-        
+    traverseNode(data, nodeId, depth=0, materialId = null) {
+        let findLod = false;
         let node = data.nodes[nodeId];
+
+        console.log(node);
         
         if (!node) return;
         //console.log(node)
@@ -138,10 +141,10 @@ class MyContents  {
             materialId = node.materialIds[0];
         }
         if (node.castShadows !== undefined) {
-            castShadows = node.castShadows
+            //castShadows = node.castShadows
         }
         if (node.receiveShadows !== undefined) {
-            receiveShadows = node.receiveShadows
+            //receiveShadows = node.receiveShadows
         }
 
         if (materialId) {
@@ -202,7 +205,7 @@ class MyContents  {
                 case "node":
                     if (!child.materialIds) {
                         child.materialIds = []
-                        child.materialIds.push(node[materialIds[0]])
+                        child.materialIds.push(node.materialIds[0])
                     }
                     const childGroup = this.traverseNode(data, child.id, depth + 1, materialId);
                     if (childGroup) group.add(childGroup);
@@ -223,8 +226,8 @@ class MyContents  {
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
-                                    mesh.castShadow = castShadows
-                                    mesh.receiveShadow = receiveShadows
+                                    //mesh.castShadow = castShadows
+                                    //mesh.receiveShadow = receiveShadows
                                     //console.log(node)
                                     if (node.loaded) group.add(mesh);
                                     
@@ -275,6 +278,7 @@ class MyContents  {
                                 //console.log(this.materials[node.materialIds[0]])
                                 
                                 mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                
                                 mesh.position.x += (child.representations[0].xyz2[0] + child.representations[0].xyz1[0] 
                                     + child.representations[0].xyz3[0]) / 3;
                                 mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1] 
@@ -417,18 +421,35 @@ class MyContents  {
                     if (child.enabled) this.app.scene.add(directionalLight);
                     this.lights.push(directionalLight);
                     break;
-
                 
+                case "lod": 
+                    let lod = new THREE.LOD();
+                    findLod = true;
+                    console.log(child.children);
+                    child.children?.forEach(nodeChildren => {
+                        let childLodGroup = new THREE.Group();
 
+                        nodeChildren.node.children.forEach( i => {
+                            console.log(nodeChildren.node);
+                            const childMesh = this.traverseNode(data, nodeChildren.node.id, depth + 1, materialId);
+                            console.log(childMesh);
+                            childLodGroup.add(childMesh);
+                        })
+                        console.log(childLodGroup, nodeChildren.mindist);
+                        lod.addLevel(childLodGroup, nodeChildren.mindist);
+                    })
+                    
+                    group.add(lod);
+                    break;   
+                
                 default:
                     break;
-            }
-            
+                }
+            }                 
+        if (depth === 1){
+            console.log(group);
+            this.app.scene.add(group);
         }
-            
-        
-        if (depth === 1) this.app.scene.add(group);
-
         return group;
     }
 
@@ -439,47 +460,45 @@ class MyContents  {
         this.app.scene.add( light1 );
         this.app.scene.fog = new THREE.Fog(data.fog.color, data.fog.near, data.fog.far);
 
-        //console.log(data.skyboxes["default"])
+        let skybox = new THREE.BoxGeometry(
+            data.skyboxes["default"].size[0],
+            data.skyboxes["default"].size[1], 
+            data.skyboxes["default"].size[2]
+        )
+        console.log('data:', data.skyboxes["default"].up);
 
-        let skybox = new THREE.BoxGeometry(data.skyboxes["default"].size[0], data.skyboxes["default"].size[1], 
-                                            data.skyboxes["default"].size[2])  
-        
-        //console.log(data.skyboxes["default"])
-
-        /*let skyTexture = new THREE.CubeTextureLoader().load(data.skyboxes["default"].right, data.skyboxes["default"].left, data.skyboxes["default"].up, data.skyboxes["default"].down,
-                                data.skyboxes["default"].front, data.skyboxes["default"].back)
-
-        let skyMaterial = new THREE.MeshPhongMaterial({envMap: skyTexture, side: THREE.BackSide});
-
-        let skyMesh = new THREE.Mesh(skybox, skyMaterial);*/
-
-        let skyMaterial = [new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
-                new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide})];
+        let skyMaterial = [
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide}),
+        ];
 
         let skyMesh = new THREE.Mesh(skybox, skyMaterial);
-
-        //skyMesh.position.set(data.skyboxes["default"].center[0], data.skyboxes["default"].center[1], data.skyboxes["default"].center[2]);
 
         this.app.scene.add(skyMesh);
 
         let textures = {};
 
         for (var key in data.textures) {
-
-            let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
-            texture.wrapS = THREE.ClampToEdgeWrapping
-            texture.wrapT = THREE.ClampToEdgeWrapping
-    
-
-            textures[key] = texture;
-            //console.log(key);
+            if(data.textures[key].isVideo) {
+                this.createHtmlVideoElement(data.textures[key].id, data.textures[key].filepath);
+                const video = document.getElementById(data.textures[key].id);
+                let texture = new THREE.VideoTexture(video);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                textures[key] = texture;
+            } else {
+                let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
+                texture.wrapS = THREE.ClampToEdgeWrapping
+                texture.wrapT = THREE.ClampToEdgeWrapping
+                textures[key] = texture;
+            }
         }
+
         for (var key in data.materials) {
-            //console.log(data.materials[key]);
+            
             let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
                                         emissive: data.materials[key].emissive, 
                                         specular: data.materials[key].specular, 
@@ -487,10 +506,12 @@ class MyContents  {
                                         map: textures[data.materials[key].textureref] });
 
             if (material.map) material.map.repeat.set(data.materials[key].texlength_s || 1, data.materials[key].texlength_t || 1);
-
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;
             if (data.materials[key].wireframe) material.wireframe = data.materials[key].wireframe;
             if (data.materials[key].shading === "flat") material.flatShading = true;
+            if (data.materials[key].bumpref) {
+                material.bumpMap = textures[data.materials[key].bumpref];
+            };
             this.materials[data.materials[key].id] = material;
         }
         
@@ -539,6 +560,23 @@ class MyContents  {
 
     update() {
         
+    }
+
+    createHtmlVideoElement(id, path) {
+        const videoElement = document.createElement("video");
+        videoElement.style.display = "none";
+        videoElement.id = id;
+        videoElement.autoplay = true;
+        videoElement.muted = true;
+        videoElement.preload = "auto";
+        videoElement.width = 640;
+        videoElement.height = 264;
+        videoElement.loop = true;
+        const sourceElement = document.createElement("source");
+        sourceElement.src = path;
+        sourceElement.type = "video/mp4";
+        videoElement.appendChild(sourceElement);
+        document.body.appendChild(videoElement);
     }
 }
 

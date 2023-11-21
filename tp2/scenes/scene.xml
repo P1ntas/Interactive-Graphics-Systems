@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 <yaf> 
-
-	<!-- Credits of the original file go to Group 1, class 1 of course LAIG school year 2013/2014, FEUP, University of Porto -->
 	
     <globals background="0 0 0 1" ambient="0 0 0 1" /> 
 
-    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="1000.0" />
+    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
 
     <cameras initial="cam1" > 
         <perspective id="cam1" 
@@ -31,9 +29,12 @@
 		<texture id="floorTex" filepath="scenes/textures/football_pitch.avif" />
         <texture id="ballTex" filepath="scenes/textures/ball.jpg" />
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
+        <texture id="grassTex" filepath="scenes/textures/grass.jpg" />
+        <texture id="grassBumpTex" filepath="scenes/textures/grass_bump.png" />
+        <texture id="goalVideoTex" isVideo="true" filepath="scenes/textures/videos/goalVideo.mp4"/>
     </textures> 
 
-    <skybox size="150 150 150" center="0 0 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.webp" down="./scenes/textures/sky.webp" left="./scenes/textures/sky.webp" right="./scenes/textures/sky.webp" front="./scenes/textures/sky.webp" back="./scenes/textures/sky.webp"/>
+    <skybox size="250 250 250" center="100 100 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.png" down="./scenes/textures/sky.png" left="./scenes/textures/sky.png" right="./scenes/textures/sky.png" front="./scenes/textures/sky.png" back="./scenes/textures/sky.png"/>
 
     <materials> 
 		
@@ -75,11 +76,37 @@
             texlength_s="1" 
             texlength_t="1"
             twosided = "true" />
+
+            <material id="grassApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="grassTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"
+            bumpref = "grassBumpTex"
+            bumpscale = "0.5" />
+
+            <material id="goalVideoApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="goalVideoTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "false" />
 			
     </materials> 
 
     <graph rootid="scene"> 
-		
+
+		<lod id="demo" near="0" far="1000" > 
+            <noderef id="ball" mindist="20"/>
+        </lod>
+
 		<node id="scene"> 
             <children> 
 				<noderef id="floor" /> 
@@ -87,8 +114,7 @@
                 <noderef id="goal1" /> 
                 <noderef id="ball" /> 
                 <noderef id="lightSystem" /> 
-               
-
+            
 
                 <pointlight id="light1" enabled="true" 
                     color="0.5 0.6 1 1" 
@@ -462,7 +488,7 @@
 				<rotate value3="-90 0.0 0.0" />
             </transforms> 
 
-			<materialref id="floorApp" />
+			<materialref id="grassApp" />
 			
             <children>             
                 <primitive>
