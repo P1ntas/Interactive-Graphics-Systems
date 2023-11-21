@@ -31,7 +31,7 @@
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
     </textures> 
 
-    <skybox size="150 150 150" center="0 0 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.webp" down="./scenes/textures/sky.webp" left="./scenes/textures/sky.webp" right="./scenes/textures/sky.webp" front="./scenes/textures/sky.webp" back="./scenes/textures/sky.webp"/>
+    <skybox size="150 150 150" center="20 20 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.png" down="./scenes/textures/sky.png" left="./scenes/textures/sky.png" right="./scenes/textures/sky.png" front="./scenes/textures/sky.png" back="./scenes/textures/sky.png"/>
 
     <materials> 
 		

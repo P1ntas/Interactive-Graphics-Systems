@@ -465,36 +465,34 @@ class MyContents  {
             data.skyboxes["default"].size[1], 
             data.skyboxes["default"].size[2]
         )
-        
-        
-        console.log(data.skyboxes["default"]);
+        console.log('data:', data.skyboxes["default"].up);
 
         let skyMaterial = [
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide}),
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
-            new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.DoubleSide}),
         ];
 
-        console.log(skyMaterial);
         let skyMesh = new THREE.Mesh(skybox, skyMaterial);
 
         this.app.scene.add(skyMesh);
 
         let textures = {};
+        console.log('Textures:' , data.textures);
 
         for (var key in data.textures) {
-
+           
             let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
             texture.wrapS = THREE.ClampToEdgeWrapping
             texture.wrapT = THREE.ClampToEdgeWrapping
-    
 
             textures[key] = texture;
             //console.log(key);
         }
+
         for (var key in data.materials) {
             //console.log(data.materials[key]);
             let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
