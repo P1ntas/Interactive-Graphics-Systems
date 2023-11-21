@@ -468,12 +468,12 @@ class MyContents  {
         console.log('data:', data.skyboxes["default"].up);
 
         let skyMaterial = [
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.DoubleSide}),
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.DoubleSide}),
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.DoubleSide}),
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.DoubleSide}),
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.DoubleSide}),
-            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].down), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].left), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].right), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].front), side: THREE.BackSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].back), side: THREE.BackSide}),
         ];
 
         let skyMesh = new THREE.Mesh(skybox, skyMaterial);
@@ -481,20 +481,24 @@ class MyContents  {
         this.app.scene.add(skyMesh);
 
         let textures = {};
-        console.log('Textures:' , data.textures);
 
         for (var key in data.textures) {
-           
-            let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
-            texture.wrapS = THREE.ClampToEdgeWrapping
-            texture.wrapT = THREE.ClampToEdgeWrapping
-
-            textures[key] = texture;
-            //console.log(key);
+            if(data.textures[key].isVideo) {
+                this.createHtmlVideoElement(data.textures[key].id, data.textures[key].filepath);
+                const video = document.getElementById(data.textures[key].id);
+                let texture = new THREE.VideoTexture(video);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                textures[key] = texture;
+            } else {
+                let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
+                texture.wrapS = THREE.ClampToEdgeWrapping
+                texture.wrapT = THREE.ClampToEdgeWrapping
+                textures[key] = texture;
+            }
         }
 
         for (var key in data.materials) {
-            //console.log(data.materials[key]);
+            
             let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
                                         emissive: data.materials[key].emissive, 
                                         specular: data.materials[key].specular, 
@@ -502,10 +506,12 @@ class MyContents  {
                                         map: textures[data.materials[key].textureref] });
 
             if (material.map) material.map.repeat.set(data.materials[key].texlength_s || 1, data.materials[key].texlength_t || 1);
-
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;
             if (data.materials[key].wireframe) material.wireframe = data.materials[key].wireframe;
             if (data.materials[key].shading === "flat") material.flatShading = true;
+            if (data.materials[key].bumpref) {
+                material.bumpMap = textures[data.materials[key].bumpref];
+            };
             this.materials[data.materials[key].id] = material;
         }
         
@@ -554,6 +560,23 @@ class MyContents  {
 
     update() {
         
+    }
+
+    createHtmlVideoElement(id, path) {
+        const videoElement = document.createElement("video");
+        videoElement.style.display = "none";
+        videoElement.id = id;
+        videoElement.autoplay = true;
+        videoElement.muted = true;
+        videoElement.preload = "auto";
+        videoElement.width = 640;
+        videoElement.height = 264;
+        videoElement.loop = true;
+        const sourceElement = document.createElement("source");
+        sourceElement.src = path;
+        sourceElement.type = "video/mp4";
+        videoElement.appendChild(sourceElement);
+        document.body.appendChild(videoElement);
     }
 }
 

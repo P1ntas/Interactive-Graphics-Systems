@@ -29,9 +29,12 @@
 		<texture id="floorTex" filepath="scenes/textures/football_pitch.avif" />
         <texture id="ballTex" filepath="scenes/textures/ball.jpg" />
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
+        <texture id="grassTex" filepath="scenes/textures/grass.jpg" />
+        <texture id="grassBumpTex" filepath="scenes/textures/grass_bump.png" />
+        <texture id="goalVideoTex" isVideo="true" filepath="scenes/textures/videos/goalVideo.mp4"/>
     </textures> 
 
-    <skybox size="150 150 150" center="20 20 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.png" down="./scenes/textures/sky.png" left="./scenes/textures/sky.png" right="./scenes/textures/sky.png" front="./scenes/textures/sky.png" back="./scenes/textures/sky.png"/>
+    <skybox size="250 250 250" center="100 100 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.png" down="./scenes/textures/sky.png" left="./scenes/textures/sky.png" right="./scenes/textures/sky.png" front="./scenes/textures/sky.png" back="./scenes/textures/sky.png"/>
 
     <materials> 
 		
@@ -73,6 +76,28 @@
             texlength_s="1" 
             texlength_t="1"
             twosided = "true" />
+
+            <material id="grassApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="grassTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true"
+            bumpref = "grassBumpTex"
+            bumpscale = "0.5" />
+
+            <material id="goalVideoApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="0.8 0.8 0.8 1.0" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="goalVideoTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "false" />
 			
     </materials> 
 
@@ -463,7 +488,7 @@
 				<rotate value3="-90 0.0 0.0" />
             </transforms> 
 
-			<materialref id="floorApp" />
+			<materialref id="grassApp" />
 			
             <children>             
                 <primitive>
