@@ -44,10 +44,19 @@ class MyContents  {
         this.onAfterSceneLoadedAndBeforeRender(data);
     }
 
+    /**
+     * Logs the output of an object with indentation.
+     * @param {Object} obj The object to log.
+     * @param {number} indent The indentation level for formatting the output.
+     */
     output(obj, indent = 0) {
         console.log("" + new Array(indent * 4).join(' ') + " - " + obj.type + " " + (obj.id !== undefined ? "'" + obj.id + "'" : ""))
     }
 
+    /**
+     * Called after scene data is loaded but before rendering. Sets up materials, cameras, and traverses the scene graph.
+     * @param {MySceneData} data The entire scene data object.
+     */
     onAfterSceneLoadedAndBeforeRender(data) {
 
         this.setupMaterials(data);
@@ -60,6 +69,14 @@ class MyContents  {
         }
     }
 
+    /**
+     * Traverses each node in the scene graph to build the scene.
+     * @param {MySceneData} data The scene data.
+     * @param {string} nodeId The current node's ID.
+     * @param {number} depth The depth of the node in the scene graph.
+     * @param {string} materialId The ID of the material used for rendering the node.
+     * @returns {THREE.Group} The group containing all the children of the current node.
+     */
     traverseNode(data, nodeId, depth=0, materialId = null) {
         let findLod = false;
         let node = data.nodes[nodeId];
@@ -349,6 +366,11 @@ class MyContents  {
         return group;
     }
 
+    /**
+     * Builds mipmaps for a texture if provided.
+     * @param {Object} textureInfo Information about the texture.
+     * @param {THREE.Texture} texture The texture to generate mipmaps for.
+     */
     buildMipmap(textureInfo, texture) {
     texture.generateMipmaps = true;
     
@@ -385,7 +407,10 @@ class MyContents  {
         }
     }
 
-
+    /**
+     * Sets up materials for the scene using provided data.
+     * @param {MySceneData} data The scene data containing materials information.
+     */
     setupMaterials(data) {
         this.app.scene.background = data.options.background;
         const light1 = new THREE.AmbientLight( data.options.ambient );
@@ -453,6 +478,10 @@ class MyContents  {
         
     }
 
+    /**
+     * Sets up cameras for the scene using provided data.
+     * @param {MySceneData} data The scene data containing camera information.
+     */
     setupCameras(data) {
  
         for (var key in data.cameras) {
@@ -493,10 +522,18 @@ class MyContents  {
         }
     }
 
+    /**
+     * Update function, to be called for updating the state of contents, if necessary.
+     */
     update() {
         
     }
 
+    /**
+     * Creates an HTML video element for textures that are videos.
+     * @param {string} id The ID to assign to the video element.
+     * @param {string} path The file path of the video.
+     */
     createHtmlVideoElement(id, path) {
         const videoElement = document.createElement("video");
         videoElement.id = id;

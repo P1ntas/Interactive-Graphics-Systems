@@ -13,33 +13,42 @@ class MyPolygon extends THREE.BufferGeometry {
         this.radius = radius;
         this.slices = slices;
         this.stacks = stacks;
+
+        // Initialize the buffers for geometry.
         this.initBuffers();
     }
 
+    /**
+     * Initializes buffers for the polygon geometry.
+     */
     initBuffers() {
+        // Arrays to store vertices, indices, normals, and texture coordinates.
         const vertices = [];
         const indices = [];
         const normals = [];
         const uvs = [];
 
+        // Calculate vertices for each stack and slice.
         for (let i = 0; i <= this.stacks; i++) {
-            // Calculate the radius for this stack
+
             const stackRadius = (this.radius / this.stacks) * i;
 
+            // Loop through each stack and slice to calculate vertices.
             for (let j = 0; j <= this.slices; j++) {
-                // Angle for this slice
+
                 const sliceAngle = j * 2 * Math.PI / this.slices;
                 const x = stackRadius * Math.cos(sliceAngle);
                 const y = stackRadius * Math.sin(sliceAngle);
 
                 vertices.push(x, y, 0);
-                normals.push(0, 0, 1); // Normal facing up
+                normals.push(0, 0, 1);
                 uvs.push((x / this.radius) / 2 + 0.5, (y / this.radius) / 2 + 0.5);
             }
         }
 
-        // Creating two triangles for each quad in the grid
+        // Create faces (triangles) using calculated vertices.
         for (let i = 0; i < this.stacks; i++) {
+            // Loop to create two triangles for each quad in the grid.
             for (let j = 0; j < this.slices; j++) {
                 const first = i * (this.slices + 1) + j;
                 const second = first + this.slices + 1;
@@ -49,6 +58,7 @@ class MyPolygon extends THREE.BufferGeometry {
             }
         }
 
+        // Assign the calculated arrays to the BufferGeometry.
         this.setIndex(indices);
         this.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         this.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
