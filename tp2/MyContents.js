@@ -478,6 +478,8 @@ class MyContents  {
 
         let skyMesh = new THREE.Mesh(skybox, skyMaterial);
 
+        skyMesh.position.set(data.skyboxes["default"].center[0], data.skyboxes["default"].center[1], data.skyboxes["default"].center[2]);
+
         this.app.scene.add(skyMesh);
 
         let textures = {};

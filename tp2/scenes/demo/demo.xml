@@ -332,7 +332,8 @@
 				<noderef id="rectangle6" />
             </children> 
         </node>
-		
+
+
 		<node id="leg">
 			<transforms>
 				<scale value3="0.06 0.92 0.06" />
