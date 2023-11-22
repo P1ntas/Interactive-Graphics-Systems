@@ -50,71 +50,6 @@ class MyContents  {
     }
 
     onAfterSceneLoadedAndBeforeRender(data) {
-       
-        // refer to descriptors in class MySceneData.js
-        // to see the data structure for each item
-
-        /*this.output(data.options)
-
-        // first and only skybox is called "default"
-        this.output(data.skyboxes["default"])
-        console.log("textures:")
-        for (var key in data.textures) {
-            let texture = data.textures[key]
-            this.output(texture, 1)
-        }
-
-        console.log("materials:")
-        for (var key in data.materials) {
-            let material = data.materials[key]
-            this.output(material, 1)
-        }
-
-        console.log("cameras:")
-        for (var key in data.cameras) {
-            let camera = data.cameras[key]
-            this.output(camera, 1)
-        }
-
-        console.log("nodes:")
-        for (var key in data.nodes) {
-            let node = data.nodes[key]
-            this.output(node, 1)
-            if (node.loaded === false) {
-                console.error("" + new Array(2 * 4).join(' ') + " not loaded. Possibly refered as a node child but not defined in scene.")
-            }
-            for (let i=0; i< node.children.length; i++) {
-                let child = node.children[i]
-                if (child.type === "primitive") {
-                    console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + " with "  + child.representations.length + " " + child.subtype + " representation(s)")
-                    if (child.subtype === "nurbs") {
-                        console.log("" + new Array(3 * 4).join(' ') + " - " + child.representations[0].controlpoints.length + " control points")
-                    }
-                }
-                else
-                if (child.type === "lodref") {
-                    console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + ", id "  + child.id)                    
-                }
-                else {
-                    this.output(child, 2)
-                }
-            }
-        }
-
-        console.log("lods:")
-        for (var key in data.lods) {
-            let lod = data.lods[key]
-            this.output(lod, 1)
-            if (lod.loaded === false) {
-                console.error("" + new Array(2 * 4).join(' ') + " not loaded. Possibly refered as a node child but not defined in scene.")
-            }
-            for (let i=0; i< lod.children.length; i++) {
-                let child = lod.children[i]
-                console.log("" + new Array(2 * 4).join(' ') + " - " + child.type + " "  + child.node.id + ", min distance: " + child.mindist)
-            }
-        }*/
-
-        //console.log(data.lods)
 
         this.setupMaterials(data);
 
@@ -425,17 +360,13 @@ class MyContents  {
                 case "lod": 
                     let lod = new THREE.LOD();
                     findLod = true;
-                    //console.log(child.children);
                     child.children?.forEach(nodeChildren => {
                         let childLodGroup = new THREE.Group();
 
                         nodeChildren.node.children.forEach( i => {
-                            //console.log(nodeChildren.node);
                             const childMesh = this.traverseNode(data, nodeChildren.node.id, depth + 1, materialId);
-                            //console.log(childMesh);
                             childLodGroup.add(childMesh);
                         })
-                        //console.log(childLodGroup, nodeChildren.mindist);
                         lod.addLevel(childLodGroup, nodeChildren.mindist);
                     })
                     
@@ -452,6 +383,44 @@ class MyContents  {
         }
         return group;
     }
+
+    buildMipmap(textureInfo, texture) {
+        texture.generateMipmaps = true;
+        
+        if (!textureInfo.mipmaps) {
+            let mipmaps = [
+                textureInfo.mipmap0, textureInfo.mipmap1, textureInfo.mipmap2,
+                textureInfo.mipmap3, textureInfo.mipmap4, textureInfo.mipmap5,
+                textureInfo.mipmap6, textureInfo.mipmap7
+            ];
+    
+            mipmaps.forEach((mipmap, level) => {
+                if (mipmap) {
+                    new THREE.TextureLoader().load(
+                        mipmap,
+                        function (mipmapTex) {
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            context.scale(1, 1);
+    
+                            const img = mipmapTex.image;
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+    
+                            context.drawImage(img, 0, 0);
+    
+                            texture.mipmaps[level] = canvas;
+                        },
+                        undefined,
+                        function (error) {
+                            console.error(error);
+                        }
+                    );
+                }
+            });
+        }
+    }
+    
 
 
     setupMaterials(data) {
@@ -485,18 +454,21 @@ class MyContents  {
         let textures = {};
 
         for (var key in data.textures) {
+            let texture = null;
             if(data.textures[key].isVideo) {
                 this.createHtmlVideoElement(data.textures[key].id, data.textures[key].filepath);
                 const video = document.getElementById(data.textures[key].id);
-                let texture = new THREE.VideoTexture(video);
+                texture = new THREE.VideoTexture(video);
                 texture.colorSpace = THREE.SRGBColorSpace;
                 textures[key] = texture;
             } else {
-                let texture = new THREE.TextureLoader().load(data.textures[key].filepath);
+                texture = new THREE.TextureLoader().load(data.textures[key].filepath);
                 texture.wrapS = THREE.ClampToEdgeWrapping
                 texture.wrapT = THREE.ClampToEdgeWrapping
                 textures[key] = texture;
             }
+
+            this.buildMipmap(data.textures[key], texture);
         }
 
         for (var key in data.materials) {
