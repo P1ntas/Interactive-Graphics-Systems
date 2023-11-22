@@ -79,7 +79,7 @@
 
             <material id="grassApp" 
             emissive="0.0 0.0 0.0 1" 
-            color="0.8 0.8 0.8 1.0" 
+            color="0.8 0.8 0.8 1" 
             specular="0 0 0 0" 
             shininess="0" 
             textureref="grassTex" 
@@ -91,20 +91,32 @@
 
             <material id="goalVideoApp" 
             emissive="0.0 0.0 0.0 1" 
-            color="0.8 0.8 0.8 1.0" 
+            color="0.8 0.8 0.8 1" 
             specular="0 0 0 0" 
             shininess="0" 
             textureref="goalVideoTex" 
             texlength_s="1" 
             texlength_t="1" 
             twosided = "false" />
+
+            <material id="netApp"
+            emissive="0.0 0.0 0.0 1" 
+            color="1 1 1 1" 
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="goalVideoTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            wireframe= "true"
+            twosided = "true" />
 			
     </materials> 
 
     <graph rootid="scene"> 
 
-		<lod id="demo" near="0" far="1000" > 
-            <noderef id="ball" mindist="20"/>
+		<lod id="scene" near="0" far="1000" > 
+            <noderef id="ball" mindist="50"/>
+            <noderef id= "ballnode" mindist="100" />
         </lod>
 
 		<node id="scene"> 
@@ -112,9 +124,50 @@
 				<noderef id="floor" /> 
                 <noderef id="goal" /> 
                 <noderef id="goal1" /> 
-                <noderef id="ball" /> 
+                
                 <noderef id="lightSystem" /> 
                 <noderef id="teleVideo" />
+
+                <lodref id="scene" />
+
+                <pointlight id="light1" enabled="true" 
+                    color="0.5 0.6 1 1" 
+                    intensity="1.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="false"
+                    position="33.75 37.3 33.75" 
+                /> 
+
+                <pointlight id="light2" enabled="true" 
+                    color="0.5 0.6 0.8 1" 
+                    intensity="1.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="false"
+                    position="11.25 7.3 3.75"
+                /> 
+                
+                <pointlight id="light3" enabled="true" 
+                    color="0.5 0.6 0.8 1" 
+                    intensity="1.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="false"
+                    position="11.25 7.3 3.75"  
+                /> 
+			              
+                <spotlight id="light4" enabled="true" 
+                    color="1.0 1.0 1.0 1" 
+                    intensity="1.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    position="2 2 4" 
+                    target="0 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
 
                 <directionallight id="light5" enabled="true" 
                     color="1.0 1.0 1.0 1" 
@@ -189,6 +242,21 @@
             <children>             
                 <primitive>
                     <sphere radius="1" slices="32" stacks="16" phistart="0" philength="360" thetastart="0" thetalength="180" />
+                </primitive>
+            </children> 
+        </node>
+
+        <node id="ballnode">
+            <transforms>
+                <rotate value3="135 0.0 0.0" />    
+				<translate value3="25 -0.5 -0.8" />
+            </transforms> 
+
+			<materialref id="ballApp" />
+			
+            <children>             
+                <primitive>
+                    <cylinder base="0.8" top="0.8" height="1.4" slices="32" stacks="32" />
                 </primitive>
             </children> 
         </node>
@@ -349,6 +417,22 @@
             </children> 
         </node>
 
+        <node id="net">
+        <transforms>
+            <rotate value3="0 90 0" />
+            <translate value3="-0.55 -5.8 -1.3" />
+        </transforms>
+        <materialref id="netApp" />
+        <children>
+            <primitive>
+                <rectangle xy1="0 0" xy2="1.3 3.3">
+                    <texcoordgen plane="s" genmode="object_linear" />
+                    <texcoordgen plane="t" genmode="object_linear" />
+                </rectangle>
+            </primitive>
+        </children>
+    </node>
+
         <node id="post1">
 			<transforms>
                 <rotate value3="90 0.0 0.0" />    
@@ -384,7 +468,7 @@
 
         <node id="postLight">
 			<transforms>
-				<rotate value3="89.5 0.0 0.0" />
+				<rotate value3="90 0.0 0.0" />
 				<scale value3="4.5 2.5 3" />
             </transforms> 
 
@@ -510,6 +594,7 @@
                 <noderef id="support1" />
 				<noderef id="support2" />
 				<noderef id="support3" />
+                <noderef id="net" />
             </children> 
         </node>
 
