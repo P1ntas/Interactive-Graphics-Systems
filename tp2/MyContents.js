@@ -53,7 +53,6 @@ class MyContents  {
         this.setupMaterials(data);
 
         this.setupCameras(data);
-        //console.log(data.nodes)
         for (var node in data.nodes) {
             if (data.nodes[node].id === "scene") {
                 this.traverseNode(data, node, 1);
@@ -64,13 +63,9 @@ class MyContents  {
     traverseNode(data, nodeId, depth=0, materialId = null) {
         let findLod = false;
         let node = data.nodes[nodeId];
-
-        //console.log(node);
         
         if (!node) return;
-        //console.log(node)
         let group = new THREE.Group();
-        //console.log(node.materialIds)
         if (node.materialIds && node.materialIds.length > 0) {
             materialId = node.materialIds[0];
         }
@@ -89,11 +84,9 @@ class MyContents  {
         }
     
         if (node.transformations) {
-            //console.log(node.transformations[0])
             if (node.transformations.length > 0) {
                 
                 if (node.transformations.length === 1) {
-                    //console.log(node.transformations[0])
                     if (node.transformations[0].type === 'T') {
                         group.translateX(node.transformations[0].translate[0]);
                         group.translateY(node.transformations[0].translate[1]);
@@ -131,10 +124,8 @@ class MyContents  {
         
         for (let i = 0; i < node.children.length; i++) {
             let child = node.children[i];
-            //console.log(child.type)
 
             let pri, mesh;
-            //if (child.id === 'leg') console.log(child.type)
             switch (child.type) {
                 case "node":
                     if (!child.materialIds) {
@@ -147,27 +138,20 @@ class MyContents  {
                     break;
 
                 case "primitive":
-                    //console.log(child)
                     switch (child.subtype) {
                         case "rectangle":
                             
                             pri = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
-                                child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x)
-
-
-                                    //console.log(this.materials[node.materialIds[0]])
-                                    
+                                child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x);                                    
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
                                     mesh.castShadow = true
                                     mesh.receiveShadow = true
-                                    //console.log(node)
                                     if (node.loaded) group.add(mesh);
                             break;
 
                         case "polygon":
-                            //console.log(child)
                             pri = new MyPolygon(child.representations[0].radius, child.representations[0].slices, child.representations[0].stacks)
                             let color6 = new THREE.MeshPhongMaterial({
                                 vertexColors: true,
@@ -204,9 +188,6 @@ class MyContents  {
                         
                         pri = new THREE.PlaneGeometry(child.representations[0].xyz1, child.representations[0].xyz2,
                                                     child.representations[0].xyz3)
-
-
-                                //console.log(this.materials[node.materialIds[0]])
                                 
                                 mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                 
@@ -229,8 +210,7 @@ class MyContents  {
                                 child.representations[0].base, child.representations[0].height,
                                 child.representations[0].slices, child.representations[0].stacks,child.representations[0].capsclose,
                                 child.representations[0].thetastart, child.representations[0].thetalength)
-                              
-                                    //console.log(this.materials[node.materialIds[0]])
+                            
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.castShadow = node.castShadows
@@ -241,13 +221,10 @@ class MyContents  {
                             break;
                         
                         case "box":
-                            //console.log(child)
                             pri = new THREE.BoxGeometry(child.representations[0].xyz2[0] - child.representations[0].xyz1[0],
                                 child.representations[0].xyz2[1] - child.representations[0].xyz1[1],
                                 child.representations[0].xyz2[2] - child.representations[0].xyz1[2],
                                 child.representations[0].parts_x, child.representations[0].parts_y, child.representations[0].parts_z)
-                               
-                                    //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xyz2[0] + child.representations[0].xyz1[0]) / 2;
@@ -266,8 +243,6 @@ class MyContents  {
                                 child.representations[0].slices, child.representations[0].stacks,child.representations[0].phistart * Math.PI / 180,
                                 child.representations[0].philength * Math.PI / 180,
                                 child.representations[0].thetastart * Math.PI / 180, child.representations[0].thetalength * Math.PI / 180)
-
-                                    //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
 
@@ -284,17 +259,13 @@ class MyContents  {
                                             child.representations[0].controlpoints[i].yy,
                                             child.representations[0].controlpoints[i].zz, 1]
                                 controlPoints.push(points)
-
                             }
-                            //console.log(controlPoints)
-                            //console.log(child.representations[0].controlpoints)
+
                             pri.build(controlPoints, 
                                 child.representations[0].degree_u, child.representations[0].degree_v, 
                                 child.representations[0].parts_u, child.representations[0].parts_v)
 
-                                if (node.materialIds.length > 0) {
-                                    //console.log(this.materials[node.materialIds[0]])
-                                    
+                                if (node.materialIds.length > 0) {                                    
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.castShadow = node.castShadows
                                     mesh.receiveShadow = node.receiveShadows
@@ -337,7 +308,6 @@ class MyContents  {
                     break;
 
                 case "directionallight": 
-                    //console.log(child)
                     const directionalLight = new THREE.DirectionalLight( child.color, child.intensity);
                     directionalLight.position.set(child.position[0], child.position[1], child.position[2]);
                     directionalLight.castShadow = child.castshadow;
@@ -427,7 +397,6 @@ class MyContents  {
             data.skyboxes["default"].size[1], 
             data.skyboxes["default"].size[2]
         )
-        //console.log('data:', data.skyboxes["default"].up);
 
         let skyMaterial = [
             new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
@@ -488,7 +457,6 @@ class MyContents  {
  
         for (var key in data.cameras) {
             let cameraData = data.cameras[key];
-            //console.log(cameraData)
 
             let camera;
 
@@ -531,16 +499,13 @@ class MyContents  {
 
     createHtmlVideoElement(id, path) {
         const videoElement = document.createElement("video");
-        videoElement.style.display = "none";
         videoElement.id = id;
         videoElement.autoplay = true;
         videoElement.muted = true;
-        videoElement.preload = "auto";
-        videoElement.width = 640;
-        videoElement.height = 264;
         videoElement.loop = true;
         const sourceElement = document.createElement("source");
         sourceElement.src = path;
+        videoElement.preload = "auto";
         sourceElement.type = "video/mp4";
         videoElement.appendChild(sourceElement);
         document.body.appendChild(videoElement);

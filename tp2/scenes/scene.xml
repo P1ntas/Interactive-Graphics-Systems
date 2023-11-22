@@ -418,20 +418,17 @@
         </node>
 
         <node id="net">
-        <transforms>
-            <rotate value3="0 90 0" />
-            <translate value3="-0.55 -5.8 -1.3" />
-        </transforms>
-        <materialref id="netApp" />
-        <children>
-            <primitive>
-                <rectangle xy1="0 0" xy2="1.3 3.3">
-                    <texcoordgen plane="s" genmode="object_linear" />
-                    <texcoordgen plane="t" genmode="object_linear" />
-                </rectangle>
-            </primitive>
-        </children>
-    </node>
+            <transforms>  
+				<rotate value3="0 90 0" />
+                <translate value3="-0.55 -5.8 -1.3" />
+            </transforms> 
+            <materialref id="netApp" />
+            <children>             
+                <primitive>
+                    <box xyz1="0 0 0" xyz2="1.3 3.3 0" />
+                </primitive>            
+            </children>
+        </node>
 
         <node id="post1">
 			<transforms>
