@@ -174,7 +174,60 @@
                     intensity="1.0"
                     castshadow="true"
                     position="2 2 4" 
+                />
+
+                <spotlight id="light4" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="45 28 -5" 
+                    target="48 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
                 /> 
+
+                <spotlight id="light1" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="9 29 -5" 
+                    target="3 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
+                <spotlight id="light2" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="14 29 3" 
+                    target="22 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
+                <spotlight id="light2" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="40 29 3" 
+                    target="30 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
             </children> 
         </node>
 
