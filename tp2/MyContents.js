@@ -33,7 +33,6 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
-
     }
 
     /**
@@ -161,13 +160,10 @@ class MyContents  {
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
-                                    //mesh.castShadow = true
-                                    //mesh.receiveShadow = true
+                                    mesh.castShadow = true
+                                    mesh.receiveShadow = true
                                     //console.log(node)
                                     if (node.loaded) group.add(mesh);
-                                    
-                                
-                        
                             break;
 
                         case "polygon":
@@ -199,8 +195,8 @@ class MyContents  {
                               );
 
                             mesh = new THREE.Mesh(pri, color6);
-                            //mesh.castShadow = node.castShadows
-                            //mesh.receiveShadow = node.receiveShadows
+                            mesh.castShadow = node.castShadows
+                            mesh.receiveShadow = node.receiveShadows
                             if (node.loaded) group.add(mesh);
                             break
 
@@ -220,8 +216,8 @@ class MyContents  {
                                     + child.representations[0].xyz3[1]) / 3;
                                 mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2] 
                                     + child.representations[0].xyz3[2]) / 3;
-                                //mesh.castShadow = node.castShadows
-                                //mesh.receiveShadow = node.receiveShadows
+                                mesh.castShadow = node.castShadows
+                                mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -237,8 +233,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
-                                    //mesh.castShadow = node.castShadows
-                                    //mesh.receiveShadow = node.receiveShadows
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                                 
@@ -258,8 +254,8 @@ class MyContents  {
                                     mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
                                     mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
 
-                                    //mesh.castShadow = node.castShadows
-                                    //mesh.receiveShadow = node.receiveShadows
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -275,8 +271,8 @@ class MyContents  {
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
 
-                                    //mesh.castShadow = true
-                                    //mesh.receiveShadow = true
+                                    mesh.castShadow = true
+                                    mesh.receiveShadow = true
                                     if (node.loaded) group.add(mesh);
                             break;
         
@@ -300,8 +296,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
-                                    //mesh.castShadow = node.castShadows
-                                    //mesh.receiveShadow = node.receiveShadows
+                                    mesh.castShadow = node.castShadows
+                                    mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 } 
                                 
@@ -378,49 +374,46 @@ class MyContents  {
                 }
             }                 
         if (depth === 1){
-            //console.log(group);
             this.app.scene.add(group);
         }
         return group;
     }
 
     buildMipmap(textureInfo, texture) {
-        texture.generateMipmaps = true;
-        
-        if (!textureInfo.mipmaps) {
-            let mipmaps = [
-                textureInfo.mipmap0, textureInfo.mipmap1, textureInfo.mipmap2,
-                textureInfo.mipmap3, textureInfo.mipmap4, textureInfo.mipmap5,
-                textureInfo.mipmap6, textureInfo.mipmap7
-            ];
+    texture.generateMipmaps = true;
     
-            mipmaps.forEach((mipmap, level) => {
-                if (mipmap) {
-                    new THREE.TextureLoader().load(
-                        mipmap,
-                        function (mipmapTex) {
-                            const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d');
-                            context.scale(1, 1);
-    
-                            const img = mipmapTex.image;
-                            canvas.width = img.width;
-                            canvas.height = img.height;
-    
-                            context.drawImage(img, 0, 0);
-    
-                            texture.mipmaps[level] = canvas;
-                        },
-                        undefined,
-                        function (error) {
-                            console.error(error);
-                        }
-                    );
+    if (!textureInfo.mipmaps) {
+        let mipmaps = [
+            textureInfo.mipmap0, textureInfo.mipmap1, textureInfo.mipmap2,
+            textureInfo.mipmap3, textureInfo.mipmap4, textureInfo.mipmap5,
+            textureInfo.mipmap6, textureInfo.mipmap7
+        ];
+
+        mipmaps.forEach((mipmap, level) => {
+            if (mipmap) {
+                new THREE.TextureLoader().load(
+                    mipmap,
+                    function (mipmapTex) {
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        context.scale(1, 1);
+
+                        const img = mipmapTex.image;
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+
+                        context.drawImage(img, 0, 0);
+
+                        texture.mipmaps[level] = canvas;
+                    },
+                    undefined,
+                    function (error) {
+                        console.error(error);
+                    });
                 }
             });
         }
     }
-    
 
 
     setupMaterials(data) {
