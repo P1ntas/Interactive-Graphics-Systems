@@ -116,51 +116,65 @@
                 <noderef id="lightSystem" /> 
                 <noderef id="teleVideo" />
 
-                <pointlight id="light1" enabled="true" 
-                    color="0.5 0.6 1 1" 
-                    intensity="1.0"
-                    distance="1000"
-                    decay="2.0"
-                    castshadow="false"
-                    position="33.75 37.3 33.75" 
-                /> 
-
-                <pointlight id="light2" enabled="true" 
-                    color="0.5 0.6 0.8 1" 
-                    intensity="1.0"
-                    distance="1000"
-                    decay="2.0"
-                    castshadow="false"
-                    position="11.25 7.3 3.75"
-                /> 
-                
-                <pointlight id="light3" enabled="true" 
-                    color="0.5 0.6 0.8 1" 
-                    intensity="1.0"
-                    distance="1000"
-                    decay="2.0"
-                    castshadow="false"
-                    position="11.25 7.3 3.75"  
-                /> 
-			              
-                <spotlight id="light4" enabled="true" 
-                    color="1.0 1.0 1.0 1" 
-                    intensity="1.0"
-                    distance="1000"
-                    decay="2.0"
-                    castshadow="true"
-                    position="2 2 4" 
-                    target="0 0 0"
-                    penumbra="1.0"
-                    angle="10.0" 
-                /> 
-
                 <directionallight id="light5" enabled="true" 
                     color="1.0 1.0 1.0 1" 
                     intensity="1.0"
                     castshadow="true"
                     position="2 2 4" 
+                />
+
+                <spotlight id="light4" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="45 28 -5" 
+                    target="48 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
                 /> 
+
+                <spotlight id="light1" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="9 29 -5" 
+                    target="3 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
+                <spotlight id="light2" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="14 29 3" 
+                    target="22 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
+                <spotlight id="light2" enabled="true" 
+                    color="1.0 1.0 0.0 1" 
+                    intensity="1000.0"
+                    distance="1000"
+                    decay="2.0"
+                    castshadow="true"
+                    shadowmapsize="1024"
+                    position="40 29 3" 
+                    target="30 0 0"
+                    penumbra="1.0"
+                    angle="10.0" 
+                /> 
+
             </children> 
         </node>
 

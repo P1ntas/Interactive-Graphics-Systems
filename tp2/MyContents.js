@@ -131,7 +131,7 @@ class MyContents  {
         let findLod = false;
         let node = data.nodes[nodeId];
 
-        console.log(node);
+        //console.log(node);
         
         if (!node) return;
         //console.log(node)
@@ -226,8 +226,8 @@ class MyContents  {
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;
-                                    //mesh.castShadow = castShadows
-                                    //mesh.receiveShadow = receiveShadows
+                                    //mesh.castShadow = true
+                                    //mesh.receiveShadow = true
                                     //console.log(node)
                                     if (node.loaded) group.add(mesh);
                                     
@@ -264,8 +264,8 @@ class MyContents  {
                               );
 
                             mesh = new THREE.Mesh(pri, color6);
-                            mesh.castShadow = node.castShadows
-                            mesh.receiveShadow = node.receiveShadows
+                            //mesh.castShadow = node.castShadows
+                            //mesh.receiveShadow = node.receiveShadows
                             if (node.loaded) group.add(mesh);
                             break
 
@@ -285,8 +285,8 @@ class MyContents  {
                                     + child.representations[0].xyz3[1]) / 3;
                                 mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2] 
                                     + child.representations[0].xyz3[2]) / 3;
-                                mesh.castShadow = node.castShadows
-                                mesh.receiveShadow = node.receiveShadows
+                                //mesh.castShadow = node.castShadows
+                                //mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -302,8 +302,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
-                                    mesh.castShadow = node.castShadows
-                                    mesh.receiveShadow = node.receiveShadows
+                                    //mesh.castShadow = node.castShadows
+                                    //mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                                 
@@ -323,8 +323,8 @@ class MyContents  {
                                     mesh.position.y += (child.representations[0].xyz2[1] + child.representations[0].xyz1[1]) / 2;
                                     mesh.position.z += (child.representations[0].xyz2[2] + child.representations[0].xyz1[2]) / 2;
 
-                                    mesh.castShadow = node.castShadows
-                                    mesh.receiveShadow = node.receiveShadows
+                                    //mesh.castShadow = node.castShadows
+                                    //mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 
                             
@@ -340,8 +340,8 @@ class MyContents  {
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
 
-                                    mesh.castShadow = node.castShadows
-                                    mesh.receiveShadow = node.receiveShadows
+                                    //mesh.castShadow = true
+                                    //mesh.receiveShadow = true
                                     if (node.loaded) group.add(mesh);
                             break;
         
@@ -365,8 +365,8 @@ class MyContents  {
                                     //console.log(this.materials[node.materialIds[0]])
                                     
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
-                                    mesh.castShadow = node.castShadows
-                                    mesh.receiveShadow = node.receiveShadows
+                                    //mesh.castShadow = node.castShadows
+                                    //mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
                                 } 
                                 
@@ -399,7 +399,7 @@ class MyContents  {
 
                     if (child.enabled) {
                         this.app.scene.add(spotLight);
-                        spotLight.target.position.set(0,0,0);
+                        spotLight.target.position.set(child.target[0], child.target[1], child.target[2]);
                         this.app.scene.add(spotLight.target);
                     }
                     this.lights.push(spotLight);
@@ -425,17 +425,17 @@ class MyContents  {
                 case "lod": 
                     let lod = new THREE.LOD();
                     findLod = true;
-                    console.log(child.children);
+                    //console.log(child.children);
                     child.children?.forEach(nodeChildren => {
                         let childLodGroup = new THREE.Group();
 
                         nodeChildren.node.children.forEach( i => {
-                            console.log(nodeChildren.node);
+                            //console.log(nodeChildren.node);
                             const childMesh = this.traverseNode(data, nodeChildren.node.id, depth + 1, materialId);
-                            console.log(childMesh);
+                            //console.log(childMesh);
                             childLodGroup.add(childMesh);
                         })
-                        console.log(childLodGroup, nodeChildren.mindist);
+                        //console.log(childLodGroup, nodeChildren.mindist);
                         lod.addLevel(childLodGroup, nodeChildren.mindist);
                     })
                     
@@ -447,7 +447,7 @@ class MyContents  {
                 }
             }                 
         if (depth === 1){
-            console.log(group);
+            //console.log(group);
             this.app.scene.add(group);
         }
         return group;
@@ -465,7 +465,7 @@ class MyContents  {
             data.skyboxes["default"].size[1], 
             data.skyboxes["default"].size[2]
         )
-        console.log('data:', data.skyboxes["default"].up);
+        //console.log('data:', data.skyboxes["default"].up);
 
         let skyMaterial = [
             new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load(data.skyboxes["default"].up), side: THREE.BackSide}),
