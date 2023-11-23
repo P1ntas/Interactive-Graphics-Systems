@@ -1,60 +1,20 @@
-# sgi-tp2-base
-The starting point of the second assignment of SGI.
+# SGI 2023/2024 - TP1
 
+## Group T06G02
 
-# Getting started
+| Name             | Number    | E-Mail                   |
+| ---------------- | --------- | ------------------------ |
+| Afonso Pinto     | 202008014 | up202008014@edu.fe.up.pt |
+| Inês Oliveira    | 202103343 | up202103343@edu.fe.up.pt |
 
-Considering a code block (for instance class A.js), to load an xml file (in the defined structure) call:
+----
+## Project information
 
-    let reader = new MyFileReader(app, this, *this.onSceneLoaded*);
-    reader.open("<path to xml file>");	
+In this project, we tried to recreate Estádio do Dragão. We have a football field, where we applied advanced textures. We have benches for the players that didn't start. We also added two goals, using wireframes to imitate their nets, and a ball, which is a sphere with a texture. 
+Our stadium is surrounded by a skybox, composed by a football fiels and the stands of the best stadium in the world (Estádio do Dragão). 
+Equipped with best multimedia center in the world, we have a big screen, showing the most important moment in the history of Mankind: <b>Eder's goal</b>. We also invested in a state of the art light system, with 4 spotlights (composed of 8 polygons each).
+Beyond that, we have the necessary lights the scene needs, as well as the cameras implemented in the demo scene.
 
-The last argument in the MyFileReader object call is the name of the method that is to be called when the xml file is loaded and parsed.
+## Issues/Problems
 
-Hence, In the same code block (for instance class A.js) add a function method with the following signature: 
-
-    onSceneLoaded(data) {
-        // do something with the data object
-    }
-
-This method is called once the xml file is loaded and parsed successfully. This method single input argument, *data*, is an object containing the entire scene data object. This document can be traversed according to the rules defined in the section on MySceneData class
-
-
-
-# MyFileServer
-File MyFileServer.js contains the class responsible for the XML parser general functionality. Most of the parsing process is derived from descriptors defined in MySceneData.js. A small part is hardcoded.
-
-> <span style="color: red;">**DO NOT CHANGE MyFileServer.js FILE. IT WILL BE MODIFIED OR REPLACED DURING EVALUATION**</span>
-
-# MySceneData
-File MySceneData.js contains a class with metadata description and, in the end of parsing, contains the full set of objects loaded from the xml scene file. This class has several important object attributes:
-- options: contains the scene options, from the globals section
-- fog: contains the scene fog options, from the fog section
-- materials: associative array/list with the scene described materials
-- textures: associative array/list with the scene described textures
-- cameras: associative array/list with all the cameras in the scene
-- activeCameraId: the id of the active camera
-- nodes: associative array/list with all the scene nodes.
-- rootId: the id of the root node
-
-NOTES: 
-1. for each entity type, there are no repeated ids. For instance, if there are two nodes with the same id, the parser will complain and the scene will not be loaded.
-2. For each loaded entity, the parser will check if all the required attributes are present. If not, the parser will complain and the scene will not be loaded.
-3. For each entity, a descriptor defined in the constructor defines the attribute's name, type, requiredness, default value.
-4. **DO NOT CHANGE MySceneData.js IT WILL BE MODIFIED OR REPLACED DURING EVALUATION**
-
-## Custom attributes
-Use  the custom attribute in the data objects to add further attributes:
-
-
-    let obj = {
-        id: "some id",
-        type: "some type",
-        custom: {
-            attr1: "value1",
-            attr2: "value2"
-        } 
-    }
-
-in the previous object, attr1 and attr2 are custom attributes that were added to the object by the programmer (student), in light its program specific needs.
-
+We found designing and implementing nurbs somewhat difficult.
