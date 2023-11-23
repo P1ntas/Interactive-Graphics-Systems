@@ -269,20 +269,31 @@ class MyContents  {
         
                         case "nurbs":
                             pri = new MyNurbsBuilder(this.app);
-                            let controlPoints = []
-                            for (let i = 0; i < child.representations[0].controlpoints.length; i++) {
+                                                                                   
+                            let controlpoints = [];
+
+                            for (let i = 0; i <  child.representations[0].degree_u + 1; i++) {
+                                const points = [];
+                                for (let j = 0; j <  child.representations[0].degree_v + 1; j++) {
+                                    const point =
+                                        child.representations[0].controlpoints[i * ( child.representations[0].degree_v + 1) + j];
+                                        points.push([point.xx, point.yy, point.zz, 1]);
+                                }
+                                controlpoints.push(points);
+            }
+                            /* for (let i = 0; i < child.representations[0].controlpoints.length; i++) {
                                 let points = [child.representations[0].controlpoints[i].xx, 
                                             child.representations[0].controlpoints[i].yy,
                                             child.representations[0].controlpoints[i].zz, 1]
                                 controlPoints.push(points)
-                            }
+                            } */
 
-                            pri.build(controlPoints, 
+                            let geometry = pri.build(controlpoints, 
                                 child.representations[0].degree_u, child.representations[0].degree_v, 
                                 child.representations[0].parts_u, child.representations[0].parts_v)
 
                                 if (node.materialIds.length > 0) {                                    
-                                    mesh = new THREE.Mesh(pri, this.materials[materialId]);
+                                    mesh = new THREE.Mesh(geometry, this.materials[materialId]);
                                     mesh.castShadow = node.castShadows
                                     mesh.receiveShadow = node.receiveShadows
                                     if (node.loaded) group.add(mesh);
@@ -535,6 +546,7 @@ class MyContents  {
      */
     createHtmlVideoElement(id, path) {
         const videoElement = document.createElement("video");
+        videoElement.style.display = "none";
         videoElement.id = id;
         videoElement.autoplay = true;
         videoElement.muted = true;

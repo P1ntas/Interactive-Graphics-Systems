@@ -26,7 +26,17 @@
 
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
-		<texture id="floorTex" filepath="scenes/textures/football_pitch.avif" />
+        <!-- <texture id="floorTex" filepath="scenes/demo/textures/demo.jpg"
+            mipmaps="false" 
+            mipmap0="scenes/demo/textures/demo1024.jpg"
+            mipmap1="scenes/demo/textures/demo512.jpg"
+            mipmap2="scenes/demo/textures/demo256.jpg"
+            mipmap3="scenes/demo/textures/demo128.jpg"
+            mipmap4="scenes/demo/textures/demo64.jpg"
+            mipmap5="scenes/demo/textures/demo32.jpg"
+            mipmap6="scenes/demo/textures/demo16.jpg"
+            mipmap7="scenes/demo/textures/demo8.jpg"
+        /> -->
         <texture id="ballTex" filepath="scenes/textures/ball.jpg" />
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
         <texture id="grassTex" filepath="scenes/textures/grass.jpg" />
@@ -518,13 +528,41 @@
 
         <node id="television">
             <transforms>
-                <translate value3="0.75 5 0.3" />
-                <rotate value3="0 90 0" />
+                <translate value3="2.7 4.5 0.3" />
+                <rotate value3="0 0 90" />
             </transforms>
             <materialref id="goalVideoApp" />
             <children>
                 <primitive>
-                    <rectangle xy1="-9.5 -0.6" xy2="9.5 8.5" />
+                    <!--<rectangle xy1="-9.5 -0.6" xy2="9.5 8.5" /> -->
+                   <nurbs degree_u="3" degree_v="3" parts_u="20" parts_v="20" distance="0.0">
+                        <controlpoint xx="0" yy="0" zz="8" />
+                        <controlpoint xx="1" yy="0" zz="10" />
+                        <controlpoint xx="9" yy="0" zz="10" />
+                        <controlpoint xx="10" yy="0" zz="8" />
+
+                        <controlpoint xx="-1" yy="1.5" zz="2" />
+                        <controlpoint xx="0" yy="3" zz="2" />
+                        <controlpoint xx="10" yy="3" zz="2" />
+                        <controlpoint xx="11" yy="1.5" zz="2" />
+
+                        <controlpoint xx="-1" yy="1.5" zz="-2" />
+                        <controlpoint xx="0" yy="3" zz="-2" />
+                        <controlpoint xx="10" yy="3" zz="-2" />
+                        <controlpoint xx="11" yy="1.5" zz="-2" />
+
+                        <controlpoint xx="0" yy="0" zz="-8" />
+                        <controlpoint xx="1" yy="0" zz="-10" />
+                        <controlpoint xx="9" yy="0" zz="-10" />
+                        <controlpoint xx="10" yy="0" zz="-8" />
+                    </nurbs>
+
+
+
+
+
+
+
                 </primitive>
             </children>
         </node>
@@ -635,7 +673,7 @@
 
         <node id="goal1">
 			<transforms>
-				<translate value3="54.5 0 10" />
+				<translate value3="52.5 0 10" />
 				<translate value3="0 1.7 0" />
 				<rotate value3="90 0 0" />
 				<scale value3="4.5 2.5 3" />
@@ -789,8 +827,8 @@
 
         <node id="net1">
 			<transforms>
-				<translate value3="51.5 0 4" />
-				<rotate value3="0 0 30" />
+				<translate value3="49 0 4" />
+				<rotate value3="0 0 25" />
             </transforms> 
 
 			<materialref id="netApp" />
@@ -803,7 +841,7 @@
 
         <node id="net2">
 			<transforms>
-				<translate value3="4.5 4 4" />
+				<translate value3="4.5 4.4 4" />
 				<rotate value3="0 0 150" />
             </transforms> 
 
@@ -822,7 +860,7 @@
             </transforms> 
 
 			<materialref id="grassApp" />
-			
+            <!-- <materialref id="floorApp" /> -->
             <children>             
                 <primitive>
                     <rectangle xy1="0 0" xy2="50 30" />
