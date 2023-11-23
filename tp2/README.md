@@ -15,6 +15,15 @@ Our stadium is surrounded by a skybox, composed by a football fiels and the stan
 Equipped with best multimedia center in the world, we have a big screen, showing the most important moment in the history of Mankind: <b>Eder's goal</b>. We also invested in a state of the art light system, with 4 spotlights (composed of 8 polygons each).
 Beyond that, we have the necessary lights the scene needs, as well as the cameras implemented in the demo scene.
 
+Here are some screenshots of the scene:
+![global_Image](image.png)
+
+![wireframes](image-1.png)
+
+![lights_image](image-3.png)
+
+![view_from_above](image-4.png)
+
 ## Issues/Problems
 
 We found designing and implementing nurbs somewhat difficult.
