@@ -157,9 +157,8 @@ class MyContents  {
                 case "primitive":
                     switch (child.subtype) {
                         case "rectangle":
-                            
                             pri = new THREE.PlaneGeometry(child.representations[0].xy2[0] - child.representations[0].xy1[0],
-                                child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations.parts_x, child.representations.parts_x);                                    
+                                child.representations[0].xy2[1] - child.representations[0].xy1[1], child.representations[0].parts_x, child.representations[0].parts_x);                                    
                                     mesh = new THREE.Mesh(pri, this.materials[materialId]);
                                     mesh.position.x += (child.representations[0].xy2[0] + child.representations[0].xy1[0]) / 2;
                                     mesh.position.y += (child.representations[0].xy2[1] + child.representations[0].xy1[1]) / 2;

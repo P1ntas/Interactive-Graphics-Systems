@@ -120,6 +120,17 @@
             texlength_s="1" 
             texlength_t="1"
             twosided = "true" />
+
+            <material id="netApp" 
+            emissive="1 1 1 1" 
+            color="1 1 1 1.0"  
+            specular="1 1 1 1" 
+            shininess="0" 
+            textureref="metalTex" 
+            wireframe ="true"
+            texlength_s="1" 
+            texlength_t="1"
+            twosided = "true" />
 			
     </materials> 
 
@@ -141,6 +152,9 @@
 
                 <noderef id="home-bench" />
                 <noderef id="away-bench" />
+
+                <noderef id="net1" />
+                <noderef id="net2" />
 
                 <lodref id="scene" />
 
@@ -464,6 +478,21 @@
             </children> 
         </node>
 
+
+        <node id="net">
+			<transforms>
+				<rotate value3="0 90 0" />
+            </transforms> 
+
+			<materialref id="netApp" />
+			
+            <children>             
+                <primitive>
+                    <rectangle xy1="0 0" xy2="8 5" parts_x="30" parts_y="10" />
+                </primitive>
+            </children> 
+        </node>
+
         <node id="postLight">
 			<transforms>
 				<rotate value3="90 0.0 0.0" />
@@ -588,7 +617,7 @@
 
         <node id="goal">
 			<transforms>
-				<translate value3="7.5 0 10" />
+				<translate value3="10.5 0 10" />
 				<translate value3="0 1.7 0" />
 				<rotate value3="90 0 0" />
 				<scale value3="4.5 2.5 3" />
@@ -755,6 +784,35 @@
                 <noderef id="bench-support"/> 
             </children>
 
+        </node>
+
+
+        <node id="net1">
+			<transforms>
+				<translate value3="51.5 0 4" />
+				<rotate value3="0 0 30" />
+            </transforms> 
+
+			<materialref id="netApp" />
+			
+            <children>
+                <noderef id="net" />
+            </children>
+        
+        </node>
+
+        <node id="net2">
+			<transforms>
+				<translate value3="4.5 4 4" />
+				<rotate value3="0 0 150" />
+            </transforms> 
+
+			<materialref id="netApp" />
+			
+            <children>
+                <noderef id="net" />
+            </children>
+        
         </node>
 		
 		<node id="floor">
