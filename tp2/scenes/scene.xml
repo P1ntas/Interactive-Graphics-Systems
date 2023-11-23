@@ -31,6 +31,7 @@
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
         <texture id="grassTex" filepath="scenes/textures/grass.jpg" />
         <texture id="grassBumpTex" filepath="scenes/textures/grass_bump.png" />
+        <texture id="woodTex" filepath="scenes/textures/wood.jpeg" />
         <texture id="goalVideoTex" isVideo="true" filepath="scenes/textures/videos/goalVideo.mp4"/>
     </textures> 
 
@@ -68,11 +69,21 @@
             twosided = "true" />
 
             <material id="metalApp" 
-            emissive="0 0 0 1" 
+            emissive="0.1 0.1 0.1 1" 
             color="1 1 1 1.0"  
             specular="0 0 0 1" 
             shininess="0" 
             textureref="metalTex" 
+            texlength_s="1" 
+            texlength_t="1"
+            twosided = "true" />
+
+            <material id="woodApp" 
+            emissive="0.3 0.3 0.3 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 1" 
+            shininess="10" 
+            textureref="woodTex" 
             texlength_s="1" 
             texlength_t="1"
             twosided = "true" />
@@ -127,6 +138,9 @@
                 
                 <noderef id="lightSystem" /> 
                 <noderef id="teleVideo" />
+
+                <noderef id="home-bench" />
+                <noderef id="away-bench" />
 
                 <lodref id="scene" />
 
@@ -552,6 +566,15 @@
             </children> 
         </node>
 
+        <node id="bar">
+
+            <children>        
+                <primitive>
+                    <box xyz1="-0 0 0" xyz2="5 0.1 0.3" />
+                </primitive>
+            </children>
+        </node>
+
         <node id="lightSystem">	
             <children>             
                 <noderef id="postLight1" /> 
@@ -597,6 +620,141 @@
 				<noderef id="support2" />
 				<noderef id="support3" />
             </children> 
+        </node>
+
+        <node id="bench-support1">
+
+        <transforms>
+                <translate value3="0 0.5 1" />
+        </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+
+        </node>
+
+        <node id="bench-support2">
+
+            <transforms>
+                <translate value3="0 -3.5 1" />
+            </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+
+        </node>
+
+        <node id="bench-support3">
+
+        <transforms>
+                <translate value3="0 0.5 0" />
+        </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+
+        </node>
+
+        <node id="bench-support4">
+
+            <transforms>
+                <translate value3="0 -3.5 0" />
+            </transforms>   
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+
+        </node>
+
+        <node id="bench-support">
+            <transforms>
+                <translate value3="1 -2.5 0" />
+                <rotate value3="0 0 90" />
+                <scale value3="0.5 1 1" />
+            </transforms>
+
+            <children>        
+                <noderef id="bench-support1" /> 
+                <noderef id="bench-support2" /> 
+                <noderef id="bench-support3" /> 
+                <noderef id="bench-support4" />
+            </children>
+
+            <materialref id="metalApp" />
+
+        </node>
+
+        <node id="bench-top1">
+        
+            <transforms>
+                <translate value3="0 0 0" />
+            </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+        </node>
+
+        <node id="bench-top2">
+        
+            <transforms>
+                <translate value3="0 0 0.5" />
+            </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+        </node>
+
+        <node id="bench-top3">
+        
+            <transforms>
+                <translate value3="0 0 1" />
+            </transforms>
+
+            <children>        
+                <noderef id="bar" /> 
+            </children>
+        </node>
+
+        <node id="bench-top"> 
+
+            <children>        
+                <noderef id="bench-top1" /> 
+                <noderef id="bench-top2" /> 
+                <noderef id="bench-top3" /> 
+            </children>
+
+            <materialref id="woodApp" />
+
+        </node>
+
+        <node id="home-bench">
+            <transforms>
+                <translate value3="15 2.5 -13" />
+            </transforms>
+
+            <children>        
+                <noderef id="bench-top" /> 
+                <noderef id="bench-support"/> 
+            </children>
+
+        </node>
+
+        <node id="away-bench">
+            <transforms>
+                <translate value3="35 2.5 -13" />
+            </transforms>
+
+            <children>        
+                <noderef id="bench-top" /> 
+                <noderef id="bench-support"/> 
+            </children>
+
         </node>
 		
 		<node id="floor">
