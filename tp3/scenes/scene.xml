@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<yaf> 
+	
+    <globals background="0 0 0 1" ambient="0 0 0 1" /> 
+
+    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
+
+    <cameras initial="cam1" > 
+        <perspective id="cam1" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="15 15 15" 
+            target="0 0.0 0" /> 
+    </cameras> 
+
+    <textures>  
+   
+    </textures> 
+
+    <skybox size="150 100 90" center="25 15 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.jpeg" down="./scenes/textures/sky.jpeg" left="./scenes/textures/dirt.avif" right="./scenes/textures/dirt.avif" front="./scenes/textures/sky.jpeg" back="./scenes/textures/sky.jpeg"/>
+
+    <materials> 
+		
+    </materials> 
+
+    <graph rootid="scene"> 
+
+		<node id="scene"> 
+            <children> 
+			              
+                <directionallight id="light5" enabled="true" 
+                    color="1.0 1.0 1.0 1" 
+                    intensity="1.0"
+                    castshadow="true"
+                    position="2 2 4" 
+                />
+
+            </children> 
+        </node>                
+		
+    </graph> 
+</yaf> 
