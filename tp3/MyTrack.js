@@ -98,7 +98,7 @@ class MyTrack {
         line.visible = this.showLine;
 
         this.curve.rotateZ(Math.PI);
-        this.curve.scale.set(10, 2, 10);
+        this.curve.scale.set(10, 1, 10);
         this.app.scene.add(this.curve);
     }
 }

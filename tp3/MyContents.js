@@ -4,6 +4,7 @@ import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyPolygon } from './MyPolygon.js'
 import { MyTrack } from './MyTrack.js';
+import { MyCar } from './MyCar.js';
 /**
  *  This class contains the contents of out application
  */
@@ -37,6 +38,8 @@ class MyContents  {
 
         let myTrack = new MyTrack(this.app);
         myTrack.createTrack();
+
+        this.car = new MyCar(this.app.scene);
     }
 
     /**
