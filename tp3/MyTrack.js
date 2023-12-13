@@ -11,6 +11,19 @@ class MyTrack {
         this.showLine = true;
         this.closedCurve = false;
         this.curve = null;
+        this.path = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0, 0, -6),
+            new THREE.Vector3(-7, 0, -5),
+            new THREE.Vector3(-7, 0, 5),
+            new THREE.Vector3(-3, 0, 5),
+            new THREE.Vector3(-2, 0, 0),
+            new THREE.Vector3(0, 0, -1),
+            new THREE.Vector3(2, 0, 0),
+            new THREE.Vector3(3, 0, 5),
+            new THREE.Vector3(7, 0, 5),
+            new THREE.Vector3(7, 0, -5),
+            new THREE.Vector3(-0.3, 0, -6)
+        ]);
     }
 
     loadTexture() {
@@ -41,25 +54,9 @@ class MyTrack {
         return new THREE.LineBasicMaterial({ color: 0xff0000 });
     }
 
-    createPath() {
-        return new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, -6),
-            new THREE.Vector3(-7, 0, -5),
-            new THREE.Vector3(-7, 0, 5),
-            new THREE.Vector3(-3, 0, 5),
-            new THREE.Vector3(-2, 0, 0),
-            new THREE.Vector3(0, 0, -1),
-            new THREE.Vector3(2, 0, 0),
-            new THREE.Vector3(3, 0, 5),
-            new THREE.Vector3(7, 0, 5),
-            new THREE.Vector3(7, 0, -5),
-            new THREE.Vector3(-0.3, 0, -6)
-        ]);
-    }
-
-    createGeometry(path) {
+    createGeometry() {
         return new THREE.TubeGeometry(
-            path,
+            this.path,
             this.segments,
             this.width,
             3,
@@ -71,8 +68,8 @@ class MyTrack {
         return new THREE.Mesh(geometry, material);
     }
 
-    createLine(path) {
-        let points = path.getPoints(this.segments);
+    createLine() {
+        let points = this.path.getPoints(this.segments);
         let geometry = new THREE.BufferGeometry().setFromPoints(points);
         let material = this.createLineMaterial();
         return new THREE.Line(geometry, material);
@@ -82,11 +79,10 @@ class MyTrack {
         const texture = this.loadTexture();
         const material = this.createMaterial(texture);
         const wireframeMaterial = this.createWireframeMaterial();
-        const path = this.createPath();
-        const geometry = this.createGeometry(path);
+        const geometry = this.createGeometry(this.path);
         const mesh = this.createMesh(geometry, material);
         const wireframe = this.createMesh(geometry, wireframeMaterial);
-        const line = this.createLine(path);
+        const line = this.createLine(this.path);
 
         this.curve = new THREE.Group();
         this.curve.add(mesh);
