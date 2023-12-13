@@ -4,6 +4,11 @@ class MyCar {
     constructor(scene) {
         this.scene = scene;
         this.box = null;
+        this.keyStates = { w: false, a: false, s: false, d: false };
+        this.velocity = new THREE.Vector3(0, 0, 0);
+        this.acceleration = 0.005; // Rate of speed increase
+        this.maxSpeed = 1; // Maximum speed
+        this.deceleration = 0.1; // Rate of speed decrease when keys are released
         this.createBox();
         this.initEventListeners();
     }
@@ -17,25 +22,40 @@ class MyCar {
     }
 
     initEventListeners() {
-        document.addEventListener('keydown', this.onDocumentKeyDown);
+        document.addEventListener('keydown', this.onKeyDown);
+        document.addEventListener('keyup', this.onKeyUp);
+        this.animate();
     }
 
-    onDocumentKeyDown = (event) => {
-        const keyCode = event.key;
-        switch (keyCode) {
-            case 'w': // Move forward
-                this.box.position.z -= 1;
-                break;
-            case 's': // Move backward
-                this.box.position.z += 1;
-                break;
-            case 'a': // Move left
-                this.box.position.x -= 1;
-                break;
-            case 'd': // Move right
-                this.box.position.x += 1;
-                break;
+    onKeyDown = (event) => {
+        if (['w', 'a', 's', 'd'].includes(event.key)) {
+            this.keyStates[event.key] = true;
         }
+    }
+
+    onKeyUp = (event) => {
+        if (['w', 'a', 's', 'd'].includes(event.key)) {
+            this.keyStates[event.key] = false;
+        }
+    }
+
+    animate = () => {
+        requestAnimationFrame(this.animate);
+        this.updateMovement();
+    }
+
+    updateMovement() {
+        // Update velocity based on key states
+        if (this.keyStates.w) this.velocity.z = Math.max(this.velocity.z - this.acceleration, -this.maxSpeed);
+        else if (this.keyStates.s) this.velocity.z = Math.min(this.velocity.z + this.acceleration, this.maxSpeed);
+        else this.velocity.z *= (1 - this.deceleration); // Natural deceleration
+
+        if (this.keyStates.a) this.velocity.x = Math.max(this.velocity.x - this.acceleration, -this.maxSpeed);
+        else if (this.keyStates.d) this.velocity.x = Math.min(this.velocity.x + this.acceleration, this.maxSpeed);
+        else this.velocity.x *= (1 - this.deceleration); // Natural deceleration
+
+        // Update the box position
+        this.box.position.add(this.velocity);
     }
 }
 
