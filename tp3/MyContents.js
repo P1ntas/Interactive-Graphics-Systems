@@ -3,6 +3,7 @@ import { MyAxis } from './MyAxis.js';
 import { MyFileReader } from './parser/MyFileReader.js';
 import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyPolygon } from './MyPolygon.js'
+import { MyTrack } from './MyTrack.js';
 /**
  *  This class contains the contents of out application
  */
@@ -33,6 +34,9 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
+
+        let myTrack = new MyTrack(this.app);
+        myTrack.createTrack();
     }
 
     /**

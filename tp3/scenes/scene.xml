@@ -18,7 +18,7 @@
    
     </textures> 
 
-    <skybox size="150 100 90" center="25 15 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.jpeg" down="./scenes/textures/sky.jpeg" left="./scenes/textures/sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/sky.jpeg" back="./scenes/textures/sky.jpeg"/>
+    <skybox size="300 300 300" center="0 150 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.jpeg" down="./scenes/textures/sky.jpeg" left="./scenes/textures/sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/sky.jpeg" back="./scenes/textures/sky.jpeg"/>
 
     <materials> 
 		
