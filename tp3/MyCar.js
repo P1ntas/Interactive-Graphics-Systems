@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class MyCar {
-    constructor(scene, app) {
-        this.scene = scene;
+    constructor(app, track) {
+        this.scene = app.scene;
         this.app = app;
+        this.track = track;
         this.box = null;
         this.camera = null;
         this.keyStates = { w: false, a: false, s: false, d: false };

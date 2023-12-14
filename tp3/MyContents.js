@@ -36,10 +36,10 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        let myTrack = new MyTrack(this.app);
-        myTrack.createTrack();
+        let track = new MyTrack(this.app);
+        track.createTrack();
 
-        this.car = new MyCar(this.app.scene, this.app);
+        this.car = new MyCar(this.app, track);
     }
 
     /**
