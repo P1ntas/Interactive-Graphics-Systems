@@ -6,16 +6,16 @@ class MyCar {
         this.scene = app.scene;
         this.app = app;
         this.track = track;
-        this.box = null;
+        this.model = null;
         this.camera = null;
         this.keyStates = { w: false, a: false, s: false, d: false };
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.acceleration = 0.5;
         this.maxSpeed = 0.2;
         this.deceleration = 0.03;
-        this.cameraOffset = new THREE.Vector3(0, 3, -100);
+        this.cameraOffset = new THREE.Vector3(0, 3, 100);
         this.cameraDistance = -5;
-        this.createBox();
+        this.loadModel();
         this.createCamera();
         this.initEventListeners();
     }
@@ -27,34 +27,39 @@ class MyCar {
     }
 
     updateCamera() {
+        if (!this.model) return;
+
         // Define the offset from the car in local space
         const offset = new THREE.Vector3(0, 5, -this.cameraDistance);
 
         // Apply the car's rotation to the offset
-        offset.applyQuaternion(this.box.quaternion);
+        offset.applyQuaternion(this.model.quaternion);
 
         // Calculate the desired camera position in world space
-        const desiredPosition = this.box.position.clone().add(offset);
+        const desiredPosition = this.model.position.clone().add(offset);
 
         // Smoothly interpolate the camera's position
         this.camera.position.lerp(desiredPosition, 0.1);
 
         // Make the camera look at the car
-        this.camera.lookAt(this.box.position);
+        this.camera.lookAt(this.model.position);
 
         // Update controls if they exist
         if (this.app.controls !== null) {
-            this.app.controls.target.copy(this.box.position);
+            this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
         }
     }
 
-    createBox() {
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        this.box = new THREE.Mesh(geometry, material);
-        this.box.position.y += 2;
-        this.scene.add(this.box);
+    loadModel() {
+        const loader = new GLTFLoader();
+        loader.load('./scenes/models/car1.glb', (glb) => {
+            this.model = glb.scene;
+            this.model.position.y += 2; // Adjust position as needed
+            this.scene.add(this.model);
+        }, undefined, (error) => {
+            console.error('An error happened while loading the model', error);
+        });
     }
 
     initEventListeners() {
@@ -82,8 +87,10 @@ class MyCar {
     }
 
     updateMovement() {
+        if (!this.model) return;
+
         let forward = new THREE.Vector3(0, 0, -1);
-        forward.applyQuaternion(this.box.quaternion);
+        forward.applyQuaternion(this.model.quaternion);
 
         let turnAngle = 0;
         const turnRate = 0.05;
@@ -94,7 +101,7 @@ class MyCar {
             turnAngle = turnRate;
         }
 
-        this.box.rotateY(turnAngle);
+        this.model.rotateY(turnAngle);
 
         let isMoving = false;
 
@@ -112,7 +119,7 @@ class MyCar {
 
         this.velocity.clampLength(0, this.maxSpeed);
 
-        this.box.position.add(this.velocity);
+        this.model.position.add(this.velocity);
     }
 }
 
