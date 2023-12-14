@@ -39,7 +39,7 @@ class MyContents  {
         let myTrack = new MyTrack(this.app);
         myTrack.createTrack();
 
-        this.car = new MyCar(this.app.scene);
+        this.car = new MyCar(this.app.scene, this.app);
     }
 
     /**

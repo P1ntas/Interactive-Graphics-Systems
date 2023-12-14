@@ -1,21 +1,56 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class MyCar {
-    constructor(scene) {
+    constructor(scene, app) {
         this.scene = scene;
+        this.app = app;
         this.box = null;
+        this.camera = null;
         this.keyStates = { w: false, a: false, s: false, d: false };
         this.velocity = new THREE.Vector3(0, 0, 0);
-        this.acceleration = 0.005; // Rate of speed increase
-        this.maxSpeed = 1; // Maximum speed
-        this.deceleration = 0.1; // Rate of speed decrease when keys are released
+        this.acceleration = 0.5;
+        this.maxSpeed = 0.2;
+        this.deceleration = 0.03;
+        this.cameraOffset = new THREE.Vector3(0, 3, -100);
+        this.cameraDistance = -5;
         this.createBox();
+        this.createCamera();
         this.initEventListeners();
     }
 
+    createCamera() {
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.set(0, 5, -10);
+        this.app.cameras['Car'] = this.camera;
+    }
+
+    updateCamera() {
+        // Define the offset from the car in local space
+        const offset = new THREE.Vector3(0, 5, -this.cameraDistance);
+
+        // Apply the car's rotation to the offset
+        offset.applyQuaternion(this.box.quaternion);
+
+        // Calculate the desired camera position in world space
+        const desiredPosition = this.box.position.clone().add(offset);
+
+        // Smoothly interpolate the camera's position
+        this.camera.position.lerp(desiredPosition, 0.1);
+
+        // Make the camera look at the car
+        this.camera.lookAt(this.box.position);
+
+        // Update controls if they exist
+        if (this.app.controls !== null) {
+            this.app.controls.target.copy(this.box.position);
+            this.app.controls.update();
+        }
+    }
+
     createBox() {
-        const geometry = new THREE.BoxGeometry(1, 1, 1); // Size of the box
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Green color
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         this.box = new THREE.Mesh(geometry, material);
         this.box.position.y += 2;
         this.scene.add(this.box);
@@ -42,19 +77,40 @@ class MyCar {
     animate = () => {
         requestAnimationFrame(this.animate);
         this.updateMovement();
+        this.updateCamera();
     }
 
     updateMovement() {
-        // Update velocity based on key states
-        if (this.keyStates.w) this.velocity.z = Math.max(this.velocity.z - this.acceleration, -this.maxSpeed);
-        else if (this.keyStates.s) this.velocity.z = Math.min(this.velocity.z + this.acceleration, this.maxSpeed);
-        else this.velocity.z *= (1 - this.deceleration); // Natural deceleration
+        let forward = new THREE.Vector3(0, 0, -1);
+        forward.applyQuaternion(this.box.quaternion);
 
-        if (this.keyStates.a) this.velocity.x = Math.max(this.velocity.x - this.acceleration, -this.maxSpeed);
-        else if (this.keyStates.d) this.velocity.x = Math.min(this.velocity.x + this.acceleration, this.maxSpeed);
-        else this.velocity.x *= (1 - this.deceleration); // Natural deceleration
+        let turnAngle = 0;
+        const turnRate = 0.05;
 
-        // Update the box position
+        if (this.keyStates.d) {
+            turnAngle = -turnRate;
+        } else if (this.keyStates.a) {
+            turnAngle = turnRate;
+        }
+
+        this.box.rotateY(turnAngle);
+
+        let isMoving = false;
+
+        if (this.keyStates.w) {
+            this.velocity.addScaledVector(forward, this.acceleration);
+            isMoving = true;
+        } else if (this.keyStates.s) {
+            this.velocity.addScaledVector(forward, -this.acceleration);
+            isMoving = true;
+        }
+
+        if (!isMoving) {
+            this.velocity.multiplyScalar(1 - this.deceleration);
+        }
+
+        this.velocity.clampLength(0, this.maxSpeed);
+
         this.box.position.add(this.velocity);
     }
 }
