@@ -120,6 +120,31 @@ class MyCar {
         this.velocity.clampLength(0, this.maxSpeed);
 
         this.model.position.add(this.velocity);
+
+        //console.log(this.isOnTrack());
+    }
+
+    isOnTrack(thresholdDistance = 5) { // Adjusted threshold distance
+        if (!this.model) {
+            return false;
+        }
+
+        const carPosXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
+        let minDistance = Infinity;
+        //console.log(minDistance)
+        const trackPoints = this.track.path.getPoints(500); 
+        //console.log(this.model.position);
+        for (let i = 0; i < trackPoints.length; i++) {
+            //console.log(trackPoints[i].z);
+            const pointXZ = new THREE.Vector2(trackPoints[i].x, trackPoints[i].z);
+            const distance = carPosXZ.distanceTo(pointXZ);
+            //console.log(distance);
+            if (distance < minDistance) {
+                minDistance = distance;
+            }
+        }
+
+        return minDistance <= thresholdDistance;
     }
 }
 
