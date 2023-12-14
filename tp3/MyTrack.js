@@ -4,7 +4,7 @@ class MyTrack {
     constructor(app) {
         this.app = app;
         this.segments = 100;
-        this.width = 1;
+        this.radius = 1;
         this.textureRepeat = 100;
         this.showWireframe = false;
         this.showMesh = true;
@@ -58,7 +58,7 @@ class MyTrack {
         return new THREE.TubeGeometry(
             this.path,
             this.segments,
-            this.width,
+            this.radius,
             3,
             this.closedCurve
         );
