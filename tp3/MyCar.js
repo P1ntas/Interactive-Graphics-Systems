@@ -55,7 +55,7 @@ class MyCar {
         const loader = new GLTFLoader();
         loader.load('./scenes/models/car1.glb', (glb) => {
             this.model = glb.scene;
-            this.model.position.y = 0;
+            this.model.position.y = 1;
             this.scene.add(this.model);
         }, undefined, (error) => {
             console.error('An error happened while loading the model', error);
