@@ -5,6 +5,7 @@ import { MyNurbsBuilder } from './MyNurbsBuilder.js';
 import { MyPolygon } from './MyPolygon.js'
 import { MyTrack } from './MyTrack.js';
 import { MyCar } from './MyCar.js';
+import { MyTrafficCone } from './MyTrafficCone.js';
 /**
  *  This class contains the contents of out application
  */
@@ -39,7 +40,13 @@ class MyContents  {
         let track = new MyTrack(this.app);
         track.createTrack();
 
+        this.trafficCone = new MyTrafficCone(0, 1, -7);
+        this.trafficCone.init();
+        this.app.scene.add(this.trafficCone.mesh);
+
         this.car = new MyCar(this.app, track);
+
+        
     }
 
     /**

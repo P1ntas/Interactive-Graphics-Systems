@@ -15,6 +15,16 @@ class MyCar {
         this.deceleration = 0.03;
         this.cameraOffset = new THREE.Vector3(0, 3, 100);
         this.cameraDistance = -5;
+        this.collisionRecoveryTime = 2000; // Time in milliseconds to recover speed after collision
+        this.collisionCooldown = 1000;
+        this.lastCollisionTime = 0;
+        this.collisionDecelerationFactor = 0.5; // How much to reduce speed upon collision
+        this.isCollided = false;
+        this.slowdownDuration = 3000; // 3 seconds slowdown duration
+        this.timeSinceCollision = 0;
+        this.onKeyDown = this.onKeyDown.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
+        this.animate = this.animate.bind(this);
         this.loadModel();
         this.createCamera();
         this.initEventListeners();
@@ -68,19 +78,19 @@ class MyCar {
         this.animate();
     }
 
-    onKeyDown = (event) => {
+    onKeyDown(event) {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = true;
         }
     }
 
-    onKeyUp = (event) => {
+    onKeyUp(event) {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = false;
         }
     }
 
-    animate = () => {
+    animate() {
         requestAnimationFrame(this.animate);
         this.updateMovement();
         this.updateCamera();
@@ -103,25 +113,58 @@ class MyCar {
 
         this.model.rotateY(turnAngle);
 
-        let isMoving = false;
-
         if (this.keyStates.w) {
             this.velocity.addScaledVector(forward, this.acceleration);
-            isMoving = true;
         } else if (this.keyStates.s) {
             this.velocity.addScaledVector(forward, -this.acceleration);
-            isMoving = true;
         }
 
-        if (!isMoving) {
-            this.velocity.multiplyScalar(1 - this.deceleration);
-        }
-
+        this.velocity.multiplyScalar(1 - this.deceleration);
         this.velocity.clampLength(0, this.maxSpeed);
 
-        this.model.position.add(this.velocity);
+        // Collision check
+        let collisionDetected = this.checkCollisionWithCones();
 
-        //console.log(this.isOnTrack());
+        if (this.isCollided) {
+            const timeElapsedSinceCollision = Date.now() - this.lastCollisionTime;
+            if (timeElapsedSinceCollision < this.slowdownDuration) {
+                this.timeSinceCollision = timeElapsedSinceCollision;
+            } else {
+                this.isCollided = false;
+                this.timeSinceCollision = 0;
+            }
+
+            const slowdownFactor = 1 - (this.timeSinceCollision / this.slowdownDuration);
+            this.velocity.multiplyScalar(slowdownFactor);
+        }
+
+        this.model.position.add(this.velocity);
+        //console.log(this.velocity)
+        // Apply velocity to move the car
+    }
+
+    checkCollisionWithCones() {
+        const carPosition = this.model.position.clone();
+        const currentTime = Date.now();
+
+        // Check if we are still within the cooldown period
+        if (currentTime - this.lastCollisionTime < this.collisionCooldown) {
+            return false; // Ignore collision as we are in cooldown
+        }
+
+            if (carPosition.distanceTo(this.app.contents.trafficCone.mesh.position) < 1) {
+                this.handleCollision();
+                this.lastCollisionTime = currentTime; // Update the last collision time
+                return true; // Collision detected
+            }
+        return false; // No collision
+    }
+
+    handleCollision() {
+        //console.log("Handling collision"); // Debug log
+        this.velocity.multiplyScalar(this.collisionDecelerationFactor); // Reduce velocity
+        this.isCollided = true;
+        this.lastCollisionTime = Date.now();
     }
 
     isOnTrack(thresholdDistance = 5) { // Adjusted threshold distance
