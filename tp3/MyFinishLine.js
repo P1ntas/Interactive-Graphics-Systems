@@ -2,28 +2,22 @@ import * as THREE from 'three';
 
 class MyFinishLine {
 
-    constructor(x, y, z,) {
+    constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.startTime = this.startTime; 
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = 512;
-        this.canvas.height = 256;
-        this.context = this.canvas.getContext('2d');
+        this.contents = contents;
     }
 
     init() {
         this.group = new THREE.Group();
 
         const barGeometry = new THREE.CylinderGeometry(0.2, 0.2, 15, 32);
-        const barMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive:0xffffff, side: THREE.DoubleSide
-        });
 
-        const bar1 = new THREE.Mesh(barGeometry, barMaterial);
+        const bar1 = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);
         bar1.position.set(-9.8, 8, 0);
 
-        const bar2 = new THREE.Mesh(barGeometry, barMaterial);
+        const bar2 = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);
         bar2.position.set(9, 8, 0);
 
         this.group.add(bar1);
@@ -31,9 +25,8 @@ class MyFinishLine {
 
 
         const displayGeometry = new THREE.BoxGeometry(18.8, 4, 0.1);
-        const displayMaterial = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./scenes/textures/finishLine.jpg"), side: THREE.DoubleSide });
 
-        const display = new THREE.Mesh(displayGeometry, displayMaterial);
+        const display = new THREE.Mesh(displayGeometry, this.contents.materials["finishLineApp"]);
         display.position.set(-0.3, 13.5, 0);
 
         this.group.add(display);

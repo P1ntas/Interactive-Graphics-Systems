@@ -2,22 +2,19 @@ import * as THREE from 'three';
 
 class MyRoadSign {
 
-    constructor(x, y, z, texturePath) {
+    constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.contents = contents;
     }
 
     init() {
         let barGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 5, 32 );
-        let barMaterial = new THREE.MeshPhongMaterial({ color: 0x808080 });
-        let bar = new THREE.Mesh(barGeometry, barMaterial);
+        let bar = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);
 
         let signGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.3, 32);
-        let signMaterial = new THREE.MeshPhongMaterial({ 
-            map: new THREE.TextureLoader().load("./scenes/textures/arrows.png")
-        });
-        let sign = new THREE.Mesh(signGeometry, signMaterial);
+        let sign = new THREE.Mesh(signGeometry, this.contents.materials["arrowsApp"]);
 
         bar.position.y += 2.5
         sign.position.y = 5

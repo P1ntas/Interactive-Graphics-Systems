@@ -43,22 +43,22 @@ class MyContents  {
 
         this.startTime = Date.now();
 
-        this.display = new MyBillboard(35, 3, -30, this.startTime);
+        this.display = new MyBillboard(35, 3, -30, this.startTime, this);
         this.display.init();
         this.app.scene.add(this.display.group);
 
-        this.finish = new MyFinishLine(0, 0, -60);
+        this.finish = new MyFinishLine(0, 0, -60, this);
         this.finish.init();
         this.app.scene.add(this.finish.group);
 
-        let track = new MyTrack(this.app);
+        let track = new MyTrack(this.app, this);
         track.createTrack();
 
-        this.trafficCone = new MyTrafficCone(0, 2, -7);
+        this.trafficCone = new MyTrafficCone(0, 2, -7, this);
         this.trafficCone.init();
         this.app.scene.add(this.trafficCone.mesh);
 
-        this.sign = new MyRoadSign(-7, 0, -7);
+        this.sign = new MyRoadSign(-7, 0, -7, this);
         this.sign.init();
         this.app.scene.add(this.sign.mesh);
 
@@ -505,11 +505,13 @@ class MyContents  {
 
         for (var key in data.materials) {
             
-            let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
+            /*let material = new THREE.MeshPhongMaterial({ color: data.materials[key].color, 
                                         emissive: data.materials[key].emissive, 
                                         specular: data.materials[key].specular, 
                                         shininess: data.materials[key].shininess,
-                                        map: textures[data.materials[key].textureref] });
+                                        map: textures[data.materials[key].textureref] });*/
+            let material = new THREE.MeshBasicMaterial({ color: data.materials[key].color, 
+                map: textures[data.materials[key].textureref] });
 
             if (material.map) material.map.repeat.set(data.materials[key].texlength_s || 1, data.materials[key].texlength_t || 1);
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;

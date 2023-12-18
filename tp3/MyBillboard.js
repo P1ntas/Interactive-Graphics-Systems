@@ -2,30 +2,23 @@ import * as THREE from 'three';
 
 class MyBillboard {
 
-    constructor(x, y, z, startTime) {
+    constructor(x, y, z, startTime, contents) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.startTime = this.startTime; 
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = 512;
-        this.canvas.height = 256;
-        this.context = this.canvas.getContext('2d');
+        this.startTime = startTime; 
+        this.contents = contents;
     }
 
     init() {
         this.group = new THREE.Group();
 
         const barGeometry = new THREE.CylinderGeometry(0.2, 0.2, 10, 32);
-        const barMaterial = new THREE.MeshPhongMaterial({ 
-            map: new THREE.TextureLoader().load("./scenes/textures/metal.jpg") ,
-            side: THREE.DoubleSide
-        });
 
-        const bar1 = new THREE.Mesh(barGeometry, barMaterial);
+        const bar1 = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);
         bar1.position.set(-1.8, 2.5, 0);
 
-        const bar2 = new THREE.Mesh(barGeometry, barMaterial);
+        const bar2 = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);
         bar2.position.set(7.8, 2.5, 0);
 
         this.group.add(bar1);
@@ -33,9 +26,8 @@ class MyBillboard {
 
 
         const displayGeometry = new THREE.BoxGeometry(9.5, 4, 0.1);
-        const displayMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
 
-        const display = new THREE.Mesh(displayGeometry, displayMaterial);
+        const display = new THREE.Mesh(displayGeometry, this.contents.materials["displayApp"]);
         display.position.set(3, 5.5, 0);
 
         this.group.add(display);
@@ -43,6 +35,7 @@ class MyBillboard {
 
         this.group.position.set(this.x, this.y, this.z);
         this.group.rotation.y = -Math.PI / 4;
+        this.group.scale.set(2, 2, 2)
 
         this.update();
     }

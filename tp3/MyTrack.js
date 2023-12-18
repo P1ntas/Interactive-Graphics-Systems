@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
 class MyTrack {
-    constructor(app) {
+    constructor(app, contents) {
         this.app = app;
+        this.contents = contents;
         this.segments = 100;
         this.radius = 1;
         this.textureRepeat = 100;
@@ -76,11 +77,13 @@ class MyTrack {
     }
 
     createTrack() {
-        const texture = this.loadTexture();
-        const material = this.createMaterial(texture);
         const wireframeMaterial = this.createWireframeMaterial();
         const geometry = this.createGeometry(this.path);
-        const mesh = this.createMesh(geometry, material);
+        this.contents.materials["rainbowApp"].map.repeat.set(3, 3);
+        this.contents.materials["rainbowApp"].map.wrapS = THREE.RepeatWrapping;
+        this.contents.materials["rainbowApp"].map.wrapT = THREE.RepeatWrapping;
+        this.contents.materials["rainbowApp"].map.repeat.set(5, 5);
+        const mesh = this.createMesh(geometry, this.contents.materials["rainbowApp"]);
         const wireframe = this.createMesh(geometry, wireframeMaterial);
         const line = this.createLine(this.path);
 
