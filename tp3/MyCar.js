@@ -25,6 +25,9 @@ class MyCar {
         this.controlSwitchDuration = 5000;
         this.lastControlSwitchTime = 0;
         this.controlsSwitched = false;
+        this.shroomEffectDuration = 5000; 
+        this.lastShroomCollisionTime = 0;
+        this.underShroomEffect = false;
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
@@ -62,7 +65,7 @@ class MyCar {
         const loader = new GLTFLoader();
         loader.load('./scenes/models/car1.glb', (glb) => {
             this.model = glb.scene;
-            this.model.position.y = 1;
+            this.model.position.y = 0.5;
             this.scene.add(this.model);
         }, undefined, (error) => {
             console.error('An error happened while loading the model', error);
@@ -144,6 +147,17 @@ class MyCar {
             }
         }
 
+        this.checkCollisionWithShroom();
+
+        if (this.underShroomEffect) {
+            if (Date.now() - this.lastShroomCollisionTime < this.shroomEffectDuration) {
+                this.maxSpeed = this.originalMaxSpeed * 2;
+            } else {
+                this.underShroomEffect = false;
+                this.maxSpeed = this.originalMaxSpeed;
+            }
+        }
+
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
     }
@@ -206,6 +220,35 @@ class MyCar {
 
     handleControlSwitch() {
         this.controlsSwitched = true;
+    }
+
+    checkCollisionWithShroom() {
+        if (!this.model || !this.app.contents || !this.app.contents.sign) {
+            return;
+        }
+
+        const currentTime = Date.now();
+
+        if (currentTime - this.lastControlSwitchTime < this.controlSwitchDuration) {
+            return; 
+        }
+
+        const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
+        const signPositionXZ = new THREE.Vector2(
+            this.app.contents.shroom.model.position.x, 
+            this.app.contents.shroom.model.position.z
+        );
+
+        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
+            this.handleShroomCollision();
+            this.lastControlSwitchTime = currentTime;
+            //console.log("Boosting")
+        }
+    }
+
+    handleShroomCollision() {
+        this.lastShroomCollisionTime = Date.now();
+        this.underShroomEffect = true;
     }
 
     isOnTrack(thresholdDistance = 5) {

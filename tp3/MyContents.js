@@ -7,6 +7,7 @@ import { MyTrack } from './MyTrack.js';
 import { MyCar } from './MyCar.js';
 import { MyTrafficCone } from './MyTrafficCone.js';
 import { MyRoadSign } from './MyRoadSign.js';
+import { MyShroom } from './MyShroom.js';
 /**
  *  This class contains the contents of out application
  */
@@ -48,6 +49,9 @@ class MyContents  {
         this.sign = new MyRoadSign(-7, 0, -7);
         this.sign.init();
         this.app.scene.add(this.sign.mesh);
+
+        this.shroom = new MyShroom(7, 1.2, -7, this.app.scene);
+        this.shroom.init();
 
         this.car = new MyCar(this.app, track);
 
