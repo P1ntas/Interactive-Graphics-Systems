@@ -8,6 +8,8 @@ import { MyCar } from './MyCar.js';
 import { MyTrafficCone } from './MyTrafficCone.js';
 import { MyRoadSign } from './MyRoadSign.js';
 import { MyShroom } from './MyShroom.js';
+import { MyBillboard } from './MyBillboard.js';
+import { MyFinishLine } from './MyFinishLine.js';
 /**
  *  This class contains the contents of out application
  */
@@ -38,6 +40,16 @@ class MyContents  {
             this.axis = new MyAxis(this)
             this.app.scene.add(this.axis)
         }
+
+        this.startTime = Date.now();
+
+        this.display = new MyBillboard(35, 3, -30, this.startTime);
+        this.display.init();
+        this.app.scene.add(this.display.group);
+
+        this.finish = new MyFinishLine(0, 0, -60);
+        this.finish.init();
+        this.app.scene.add(this.finish.group);
 
         let track = new MyTrack(this.app);
         track.createTrack();
@@ -559,7 +571,7 @@ class MyContents  {
      * Update function, to be called for updating the state of contents, if necessary.
      */
     update() {
-        
+       this.display.update(); 
     }
 
     /**
