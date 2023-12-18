@@ -22,6 +22,9 @@ class MyCar {
         this.originalMaxSpeed = this.maxSpeed; 
         this.inCollisionState = false;
         this.collisionEndTime = 0;
+        this.controlSwitchDuration = 5000;
+        this.lastControlSwitchTime = 0;
+        this.controlsSwitched = false;
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
@@ -99,10 +102,18 @@ class MyCar {
         let turnAngle = 0;
         const turnRate = 0.05;
 
-        if (this.keyStates.d) {
-            turnAngle = -turnRate;
-        } else if (this.keyStates.a) {
-            turnAngle = turnRate;
+        if (this.controlsSwitched) {
+            if (this.keyStates.d) {
+                turnAngle = turnRate;
+            } else if (this.keyStates.a) {
+                turnAngle = -turnRate;
+            }
+        } else {
+            if (this.keyStates.d) {
+                turnAngle = -turnRate;
+            } else if (this.keyStates.a) {
+                turnAngle = turnRate;
+            }
         }
 
         this.model.rotateY(turnAngle);
@@ -115,6 +126,12 @@ class MyCar {
 
         this.velocity.multiplyScalar(1 - this.deceleration);
         this.velocity.clampLength(0, this.maxSpeed);
+
+        this.checkCollisionWithSign();
+
+        if (this.controlsSwitched && (Date.now() - this.lastControlSwitchTime > this.controlSwitchDuration)) {
+            this.controlsSwitched = false;
+        }
 
         this.checkCollisionWithCones();
 
@@ -136,14 +153,19 @@ class MyCar {
             return;
         }
 
-        const carPosition = this.model.position.clone();
         const currentTime = Date.now();
 
         if (currentTime - this.lastCollisionTime < this.collisionCooldown) {
             return; 
         }
+        
+        const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
+        const conePositionXZ = new THREE.Vector2(
+            this.app.contents.trafficCone.mesh.position.x, 
+            this.app.contents.trafficCone.mesh.position.z
+        );
 
-        if (carPosition.distanceTo(this.app.contents.trafficCone.mesh.position) < 1) {
+        if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
             this.handleCollision();
             this.lastCollisionTime = currentTime; 
             this.collisionEndTime = currentTime + this.slowdownDuration; 
@@ -156,6 +178,34 @@ class MyCar {
         this.velocity.multiplyScalar(this.collisionDecelerationFactor); 
         this.isCollided = true;
         this.lastCollisionTime = Date.now();
+    }
+
+    checkCollisionWithSign() {
+        if (!this.model || !this.app.contents || !this.app.contents.sign) {
+            return;
+        }
+
+        const currentTime = Date.now();
+
+        if (currentTime - this.lastControlSwitchTime < this.controlSwitchDuration) {
+            return; 
+        }
+
+        const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
+        const signPositionXZ = new THREE.Vector2(
+            this.app.contents.sign.mesh.position.x, 
+            this.app.contents.sign.mesh.position.z
+        );
+
+        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
+            this.handleControlSwitch();
+            this.lastControlSwitchTime = currentTime;
+            //console.log("Switching controls")
+        }
+    }
+
+    handleControlSwitch() {
+        this.controlsSwitched = true;
     }
 
     isOnTrack(thresholdDistance = 5) {
