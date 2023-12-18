@@ -223,7 +223,7 @@ class MyCar {
     }
 
     checkCollisionWithShroom() {
-        if (!this.model || !this.app.contents || !this.app.contents.sign) {
+        if (!this.model || !this.app.contents || !this.app.contents.shroom.model) {
             return;
         }
 
