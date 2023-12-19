@@ -36,6 +36,7 @@ class MyBillboard {
         this.group.position.set(this.x, this.y, this.z);
         this.group.rotation.y = -Math.PI / 4;
         this.group.scale.set(2, 2, 2)
+        this.group.position.y += 1.5;
 
         this.update();
     }

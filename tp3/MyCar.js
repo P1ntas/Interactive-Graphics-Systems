@@ -158,6 +158,8 @@ class MyCar {
             }
         }
 
+        this.checkCollisionWithClock();
+
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
     }
@@ -295,7 +297,7 @@ class MyCar {
         const rivalPosition = new THREE.Vector3().setFromMatrixPosition(rival.model.matrixWorld);
         
         const distance = carPosition.distanceTo(rivalPosition);
-        const collisionDistance = 5; // Adjust this value based on your model sizes and desired collision proximity
+        const collisionDistance = 5; 
         
         if (distance < collisionDistance) {
             this.handleCollision();
@@ -311,6 +313,37 @@ class MyCar {
         this.inCollisionState = true;
         this.collisionEndTime = Date.now() + this.slowdownDuration;
     }
+
+    checkCollisionWithClock() {
+        if (!this.model || !this.app.contents || !this.app.contents.clock1 || !this.app.contents.clock1.model) {
+            return;
+        }
+    
+        const currentTime = Date.now();
+    
+        if (currentTime - this.lastCollisionTime < this.collisionCooldown) {
+            return;
+        }
+        
+        const carPosition = new THREE.Vector3().setFromMatrixPosition(this.model.matrixWorld);
+        const clockPosition = new THREE.Vector3().setFromMatrixPosition(this.app.contents.clock1.model.matrixWorld);
+    
+        const distance = carPosition.distanceTo(clockPosition);
+        const collisionDistance = 2; 
+    
+        if (distance < collisionDistance) {
+            this.handleClockCollision();
+            this.lastCollisionTime = currentTime;
+        }
+    }
+
+    handleClockCollision() {
+        if (this.app.contents.timer) {
+            this.app.contents.timer.takeTime(5); 
+        }
+    }
+    
+    
 }
 
 export { MyCar }

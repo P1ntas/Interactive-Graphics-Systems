@@ -12,6 +12,7 @@ import { MyBillboard } from './MyBillboard.js';
 import { MyFinishLine } from './MyFinishLine.js';
 import { MyRival } from './MyRival.js';
 import { MyTimer } from './MyTimer.js';
+import { MyClock } from './MyClock.js';
 /**
  *  This class contains the contents of out application
  */
@@ -31,6 +32,7 @@ class MyContents  {
         this.shrooms = []
         this.signs = []
         this.cones = []
+        this.clocks = []
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");	
@@ -95,6 +97,10 @@ class MyContents  {
         this.shroom2.init();
 
         this.shrooms.push(this.shroom2)
+
+        this.clock1 = new MyClock(-5, 1.2, 0, this.app.scene);
+        this.clock1.init();
+        this.clocks.push(this.clock1)
 
         this.car = new MyCar(this.app, track);
 
@@ -611,7 +617,7 @@ class MyContents  {
        this.car.checkCollisionWithRival(this.rival);
        this.rival.update(deltaTime);
        this.timer.update();
-       console.log(this.timer.formatTime());
+       console.log(this.timer.getFormattedTime());
     }
 
     /**
