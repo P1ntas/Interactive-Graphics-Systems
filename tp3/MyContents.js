@@ -13,6 +13,8 @@ import { MyFinishLine } from './MyFinishLine.js';
 import { MyRival } from './MyRival.js';
 import { MyTimer } from './MyTimer.js';
 import { MyClock } from './MyClock.js';
+import { MyGarage } from './MyGarage.js';
+import { MyHouse } from './MyHouse.js';
 /**
  *  This class contains the contents of out application
  */
@@ -107,6 +109,15 @@ class MyContents  {
         this.clock = new THREE.Clock();
 
         this.rival = new MyRival(track.path, this.app.scene);
+
+        this.garage1 = new MyGarage(-90, 0, 120, this.app.scene);
+        this.garage1.init();
+
+        this.garage2 = new MyGarage(-90, 0, -120, this.app.scene);
+        this.garage2.init();
+
+        this.house = new MyHouse(70, 0, -110, this.app.scene);
+        this.house.init();
     }
 
     /**
