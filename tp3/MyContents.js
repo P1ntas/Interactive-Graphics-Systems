@@ -10,6 +10,7 @@ import { MyRoadSign } from './MyRoadSign.js';
 import { MyShroom } from './MyShroom.js';
 import { MyBillboard } from './MyBillboard.js';
 import { MyFinishLine } from './MyFinishLine.js';
+import { MyRival } from './MyRival.js';
 /**
  *  This class contains the contents of out application
  */
@@ -95,7 +96,9 @@ class MyContents  {
 
         this.car = new MyCar(this.app, track);
 
-        
+        this.clock = new THREE.Clock();
+
+        this.rival = new MyRival(track.path, this.app.scene);
     }
 
     /**
@@ -601,7 +604,9 @@ class MyContents  {
      * Update function, to be called for updating the state of contents, if necessary.
      */
     update() {
-       this.display.update(); 
+       //this.display.update(); 
+       let deltaTime = this.clock.getDelta();
+       this.rival.update(deltaTime);
     }
 
     /**
