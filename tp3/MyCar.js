@@ -174,9 +174,21 @@ class MyCar {
         }
         
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        const conePositionXZ = new THREE.Vector2(
+        let conePositionXZ = new THREE.Vector2(
             this.app.contents.trafficCone.mesh.position.x, 
             this.app.contents.trafficCone.mesh.position.z
+        );
+
+        if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
+            this.handleCollision();
+            this.lastCollisionTime = currentTime; 
+            this.collisionEndTime = currentTime + this.slowdownDuration; 
+            this.inCollisionState = true; 
+        }
+
+        conePositionXZ = new THREE.Vector2(
+            this.app.contents.trafficCone2.mesh.position.x, 
+            this.app.contents.trafficCone2.mesh.position.z
         );
 
         if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
@@ -206,9 +218,20 @@ class MyCar {
         }
 
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        const signPositionXZ = new THREE.Vector2(
+        let signPositionXZ = new THREE.Vector2(
             this.app.contents.sign.mesh.position.x, 
             this.app.contents.sign.mesh.position.z
+        );
+
+        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
+            this.handleControlSwitch();
+            this.lastControlSwitchTime = currentTime;
+            //console.log("Switching controls")
+        }
+
+        signPositionXZ = new THREE.Vector2(
+            this.app.contents.sign2.mesh.position.x, 
+            this.app.contents.sign2.mesh.position.z
         );
 
         if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
@@ -234,9 +257,20 @@ class MyCar {
         }
 
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        const signPositionXZ = new THREE.Vector2(
+        let signPositionXZ = new THREE.Vector2(
             this.app.contents.shroom.model.position.x, 
             this.app.contents.shroom.model.position.z
+        );
+
+        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
+            this.handleShroomCollision();
+            this.lastControlSwitchTime = currentTime;
+            //console.log("Boosting")
+        }
+
+        signPositionXZ = new THREE.Vector2(
+            this.app.contents.shroom2.model.position.x, 
+            this.app.contents.shroom2.model.position.z
         );
 
         if (carPositionXZ.distanceTo(signPositionXZ) < 1) {

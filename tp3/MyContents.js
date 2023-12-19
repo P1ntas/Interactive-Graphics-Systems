@@ -26,6 +26,10 @@ class MyContents  {
         this.materials = {};
         this.lights = [];
 
+        this.shrooms = []
+        this.signs = []
+        this.cones = []
+
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");	
     }
@@ -54,16 +58,40 @@ class MyContents  {
         let track = new MyTrack(this.app, this);
         track.createTrack();
 
-        this.trafficCone = new MyTrafficCone(0, 2, -7, this);
+        this.trafficCone = new MyTrafficCone(-21, 2, -1, this);
         this.trafficCone.init();
         this.app.scene.add(this.trafficCone.mesh);
 
-        this.sign = new MyRoadSign(-7, 0, -7, this);
+        this.cones.push(this.trafficCone)
+
+        this.trafficCone2 = new MyTrafficCone(-77, 2, 8, this);
+        this.trafficCone2.init();
+        this.app.scene.add(this.trafficCone2.mesh);
+
+        this.cones.push(this.trafficCone2)
+
+        this.sign = new MyRoadSign(65, 0, -50, this);
         this.sign.init();
+        this.sign.mesh.rotation.y = Math.PI / 6;
         this.app.scene.add(this.sign.mesh);
 
-        this.shroom = new MyShroom(7, 1.2, -7, this.app.scene);
+        this.signs.push(this.sign)
+
+        this.sign2 = new MyRoadSign(-82, 0, 30, this);
+        this.sign2.init();
+        this.app.scene.add(this.sign2.mesh);
+
+        this.signs.push(this.sign2)
+
+        this.shroom = new MyShroom(48, 1.2, -63, this.app.scene);
         this.shroom.init();
+
+        this.shrooms.push(this.shroom)
+
+        this.shroom2 = new MyShroom(-67, 1.2, 47, this.app.scene);
+        this.shroom2.init();
+
+        this.shrooms.push(this.shroom2)
 
         this.car = new MyCar(this.app, track);
 
