@@ -285,27 +285,31 @@ class MyCar {
         this.underShroomEffect = true;
     }
 
-    isOnTrack(thresholdDistance = 5) {
-        if (!this.model) {
-            return false;
+    checkCollisionWithRival(rival) {
+        if (!this.model || !rival.model) return;
+    
+        const currentTime = Date.now();
+        if (currentTime - this.lastCollisionTime < this.collisionCooldown) return;
+    
+        const carPosition = new THREE.Vector3().setFromMatrixPosition(this.model.matrixWorld);
+        const rivalPosition = new THREE.Vector3().setFromMatrixPosition(rival.model.matrixWorld);
+        
+        const distance = carPosition.distanceTo(rivalPosition);
+        const collisionDistance = 5; // Adjust this value based on your model sizes and desired collision proximity
+        
+        if (distance < collisionDistance) {
+            this.handleCollision();
+            this.lastCollisionTime = currentTime;
+            this.collisionEndTime = currentTime + this.slowdownDuration;
+            this.inCollisionState = true;
         }
+    }
 
-        const carPosXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        let minDistance = Infinity;
-        //console.log(minDistance)
-        const trackPoints = this.track.path.getPoints(500); 
-        //console.log(this.model.position);
-        for (let i = 0; i < trackPoints.length; i++) {
-            //console.log(trackPoints[i].z);
-            const pointXZ = new THREE.Vector2(trackPoints[i].x, trackPoints[i].z);
-            const distance = carPosXZ.distanceTo(pointXZ);
-            //console.log(distance);
-            if (distance < minDistance) {
-                minDistance = distance;
-            }
-        }
-
-        return minDistance <= thresholdDistance;
+    handleCollision() {
+        this.velocity.multiplyScalar(this.collisionDecelerationFactor);
+        this.isCollided = true;
+        this.inCollisionState = true;
+        this.collisionEndTime = Date.now() + this.slowdownDuration;
     }
 }
 

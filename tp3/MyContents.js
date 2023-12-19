@@ -606,6 +606,7 @@ class MyContents  {
     update() {
        //this.display.update(); 
        let deltaTime = this.clock.getDelta();
+       this.car.checkCollisionWithRival(this.rival);
        this.rival.update(deltaTime);
     }
 
