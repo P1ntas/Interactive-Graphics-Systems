@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 class MyBillboard {
 
-    constructor(x, y, z, startTime, contents) {
+    constructor(x, y, z, timer, contents) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.startTime = startTime; 
+        this.timer = timer; 
         this.contents = contents;
     }
 

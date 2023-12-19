@@ -11,6 +11,7 @@ import { MyShroom } from './MyShroom.js';
 import { MyBillboard } from './MyBillboard.js';
 import { MyFinishLine } from './MyFinishLine.js';
 import { MyRival } from './MyRival.js';
+import { MyTimer } from './MyTimer.js';
 /**
  *  This class contains the contents of out application
  */
@@ -46,9 +47,10 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        this.startTime = Date.now();
+        this.timer = new MyTimer();
+        this.timer.start();
 
-        this.display = new MyBillboard(35, 3, -30, this.startTime, this);
+        this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
 
@@ -608,6 +610,8 @@ class MyContents  {
        let deltaTime = this.clock.getDelta();
        this.car.checkCollisionWithRival(this.rival);
        this.rival.update(deltaTime);
+       this.timer.update();
+       console.log(this.timer.formatTime());
     }
 
     /**
