@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<yaf> 
+	
+    <globals background="0 0 0 1" ambient="0 0 0 1" /> 
+
+    <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
+
+    <cameras initial="cam1" > 
+        <perspective id="cam1" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="15 15 15" 
+            target="0 0.0 0" /> 
+    </cameras> 
+
+    <textures>  
+        <texture id="arrowsTex" filepath="scenes/textures/arrows.png" />
+        <texture id="finishLineTex" filepath="scenes/textures/finishLine.jpg" />
+        <texture id="metalTex" filepath="scenes/textures/metal.jpg" />
+        <texture id="rainbowTex" filepath="scenes/textures/rainbow.jpeg" />
+        <texture id="trafficConeTex" filepath="scenes/textures/trafficCone.jpeg" />
+    </textures> 
+
+    <skybox size="300 300 300" center="0 150 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.jpeg" down="./scenes/textures/sky.jpeg" left="./scenes/textures/sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/sky.jpeg" back="./scenes/textures/sky.jpeg"/>
+
+    <materials> 
+		<material id="arrowsApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 0" 
+            shininess="0" 
+            textureref="arrowsTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true" />
+
+        <material id="finishLineApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 0" 
+            shininess="100" 
+            textureref="finishLineTex" 
+            texlength_s="1" 
+            texlength_t="1" 
+            twosided = "true" />
+
+        <material id="barApp" 
+            emissive="1.0 1.0 1.0 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 0" 
+            shininess="0" 
+            texlength_s="1" 
+            texlength_t="1" 
+            textureref="metalTex" 
+            twosided = "true" />
+
+        <material id="displayApp" 
+            emissive="1.0 1.0 1.0 1" 
+            color="0 0 0 0.0"  
+            specular="0 0 0 0" 
+            shininess="0" 
+            twosided = "true" />
+
+        <material id="rainbowApp" 
+            emissive="1.0 1.0 1.0 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 0" 
+            shininess="0" 
+            texlength_s="1" 
+            texlength_t="1" 
+            textureref="rainbowTex" 
+            twosided = "true" />
+
+        <material id="trafficConeApp" 
+            emissive="0.0 0.0 0.0 1" 
+            color="1 1 1 1.0"  
+            specular="0 0 0 0" 
+            shininess="0" 
+            texlength_s="1" 
+            texlength_t="1" 
+            textureref="trafficConeTex" 
+            twosided = "true" />
+    </materials> 
+
+    <graph rootid="scene"> 
+
+		<node id="scene"> 
+            <children> 
+			              
+                <directionallight id="light5" enabled="true" 
+                    color="1.0 1.0 1.0 1" 
+                    intensity="1.0"
+                    castshadow="true"
+                    position="2 2 4" 
+                />
+
+            </children> 
+        </node>                
+		
+    </graph> 
+</yaf> 

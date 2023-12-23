@@ -26,7 +26,7 @@
 
     <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas --> 
     <textures>        
-        <!-- <texture id="floorTex" filepath="scenes/demo/textures/demo.jpg"
+        <texture id="floorTex" filepath="scenes/demo/textures/demo.jpg"
             mipmaps="false" 
             mipmap0="scenes/demo/textures/demo1024.jpg"
             mipmap1="scenes/demo/textures/demo512.jpg"
@@ -36,7 +36,7 @@
             mipmap5="scenes/demo/textures/demo32.jpg"
             mipmap6="scenes/demo/textures/demo16.jpg"
             mipmap7="scenes/demo/textures/demo8.jpg"
-        /> -->
+        />
         <texture id="ballTex" filepath="scenes/textures/ball.jpg" />
         <texture id="metalTex" filepath="scenes/textures/metal.jpeg" />
         <texture id="grassTex" filepath="scenes/textures/grass.jpg" />
