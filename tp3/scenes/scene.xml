@@ -22,7 +22,7 @@
         <texture id="trafficConeTex" filepath="scenes/textures/trafficCone.jpeg" />
     </textures> 
 
-    <skybox size="300 300 300" center="0 150 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/sky.jpeg" down="./scenes/textures/sky.jpeg" left="./scenes/textures/sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/sky.jpeg" back="./scenes/textures/sky.jpeg"/>
+    <skybox size="300 250 300" center="0 125 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/dark_sky.jpeg" down="./scenes/textures/dark_sky.jpeg" left="./scenes/textures/dark_sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/dark_sky.jpeg" back="./scenes/textures/dark_sky.jpeg"/>
 
     <materials> 
 		<material id="arrowsApp" 
