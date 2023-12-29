@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MyContents } from './MyContents.js';
 import { MyGuiInterface } from './MyGuiInterface.js';
+import { MyMainMenu } from './Menus/MyMainMenu.js';
 import Stats from 'three/addons/libs/stats.module.js'
 
 /**
@@ -34,7 +35,18 @@ class MyApp  {
      * initializes the application
      */
     init() {
-                
+        this.gameState = {
+            INITIAL_MENU: 'initialMenu',
+            GAME_MENU: 'gameMenu',
+            GAMEOVER_MENU: 'gameOverMenu'
+        };
+
+        this.currentState = this.gameState.INITIAL_MENU;
+
+        if (this.currentState == "initialMenu") {
+            this.mainMenu = new MyMainMenu();
+        }
+
         // Create an empty scene
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0x101010 );
@@ -79,7 +91,7 @@ class MyApp  {
         const right = this.frustumSize /2 * aspect 
         const top = this.frustumSize / 2 
         const bottom = -this.frustumSize / 2
-        const near = -this.frustumSize /2
+        const near = -this.frustumSize / 2
         const far =  this.frustumSize
 
         // create a left view orthographic camera

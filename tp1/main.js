@@ -3,8 +3,10 @@ import { MyApp } from './MyApp.js';
 import { MyGuiInterface } from './MyGuiInterface.js';
 import { MyContents } from './MyContents.js';
 
+
 // create the application object
 let app = new MyApp()
+
 // initializes the application
 app.init()
 

@@ -84,7 +84,6 @@ class MyGuiInterface  {
         
             lightFolder.open(); // Open the folder by default
         });
-
     }
 
 }
