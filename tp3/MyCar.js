@@ -259,6 +259,10 @@ class MyCar {
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
     
         for (let shroom of this.app.contents.shrooms) {
+            if (!shroom.model) {
+                continue;
+            }
+    
             const shroomPositionXZ = new THREE.Vector2(
                 shroom.model.position.x, 
                 shroom.model.position.z
@@ -271,6 +275,7 @@ class MyCar {
             }
         }
     }
+    
     
 
     handleShroomCollision() {
@@ -320,6 +325,10 @@ class MyCar {
         const collisionDistance = 2;
     
         for (let clock of this.app.contents.clocks) {
+            if (!clock.model) {
+                continue; 
+            }
+    
             const clockPosition = new THREE.Vector3().setFromMatrixPosition(clock.model.matrixWorld);
     
             const distance = carPosition.distanceTo(clockPosition);
@@ -327,11 +336,11 @@ class MyCar {
             if (distance < collisionDistance) {
                 this.handleClockCollision();
                 this.lastCollisionTime = currentTime;
-
                 break;
             }
         }
     }
+    
     
 
     handleClockCollision() {
