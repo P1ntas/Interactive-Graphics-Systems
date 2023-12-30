@@ -7,7 +7,7 @@ class MyPicking {
         this.label = label;
         this.intersectObjs = [];
         this.notPickableObjIds = [];
-        this.pickingColor = "0x00ff00";
+        this.pickingColor = "0x00ffff";
 
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
