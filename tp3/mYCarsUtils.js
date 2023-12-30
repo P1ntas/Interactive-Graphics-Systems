@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-class CarsUtils {
-    constructor(app) {
+class MyCarsUtils {
+    constructor(app, garage) {
         this.app = app;
+        this.garage = garage;
         this.car_meshes = [];
         this.colors = ["#ff0000", "#00ff00", "#0000ff"];
     }
@@ -12,21 +13,27 @@ class CarsUtils {
         this.buildCarsColumn("car_");
     }
 
+    applyTransformations() {
+        
+    }
+
     /*
     *
     * Build a colums full of boxes
     *
     */
     buildCarsColumn(name) {
+        console.log("this.garage.modelllll: ", this.garage.model);
         for (let i = 0; i < 3; i++) {
-            this.buildCar(name + i, this.colors[i], i * 2);
+            console.log("this.garage.scene.position.x + i * 4: ", this.garage);
+            this.buildCar(name + i, this.colors[i], -20 + this.garage.model.position.x + i * 4, this.garage.model.position.z);
         }
     }
 
     /**
      * builds the box mesh with material assigned
      */
-    buildCar(name, color, xpos) {
+    buildCar(name, color, xpos, zPos) {
 
         this.boxMeshSize = 1.0;
         let boxMaterial = new THREE.MeshPhongMaterial({
@@ -38,19 +45,21 @@ class CarsUtils {
         );
 
         const loader = new GLTFLoader();
-            loader.load('./scenes/models/blue_car.glb', (glb) => {
+            loader.load('./scenes/models/myCar.glb', (glb) => {
                 glb.scene.position.x = xpos;
-                glb.scene.position.y = 0.5;
-                glb.scene.position.z = 0;
+                glb.scene.position.y = 1.3;
+                glb.scene.position.z = zPos;
                 glb.scene.rotation.y = - Math.PI / 2;
 
-                /* glb.scene.children[0].children.map(mesh => {
-                    mesh.material = boxMaterial;
-                }); */
-
                 glb.scene.children[0].children[2].material = boxMaterial;
+                glb.scene.children[0].children[3].material = boxMaterial;
+                glb.scene.children[0].children[4].material = boxMaterial;
+                glb.scene.children[0].children[5].material = boxMaterial;
+                glb.scene.children[0].children[6].material = boxMaterial;
+                glb.scene.children[0].children[7].material = boxMaterial;
 
                 console.log("glb.scene: ", glb.scene);
+                glb.scene.scale.set(2.7, 2.7, 2.7);
 
                 this.car_meshes.push(glb.scene);
                 this.app.scene.add(glb.scene);
@@ -76,4 +85,4 @@ class CarsUtils {
 
 
 
-export { CarsUtils }
+export { MyCarsUtils }

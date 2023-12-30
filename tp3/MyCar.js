@@ -63,7 +63,7 @@ class MyCar {
 
     loadModel() {
         const loader = new GLTFLoader();
-        loader.load('./scenes/models/blue_car.glb', (glb) => {
+        loader.load('./scenes/models/myCar.glb', (glb) => {
             this.model = glb.scene;
             this.model.position.y = 0.5;
             this.scene.add(this.model);

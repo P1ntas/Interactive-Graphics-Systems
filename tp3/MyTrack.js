@@ -13,7 +13,7 @@ class MyTrack {
         this.closedCurve = false;
         this.curve = null;
         this.path = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, -6),
+            new THREE.Vector3(0.3, 0, -5),
             new THREE.Vector3(-7, 0, -5),
             new THREE.Vector3(-7, 0, 5),
             new THREE.Vector3(-3, 0, 5),
@@ -23,7 +23,7 @@ class MyTrack {
             new THREE.Vector3(3, 0, 5),
             new THREE.Vector3(7, 0, 5),
             new THREE.Vector3(7, 0, -5),
-            new THREE.Vector3(-0.3, 0, -6)
+            new THREE.Vector3(0.3, 0, -5)
         ]);
     }
 

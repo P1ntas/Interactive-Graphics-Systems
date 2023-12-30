@@ -16,7 +16,7 @@ import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
 import { MyFirework } from './MyFirework.js';
-import { CarsUtils } from './CarsUtils.js';
+import { MyCarsUtils } from './mYCarsUtils.js';
 import { MyPicking } from './MyPicking.js';
 
 /**
@@ -48,7 +48,7 @@ class MyContents  {
     /**
      * initializes the contents
      */
-    init() {
+    async init() {
         // create once 
         if (this.axis === null) {
             // create and attach the axis to the scene
@@ -115,18 +115,22 @@ class MyContents  {
 
         this.rival = new MyRival(track.path, this.app.scene);
 
-        this.garage1 = new MyGarage(-90, 0, 120, this.app.scene);
-        this.garage1.init();
+        this.garage = new MyGarage(-90, 0, 120, this.app.scene);
 
-        this.garage2 = new MyGarage(-90, 0, -120, this.app.scene);
-        this.garage2.init();
+        try {
+            await this.garage.init();
+            console.log("this.garage: ", this.garage.model);
+        } catch (error) {
+            console.error(error);
+        }
 
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
 
         // Init cars garage content
-        this.carsUtils = new CarsUtils(this.app);
+        this.carsUtils = new MyCarsUtils(this.app, this.garage);
         this.carsUtils.init();
+        this.carsUtils.applyTransformations();
 
         // Init cars picking
         this.carsPicking = new MyPicking(this.app, "car_");
