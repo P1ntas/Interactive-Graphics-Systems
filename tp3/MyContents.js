@@ -110,6 +110,7 @@ class MyContents  {
         this.clocks.push(this.clock1)
 
         this.car = new MyCar(this.app, track);
+        this.car.init();
 
         this.clock = new THREE.Clock();
 
@@ -119,7 +120,7 @@ class MyContents  {
 
         try {
             await this.garage.init();
-            console.log("this.garage: ", this.garage.model);
+            //console.log("this.garage: ", this.garage.model);
         } catch (error) {
             console.error(error);
         }
@@ -130,7 +131,6 @@ class MyContents  {
         // Init cars garage content
         this.carsUtils = new MyCarsUtils(this.app, this.garage);
         this.carsUtils.init();
-        this.carsUtils.applyTransformations();
 
         // Init cars picking
         this.carsPicking = new MyPicking(this.app, "car_");
@@ -649,7 +649,7 @@ class MyContents  {
 
         if(Math.random()  < 0.05 ) {
             this.fireworks.push(new MyFirework(this.app, this))
-            console.log("firework added")
+            //console.log("firework added")
         }
 
         // for each fireworks 
@@ -658,7 +658,7 @@ class MyContents  {
             if (this.fireworks[i].done) {
                 // remove firework 
                 this.fireworks.splice(i,1) 
-                console.log("firework removed")
+                //console.log("firework removed")
                 continue 
             }
             // otherwise upsdate  firework

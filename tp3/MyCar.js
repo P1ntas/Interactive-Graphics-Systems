@@ -31,9 +31,17 @@ class MyCar {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
-        this.loadModel();
+
         this.createCamera();
         this.initEventListeners();
+    }
+
+    async init() {
+        try {
+            await this.loadModel();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     createCamera() {
@@ -61,15 +69,46 @@ class MyCar {
         }
     }
 
-    loadModel() {
+    async loadModel() {
         const loader = new GLTFLoader();
-        loader.load('./scenes/models/myCar.glb', (glb) => {
-            this.model = glb.scene;
-            this.model.position.y = 0.5;
-            this.scene.add(this.model);
-        }, undefined, (error) => {
-            console.error('An error happened while loading the model', error);
+
+        return new Promise((resolve, reject) => {
+            loader.load('./scenes/models/myCar.glb', (glb) => {
+                this.model = glb.scene;
+                this.model.position.y = 0.5;
+                this.model.rotation.y = Math.PI;
+                glb.scene.scale.set(2.7, 2.7, 2.7);
+                this.scene.add(this.model);
+                this.loadWheels();
+                this.model.name = "player_car";
+                resolve(this.model); // Resolve the promise with the loaded model
+            }, undefined, (error) => {
+                console.error('An error happened while loading the model', error);
+                reject(error); // Reject the promise on error
+            });
         });
+    }
+
+    loadWheels() {
+        const loader = new GLTFLoader();
+        loader.load('./scenes/models/wheels.glb', (gltf) => {
+            const wheelModel = gltf.scene;
+            gltf.scene.scale.set(0.15, 0.15, 0.15);
+            gltf.scene.rotation.y=Math.PI /2;
+            // Create and position wheels
+            this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, 0.45)); // Back-Left
+            this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, 0.45)); // Front-Left
+            this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, -0.45)); // Back-Right
+            this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, -0.45)); // Front-Left
+        }, undefined, (error) => {
+            console.error('An error happened while loading the wheel model', error);
+        });
+    }
+
+    createWheel(wheelModel, position) {
+        const wheel = wheelModel.clone();
+        wheel.position.copy(position);
+        this.model.add(wheel);
     }
 
     initEventListeners() {
@@ -99,7 +138,7 @@ class MyCar {
     updateMovement() {
         if (!this.model) return;
 
-        let forward = new THREE.Vector3(0, 0, -1);
+        let forward = new THREE.Vector3(-1, 0, 0);
         forward.applyQuaternion(this.model.quaternion);
 
         let turnAngle = 0;

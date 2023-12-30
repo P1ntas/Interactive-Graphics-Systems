@@ -13,19 +13,15 @@ class MyCarsUtils {
         this.buildCarsColumn("car_");
     }
 
-    applyTransformations() {
-        
-    }
-
     /*
     *
     * Build a colums full of boxes
     *
     */
     buildCarsColumn(name) {
-        console.log("this.garage.modelllll: ", this.garage.model);
+        //console.log("this.garage.modelllll: ", this.garage.model);
         for (let i = 0; i < 3; i++) {
-            console.log("this.garage.scene.position.x + i * 4: ", this.garage);
+            //console.log("this.garage.scene.position.x + i * 4: ", this.garage);
             this.buildCar(name + i, this.colors[i], -20 + this.garage.model.position.x + i * 4, this.garage.model.position.z);
         }
     }
