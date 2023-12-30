@@ -23,6 +23,36 @@
     <div id="canvas"></div>
     <div id="camera"></div>
     <script type="module" src="main.js"></script>
+    <script type="x-shader/x-vertex" id="vertexShader">
+      uniform float time;
+      uniform float scale;
+      varying vec3 vNormal;
+      varying vec2 vUv;
+  
+      void main() {
+          vNormal = normal;
+          vUv = uv;
+          float pulsate = abs(sin(time)) * scale;
+          vec3 newPos = position + normal * pulsate;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+      }
+  </script>
+  
+  
+  <script type="x-shader/x-fragment" id="fragmentShader">
+    varying vec3 vNormal;
+    varying vec2 vUv;
+    uniform sampler2D tex;
+
+    void main() {
+        vec3 light = vec3(0.5, 0.5, 1.0);
+        light = normalize(light);
+        float dProd = max(0.0, dot(vNormal, light));
+        gl_FragColor = texture2D(tex, vUv);
+    }
+</script>
+
+  
 </body>
 
 </html>
