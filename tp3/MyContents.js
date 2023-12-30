@@ -15,6 +15,8 @@ import { MyTimer } from './MyTimer.js';
 import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
+import { MyFirework } from './MyFirework.js';
+
 /**
  *  This class contains the contents of out application
  */
@@ -35,6 +37,7 @@ class MyContents  {
         this.signs = []
         this.cones = []
         this.clocks = []
+        this.fireworks = []
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");	
@@ -629,6 +632,24 @@ class MyContents  {
        this.rival.update(deltaTime);
        this.timer.update();
        console.log(this.timer.getFormattedTime());
+
+        if(Math.random()  < 0.05 ) {
+            this.fireworks.push(new MyFirework(this.app, this))
+            console.log("firework added")
+        }
+
+        // for each fireworks 
+        for( let i = 0; i < this.fireworks.length; i++ ) {
+            // is firework finished?
+            if (this.fireworks[i].done) {
+                // remove firework 
+                this.fireworks.splice(i,1) 
+                console.log("firework removed")
+                continue 
+            }
+            // otherwise upsdate  firework
+            this.fireworks[i].update()
+        }
     }
 
     /**
