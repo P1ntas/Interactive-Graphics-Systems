@@ -16,6 +16,8 @@ import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
 import { MyFirework } from './MyFirework.js';
+import { CarsUtils } from './CarsUtils.js';
+import { MyPicking } from './MyPicking.js';
 
 /**
  *  This class contains the contents of out application
@@ -121,6 +123,14 @@ class MyContents  {
 
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
+
+        // Init cars garage content
+        this.carsUtils = new CarsUtils(this.app);
+        this.carsUtils.init();
+
+        // Init cars picking
+        this.carsPicking = new MyPicking(this.app, "car_");
+        this.carsPicking.init(this.carsUtils.car_meshes);
     }
 
     /**
