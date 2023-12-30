@@ -13,7 +13,6 @@ class MyTrafficCone {
             scale: { value: 0.1 },
             tex: { value: this.contents.textures["trafficConeTex"] }
         };
-        console.log(this.uniforms);
     }
 
     init() {
