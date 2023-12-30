@@ -31,7 +31,7 @@ class MyCar {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
-
+        this.wheels= [];
         this.createCamera();
         this.initEventListeners();
     }
@@ -109,6 +109,7 @@ class MyCar {
         const wheel = wheelModel.clone();
         wheel.position.copy(position);
         this.model.add(wheel);
+        this.wheels.push(wheel);
     }
 
     initEventListeners() {
@@ -133,6 +134,7 @@ class MyCar {
         requestAnimationFrame(this.animate);
         this.updateMovement();
         this.updateCamera();
+        this.updateWheelRotation();
     }
 
     updateMovement() {
@@ -201,6 +203,17 @@ class MyCar {
 
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
+    }
+
+    updateWheelRotation() {
+        const wheelCircumference = 2 * Math.PI * 0.3; 
+        const distanceTravelled = this.velocity.length(); 
+
+        const wheelRotation = distanceTravelled / wheelCircumference * 2 * Math.PI;
+
+        this.wheels.forEach(wheel => {
+            wheel.rotateX(wheelRotation); 
+        });
     }
 
     checkCollisionWithCones() {

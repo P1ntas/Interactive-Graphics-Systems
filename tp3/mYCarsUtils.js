@@ -7,11 +7,29 @@ class MyCarsUtils {
         this.garage = garage;
         this.car_meshes = [];
         this.colors = ["#ff0000", "#00ff00", "#0000ff"];
+        this.wheelModel = null;
     }
 
-    init() {
+    async init() {
+        await this.loadWheelModel();
         this.buildCarsColumn("car_");
     }
+
+    async loadWheelModel() {
+        const loader = new GLTFLoader();
+        return new Promise((resolve, reject) => {
+            loader.load('./scenes/models/wheels.glb', (gltf) => {
+                this.wheelModel = gltf.scene;
+                this.wheelModel.scale.set(0.15, 0.15, 0.15);
+                this.wheelModel.rotation.y = Math.PI / 2;
+                resolve();
+            }, undefined, (error) => {
+                console.error('An error happened while loading the wheel model', error);
+                reject(error);
+            });
+        });
+    }
+
 
     /*
     *
@@ -43,7 +61,7 @@ class MyCarsUtils {
         const loader = new GLTFLoader();
             loader.load('./scenes/models/myCar.glb', (glb) => {
                 glb.scene.position.x = xpos;
-                glb.scene.position.y = 1.3;
+                glb.scene.position.y = 1.7;
                 glb.scene.position.z = zPos;
                 glb.scene.rotation.y = - Math.PI / 2;
 
@@ -57,12 +75,14 @@ class MyCarsUtils {
                 console.log("glb.scene: ", glb.scene);
                 glb.scene.scale.set(2.7, 2.7, 2.7);
 
+                this.addWheelsToCar(glb.scene);
                 this.car_meshes.push(glb.scene);
                 this.app.scene.add(glb.scene);
             }, undefined, (error) => {
                 console.error('An error happened while loading the model', error);
             }
         );
+
 
         // Create a Cube Mesh with basic material
         /* let box = new THREE.BoxGeometry(
@@ -76,9 +96,22 @@ class MyCarsUtils {
         this.boxMesh.position.y = 0.5;
         this.boxMesh.position.z = 0; */
     }
-    
-}
 
+    addWheelsToCar(car) {
+        const wheelPositions = [
+            new THREE.Vector3(0.67, -0.25, 0.45),
+            new THREE.Vector3(-0.75, -0.25, 0.45),
+            new THREE.Vector3(0.67, -0.25, -0.45),
+            new THREE.Vector3(-0.75, -0.25, -0.45)
+        ];
+
+        wheelPositions.forEach(position => {
+            const wheel = this.wheelModel.clone();
+            wheel.position.copy(position);
+            car.add(wheel);
+        });
+    }
+}
 
 
 export { MyCarsUtils }
