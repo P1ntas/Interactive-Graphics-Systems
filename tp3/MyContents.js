@@ -54,6 +54,20 @@ class MyContents  {
         this.timer = new MyTimer();
         this.timer.start();
 
+        document.addEventListener('keydown', function(event) {
+            
+            if (event.code === 'Space') {
+                
+                if (this.timer.running) {
+                    if (this.timer.paused) {
+                        this.timer.resume();
+                    } else {
+                        this.timer.pause();
+                    }
+                }
+            }
+        });
+
         this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
@@ -626,7 +640,7 @@ class MyContents  {
        //this.display.update(); 
        let deltaTime = this.clock.getDelta();
        this.car.checkCollisionWithRival(this.rival);
-       this.rival.update(deltaTime);
+       if (!this.timer.paused) this.rival.update(deltaTime);
        this.timer.update();
        console.log(this.timer.getFormattedTime());
     }

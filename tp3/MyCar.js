@@ -82,6 +82,17 @@ class MyCar {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = true;
         }
+        
+        if (event.code === 'Space') {
+
+            if (this.app.contents.timer.running) {
+                if (this.app.contents.timer.paused) {
+                    this.app.contents.timer.resume();
+                } else {
+                    this.app.contents.timer.pause();
+                }
+            }
+        }
     }
 
     onKeyUp(event) {
@@ -98,6 +109,8 @@ class MyCar {
 
     updateMovement() {
         if (!this.model) return;
+
+        if (this.app.contents.timer.paused) return;
 
         let forward = new THREE.Vector3(0, 0, -1);
         forward.applyQuaternion(this.model.quaternion);
