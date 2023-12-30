@@ -54,20 +54,6 @@ class MyContents  {
         this.timer = new MyTimer();
         this.timer.start();
 
-        document.addEventListener('keydown', function(event) {
-            
-            if (event.code === 'Space') {
-                
-                if (this.timer.running) {
-                    if (this.timer.paused) {
-                        this.timer.resume();
-                    } else {
-                        this.timer.pause();
-                    }
-                }
-            }
-        });
-
         this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
