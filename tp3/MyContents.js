@@ -630,7 +630,7 @@ class MyContents  {
        this.timer.update();
        this.trafficCone.update();
        this.trafficCone2.update();
-       console.log(this.timer.getFormattedTime());
+       //console.log(this.timer.getFormattedTime());
     }
 
     /**

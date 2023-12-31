@@ -31,6 +31,8 @@ class MyCar {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
+        this.trackPoints = this.track.path.getPoints(200).map(point => 
+            new THREE.Vector3(point.x * -10, point.y * -1, point.z * 10));
         this.loadModel();
         this.createCamera();
         this.initEventListeners();
@@ -172,6 +174,12 @@ class MyCar {
         }
 
         this.checkCollisionWithClock();
+
+        if (!this.isCarOnTrack()) {
+            this.maxSpeed = this.originalMaxSpeed * 0.6;
+        } else {
+            this.maxSpeed = this.originalMaxSpeed;
+        }
 
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
@@ -348,6 +356,35 @@ class MyCar {
             this.app.contents.timer.takeTime(5); 
         }
     }
+
+    isCarOnTrack(threshold = 10) {
+        if (!this.model || !this.track || !this.track.path) {
+            console.error('Car or track not properly initialized.');
+            return false;
+        }
+    
+        const carPosition = new THREE.Vector3().setFromMatrixPosition(this.model.matrixWorld);
+
+        let closestPoint = this.trackPoints[0];
+        let minDistance = carPosition.distanceTo(closestPoint);
+    
+        for (let i = 1; i < this.trackPoints.length; i++) {
+            const distance = carPosition.distanceTo(this.trackPoints[i]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = this.trackPoints[i];
+            }
+        }
+        //console.log(minDistance);
+
+        /*if (minDistance > threshold) {
+            console.log('Car is off track!');
+        }
+        else console.log('Car is on track!');*/
+
+        return minDistance < threshold;
+    }
+    
     
     
 }
