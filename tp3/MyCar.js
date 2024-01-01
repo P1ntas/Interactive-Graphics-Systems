@@ -28,6 +28,9 @@ class MyCar {
         this.shroomEffectDuration = 5000; 
         this.lastShroomCollisionTime = 0;
         this.underShroomEffect = false;
+        this.lastIncrementTime = 0;
+        this.incrementCooldown = 10000;
+        this.passThroughCounter = 0;
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
@@ -114,6 +117,8 @@ class MyCar {
 
         if (this.app.contents.timer.paused) return;
 
+        this.checkPositionForWin();
+
         let forward = new THREE.Vector3(0, 0, -1);
         forward.applyQuaternion(this.model.quaternion);
 
@@ -184,6 +189,29 @@ class MyCar {
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
     }
+
+    checkPositionForWin() {
+        if (!this.model) return;
+
+        //console.log(this.model.position.x, this.model.position.z)
+        //console.log(this.passThroughCounter);
+    
+        const currentTime = Date.now();
+        const carX = this.model.position.x;
+        const carZ = this.model.position.z;
+
+        if (carX >= -1 && carX <= 1 && carZ >= -70 && carZ <= -50) {
+            if (currentTime - this.lastIncrementTime > this.incrementCooldown) {
+                this.passThroughCounter++;
+                this.lastIncrementTime = currentTime; 
+    
+                if (this.passThroughCounter === 3) {
+                    console.log("Game win");
+                }
+            }
+        }
+    }
+    
 
     checkCollisionWithCones() {
         if (!this.model || !this.app.contents || !this.app.contents.cones) {

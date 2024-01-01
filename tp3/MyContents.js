@@ -100,7 +100,7 @@ class MyContents  {
 
         this.shrooms.push(this.shroom2)
 
-        this.clock1 = new MyClock(-5, 1.2, 0, this.app.scene);
+        this.clock1 = new MyClock(40, 1.2, 55, this.app.scene);
         this.clock1.init();
         this.clocks.push(this.clock1)
 
