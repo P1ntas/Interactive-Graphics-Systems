@@ -74,6 +74,7 @@ class MyCarsUtils {
 
                 console.log("glb.scene: ", glb.scene);
                 glb.scene.scale.set(2.7, 2.7, 2.7);
+                glb.scene.name = name;
 
                 this.addWheelsToCar(glb.scene);
                 this.car_meshes.push(glb.scene);

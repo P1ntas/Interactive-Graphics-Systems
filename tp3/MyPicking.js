@@ -141,15 +141,18 @@ class MyPicking {
             this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
             //3. compute intersections
+            console.log("this.intersectObjs: " , this.intersectObjs);
             var intersects = this.raycaster.intersectObjects(this.intersectObjs);
 
             if (intersects.length > 0) {
                 const obj = intersects[0].object
-                if (this.notPickableObjIds.includes(obj.name)) {
+                console.log("Object: ", obj);
+                /* if (this.notPickableObjIds.includes(obj.name)) {
                     console.log("Object cannot be picked !")
                 }
                 else
-                    console.log("Object picked: " + obj.name)
+                    console.log("Object: " + obj)
+                    console.log("Object picked: " + obj.name) */
             }
         }
     }

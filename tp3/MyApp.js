@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MyContents } from './MyContents.js';
 import { MyGuiInterface } from './MyGuiInterface.js';
-import { MyMainMenu } from './Menus/MyMainMenu.js';
 import Stats from 'three/addons/libs/stats.module.js'
 
 /**
@@ -42,10 +41,6 @@ class MyApp  {
         };
 
         this.currentState = this.gameState.INITIAL_MENU;
-
-        if (this.currentState == "initialMenu") {
-            this.mainMenu = new MyMainMenu();
-        }
 
         // Create an empty scene
         this.scene = new THREE.Scene();

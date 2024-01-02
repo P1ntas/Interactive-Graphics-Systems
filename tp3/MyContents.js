@@ -16,8 +16,9 @@ import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
 import { MyFirework } from './MyFirework.js';
-import { MyCarsUtils } from './mYCarsUtils.js';
+import { MyCarsUtils } from './MyCarsUtils.js';
 import { MyPicking } from './MyPicking.js';
+import { MyMainMenu } from './Menus/MyMainMenu.js';
 
 /**
  *  This class contains the contents of out application
@@ -63,7 +64,7 @@ class MyContents  {
         this.display.init();
         this.app.scene.add(this.display.group);
 
-        this.finish = new MyFinishLine(0, 0, -60, this);
+        this.finish = new MyFinishLine(0, 0, -50, this);
         this.finish.init();
         this.app.scene.add(this.finish.group);
 
@@ -115,6 +116,7 @@ class MyContents  {
         this.clock = new THREE.Clock();
 
         this.rival = new MyRival(track.path, this.app.scene);
+        this.rival.init();
 
         this.garage = new MyGarage(-90, 0, 120, this.app.scene);
 
@@ -135,6 +137,9 @@ class MyContents  {
         // Init cars picking
         this.carsPicking = new MyPicking(this.app, "car_");
         this.carsPicking.init(this.carsUtils.car_meshes);
+
+        this.mainMenu = new MyMainMenu(130, 100, 0, this.app.scene);
+        this.mainMenu.createMenu();
     }
 
     /**
@@ -645,7 +650,7 @@ class MyContents  {
        this.car.checkCollisionWithRival(this.rival);
        this.rival.update(deltaTime);
        this.timer.update();
-       console.log(this.timer.getFormattedTime());
+       //console.log(this.timer.getFormattedTime());
 
         if(Math.random()  < 0.05 ) {
             this.fireworks.push(new MyFirework(this.app, this))

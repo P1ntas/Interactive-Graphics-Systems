@@ -46,13 +46,25 @@ class MyCar {
 
     createCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 5, -10);
         this.app.cameras['Car'] = this.camera;
     }
 
     updateCamera() {
         if (!this.model) return;
 
+        const cameraOffset = new THREE.Vector3(0, 2, 5); // Ajuste esses valores conforme necessário
+        const cameraPosition = this.model.position.clone().add(cameraOffset.applyQuaternion(this.model.quaternion));
+
+        this.camera.position.copy(cameraPosition);
+        this.camera.lookAt(this.model.position);
+    
+        // Se estiver usando OrbitControls ou algo similar, atualize-os aqui
+        if (this.app.controls) {
+            this.app.controls.target.copy(this.model.position);
+            this.app.controls.update();
+        }
+
+        /*
         const offset = new THREE.Vector3(0, 5, -this.cameraDistance);
 
         offset.applyQuaternion(this.model.quaternion);
@@ -66,7 +78,7 @@ class MyCar {
         if (this.app.controls !== null) {
             this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
-        }
+        } */
     }
 
     async loadModel() {
@@ -76,7 +88,7 @@ class MyCar {
             loader.load('./scenes/models/myCar.glb', (glb) => {
                 this.model = glb.scene;
                 this.model.position.y = 0.5;
-                this.model.rotation.y = Math.PI;
+                this.model.position.set(12, 1.7, -47);
                 glb.scene.scale.set(2.7, 2.7, 2.7);
                 this.scene.add(this.model);
                 this.loadWheels();
