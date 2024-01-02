@@ -106,7 +106,7 @@ class MyContents  {
 
         this.shrooms.push(this.shroom2)
 
-        this.clock1 = new MyClock(-5, 1.2, 0, this.app.scene);
+        this.clock1 = new MyClock(40, 1.2, 55, this.app.scene);
         this.clock1.init();
         this.clocks.push(this.clock1)
 
@@ -555,7 +555,7 @@ class MyContents  {
 
         this.app.scene.add(skyMesh);
 
-        let textures = {};
+        this.textures = {};
 
         for (var key in data.textures) {
             let texture = null;
@@ -564,12 +564,12 @@ class MyContents  {
                 const video = document.getElementById(data.textures[key].id);
                 texture = new THREE.VideoTexture(video);
                 texture.colorSpace = THREE.SRGBColorSpace;
-                textures[key] = texture;
+                this.textures[key] = texture;
             } else {
                 texture = new THREE.TextureLoader().load(data.textures[key].filepath);
                 texture.wrapS = THREE.ClampToEdgeWrapping
                 texture.wrapT = THREE.ClampToEdgeWrapping
-                textures[key] = texture;
+                this.textures[key] = texture;
             }
 
             this.buildMipmap(data.textures[key], texture);
@@ -583,14 +583,14 @@ class MyContents  {
                                         shininess: data.materials[key].shininess,
                                         map: textures[data.materials[key].textureref] });*/
             let material = new THREE.MeshBasicMaterial({ color: data.materials[key].color, 
-                map: textures[data.materials[key].textureref] });
+                map: this.textures[data.materials[key].textureref] });
 
             if (material.map) material.map.repeat.set(data.materials[key].texlength_s || 1, data.materials[key].texlength_t || 1);
             if (data.materials[key].twosided) material.side = THREE.DoubleSide;
             if (data.materials[key].wireframe) material.wireframe = data.materials[key].wireframe;
             if (data.materials[key].shading === "flat") material.flatShading = true;
             if (data.materials[key].bumpref) {
-                material.bumpMap = textures[data.materials[key].bumpref];
+                material.bumpMap = this.textures[data.materials[key].bumpref];
             };
             this.materials[data.materials[key].id] = material;
         }
@@ -648,7 +648,7 @@ class MyContents  {
        //this.display.update(); 
        let deltaTime = this.clock.getDelta();
        this.car.checkCollisionWithRival(this.rival);
-       this.rival.update(deltaTime);
+       if (!this.timer.paused) this.rival.update(deltaTime);
        this.timer.update();
        //console.log(this.timer.getFormattedTime());
 
@@ -669,6 +669,10 @@ class MyContents  {
             // otherwise upsdate  firework
             this.fireworks[i].update()
         }
+
+        this.trafficCone.update();
+        this.trafficCone2.update();
+        //console.log(this.timer.getFormattedTime());
     }
 
     /**

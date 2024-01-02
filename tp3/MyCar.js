@@ -28,10 +28,16 @@ class MyCar {
         this.shroomEffectDuration = 5000; 
         this.lastShroomCollisionTime = 0;
         this.underShroomEffect = false;
+        this.lastIncrementTime = 0;
+        this.incrementCooldown = 10000;
+        this.passThroughCounter = 0;
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
         this.wheels= [];
+        this.trackPoints = this.track.path.getPoints(200).map(point => 
+            new THREE.Vector3(point.x * -10, point.y * -1, point.z * 10));
+        this.loadModel();
         this.createCamera();
         this.initEventListeners();
     }
@@ -134,6 +140,17 @@ class MyCar {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = true;
         }
+        
+        if (event.code === 'Space') {
+
+            if (this.app.contents.timer.running) {
+                if (this.app.contents.timer.paused) {
+                    this.app.contents.timer.resume();
+                } else {
+                    this.app.contents.timer.pause();
+                }
+            }
+        }
     }
 
     onKeyUp(event) {
@@ -151,6 +168,10 @@ class MyCar {
 
     updateMovement() {
         if (!this.model) return;
+
+        if (this.app.contents.timer.paused) return;
+
+        this.checkPositionForWin();
 
         let forward = new THREE.Vector3(-1, 0, 0);
         forward.applyQuaternion(this.model.quaternion);
@@ -213,6 +234,12 @@ class MyCar {
 
         this.checkCollisionWithClock();
 
+        if (!this.isCarOnTrack()) {
+            this.maxSpeed = this.originalMaxSpeed * 0.6;
+        } else {
+            this.maxSpeed = this.originalMaxSpeed;
+        }
+
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
     }
@@ -228,40 +255,55 @@ class MyCar {
         });
     }
 
+    checkPositionForWin() {
+        if (!this.model) return;
+
+        //console.log(this.model.position.x, this.model.position.z)
+        //console.log(this.passThroughCounter);
+    
+        const currentTime = Date.now();
+        const carX = this.model.position.x;
+        const carZ = this.model.position.z;
+
+        if (carX >= -1 && carX <= 1 && carZ >= -70 && carZ <= -50) {
+            if (currentTime - this.lastIncrementTime > this.incrementCooldown) {
+                this.passThroughCounter++;
+                this.lastIncrementTime = currentTime; 
+    
+                if (this.passThroughCounter === 3) {
+                    console.log("Game win");
+                }
+            }
+        }
+    }
+    
+
     checkCollisionWithCones() {
-        if (!this.model || !this.app.contents || !this.app.contents.trafficCone) {
+        if (!this.model || !this.app.contents || !this.app.contents.cones) {
             return;
         }
-
+    
         const currentTime = Date.now();
-
+    
         if (currentTime - this.lastCollisionTime < this.collisionCooldown) {
             return; 
         }
-        
+    
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        let conePositionXZ = new THREE.Vector2(
-            this.app.contents.trafficCone.mesh.position.x, 
-            this.app.contents.trafficCone.mesh.position.z
-        );
-
-        if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
-            this.handleCollision();
-            this.lastCollisionTime = currentTime; 
-            this.collisionEndTime = currentTime + this.slowdownDuration; 
-            this.inCollisionState = true; 
-        }
-
-        conePositionXZ = new THREE.Vector2(
-            this.app.contents.trafficCone2.mesh.position.x, 
-            this.app.contents.trafficCone2.mesh.position.z
-        );
-
-        if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
-            this.handleCollision();
-            this.lastCollisionTime = currentTime; 
-            this.collisionEndTime = currentTime + this.slowdownDuration; 
-            this.inCollisionState = true; 
+    
+        for (let cone of this.app.contents.cones) {
+            const conePositionXZ = new THREE.Vector2(
+                cone.mesh.position.x, 
+                cone.mesh.position.z
+            );
+    
+            if (carPositionXZ.distanceTo(conePositionXZ) < 1) {
+                this.handleCollision();
+                this.lastCollisionTime = currentTime; 
+                this.collisionEndTime = currentTime + this.slowdownDuration; 
+                this.inCollisionState = true;
+                break; 
+            }
         }
     }
 
@@ -273,78 +315,68 @@ class MyCar {
     }
 
     checkCollisionWithSign() {
-        if (!this.model || !this.app.contents || !this.app.contents.sign) {
+        if (!this.model || !this.app.contents || !this.app.contents.signs) {
             return;
         }
-
+    
         const currentTime = Date.now();
-
+    
         if (currentTime - this.lastControlSwitchTime < this.controlSwitchDuration) {
             return; 
         }
-
+    
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        let signPositionXZ = new THREE.Vector2(
-            this.app.contents.sign.mesh.position.x, 
-            this.app.contents.sign.mesh.position.z
-        );
-
-        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
-            this.handleControlSwitch();
-            this.lastControlSwitchTime = currentTime;
-            //console.log("Switching controls")
-        }
-
-        signPositionXZ = new THREE.Vector2(
-            this.app.contents.sign2.mesh.position.x, 
-            this.app.contents.sign2.mesh.position.z
-        );
-
-        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
-            this.handleControlSwitch();
-            this.lastControlSwitchTime = currentTime;
-            //console.log("Switching controls")
+    
+        for (let sign of this.app.contents.signs) {
+            const signPositionXZ = new THREE.Vector2(
+                sign.mesh.position.x, 
+                sign.mesh.position.z
+            );
+    
+            if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
+                this.handleControlSwitch();
+                this.lastControlSwitchTime = currentTime;
+                break;
+            }
         }
     }
+    
 
     handleControlSwitch() {
         this.controlsSwitched = true;
     }
 
     checkCollisionWithShroom() {
-        if (!this.model || !this.app.contents || !this.app.contents.shroom.model) {
+        if (!this.model || !this.app.contents || !this.app.contents.shrooms) {
             return;
         }
-
+    
         const currentTime = Date.now();
-
+    
         if (currentTime - this.lastControlSwitchTime < this.controlSwitchDuration) {
             return; 
         }
-
+    
         const carPositionXZ = new THREE.Vector2(this.model.position.x, this.model.position.z);
-        let signPositionXZ = new THREE.Vector2(
-            this.app.contents.shroom.model.position.x, 
-            this.app.contents.shroom.model.position.z
-        );
-
-        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
-            this.handleShroomCollision();
-            this.lastControlSwitchTime = currentTime;
-            //console.log("Boosting")
-        }
-
-        signPositionXZ = new THREE.Vector2(
-            this.app.contents.shroom2.model.position.x, 
-            this.app.contents.shroom2.model.position.z
-        );
-
-        if (carPositionXZ.distanceTo(signPositionXZ) < 1) {
-            this.handleShroomCollision();
-            this.lastControlSwitchTime = currentTime;
-            //console.log("Boosting")
+    
+        for (let shroom of this.app.contents.shrooms) {
+            if (!shroom.model) {
+                continue;
+            }
+    
+            const shroomPositionXZ = new THREE.Vector2(
+                shroom.model.position.x, 
+                shroom.model.position.z
+            );
+    
+            if (carPositionXZ.distanceTo(shroomPositionXZ) < 1) {
+                this.handleShroomCollision();
+                this.lastControlSwitchTime = currentTime;
+                break;
+            }
         }
     }
+    
 
     handleShroomCollision() {
         this.lastShroomCollisionTime = Date.now();
@@ -379,7 +411,7 @@ class MyCar {
     }
 
     checkCollisionWithClock() {
-        if (!this.model || !this.app.contents || !this.app.contents.clock1 || !this.app.contents.clock1.model) {
+        if (!this.model || !this.app.contents || !this.app.contents.clocks) {
             return;
         }
     
@@ -388,24 +420,63 @@ class MyCar {
         if (currentTime - this.lastCollisionTime < this.collisionCooldown) {
             return;
         }
-        
+    
         const carPosition = new THREE.Vector3().setFromMatrixPosition(this.model.matrixWorld);
-        const clockPosition = new THREE.Vector3().setFromMatrixPosition(this.app.contents.clock1.model.matrixWorld);
+        const collisionDistance = 2;
     
-        const distance = carPosition.distanceTo(clockPosition);
-        const collisionDistance = 2; 
+        for (let clock of this.app.contents.clocks) {
+            if (!clock.model) {
+                continue; 
+            }
     
-        if (distance < collisionDistance) {
-            this.handleClockCollision();
-            this.lastCollisionTime = currentTime;
+            const clockPosition = new THREE.Vector3().setFromMatrixPosition(clock.model.matrixWorld);
+    
+            const distance = carPosition.distanceTo(clockPosition);
+    
+            if (distance < collisionDistance) {
+                this.handleClockCollision();
+                this.lastCollisionTime = currentTime;
+                break;
+            }
         }
     }
+    
+    
 
     handleClockCollision() {
         if (this.app.contents.timer) {
             this.app.contents.timer.takeTime(5); 
         }
     }
+
+    isCarOnTrack(threshold = 10) {
+        if (!this.model || !this.track || !this.track.path) {
+            console.error('Car or track not properly initialized.');
+            return false;
+        }
+    
+        const carPosition = new THREE.Vector3().setFromMatrixPosition(this.model.matrixWorld);
+
+        let closestPoint = this.trackPoints[0];
+        let minDistance = carPosition.distanceTo(closestPoint);
+    
+        for (let i = 1; i < this.trackPoints.length; i++) {
+            const distance = carPosition.distanceTo(this.trackPoints[i]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = this.trackPoints[i];
+            }
+        }
+        //console.log(minDistance);
+
+        /*if (minDistance > threshold) {
+            console.log('Car is off track!');
+        }
+        else console.log('Car is on track!');*/
+
+        return minDistance < threshold;
+    }
+    
     
     
 }

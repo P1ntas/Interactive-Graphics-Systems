@@ -3,14 +3,16 @@ import * as THREE from 'three';
 class MyTimer {
     constructor() {
         this.elapsedTime = 0;
-        this.lastUpdateTime = Date.now();
+        this.lastUpdateTime = 0;
         this.running = false;
+        this.paused = false;
     }
 
     start() {
         if (!this.running) {
             this.lastUpdateTime = Date.now();
             this.running = true;
+            this.paused = false;
         }
     }
 
@@ -19,8 +21,22 @@ class MyTimer {
         this.running = false;
     }
 
+    pause() {
+        if (this.running && !this.paused) {
+            this.update();
+            this.paused = true;
+        }
+    }
+
+    resume() {
+        if (this.running && this.paused) {
+            this.lastUpdateTime = Date.now();
+            this.paused = false;
+        }
+    }
+
     update() {
-        if (this.running) {
+        if (this.running && !this.paused) {
             const currentTime = Date.now();
             this.elapsedTime += currentTime - this.lastUpdateTime;
             this.lastUpdateTime = currentTime;
@@ -47,6 +63,5 @@ class MyTimer {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 }
-
 
 export { MyTimer }
