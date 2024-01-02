@@ -60,7 +60,9 @@ class MyCar {
 
         this.camera.lookAt(this.model.position);
 
-        if (this.app.controls !== null) {
+        console.log(this.app.activeCameraName)
+
+        if (this.app.activeCameraName == "Car" && this.app.controls !== null) {
             this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
         }
