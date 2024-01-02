@@ -34,14 +34,6 @@ class MyApp  {
      * initializes the application
      */
     init() {
-        this.gameState = {
-            INITIAL_MENU: 'initialMenu',
-            GAME_MENU: 'gameMenu',
-            GAMEOVER_MENU: 'gameOverMenu'
-        };
-
-        this.currentState = this.gameState.INITIAL_MENU;
-
         // Create an empty scene
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0x101010 );

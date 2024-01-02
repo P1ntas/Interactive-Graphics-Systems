@@ -45,15 +45,6 @@ class MyRival {
                 reject(error); // Reject the promise on error
             });
         });
-        /* loader.load('./scenes/models/car1.glb', (glb) => {
-            this.model = glb.scene;
-            
-            this.model.scale.set(1, 1, 1);
-            this.model.position.copy(this.points[0]); 
-            this.scene.add(this.model);
-        }, undefined, (error) => {
-            console.error('An error happened while loading the model', error);
-        });*/
     } 
 
     loadWheels() {

@@ -7,7 +7,7 @@
 
     <cameras initial="cam1" > 
         <perspective id="cam1" 
-            angle="60" 
+            angle="0" 
             near="0.1" 
             far="1000" 
             location="15 15 15" 

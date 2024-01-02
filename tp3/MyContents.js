@@ -15,6 +15,7 @@ import { MyTimer } from './MyTimer.js';
 import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
+import { MyStands } from './MyStands.js';
 import { MyFirework } from './MyFirework.js';
 import { MyCarsUtils } from './MyCarsUtils.js';
 import { MyPicking } from './MyPicking.js';
@@ -42,8 +43,11 @@ class MyContents  {
         this.clocks = []
         this.fireworks = []
 
+        this.countdown = 3; 
+        this.isRaceStarted = false;
+
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/scene.xml");	
+		this.reader.open("scenes/scene.xml");
     }
 
     /**
@@ -130,6 +134,9 @@ class MyContents  {
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
 
+        this.stands = new MyStands(40, 0, 40, this.app.scene);
+        this.stands.init();
+
         // Init cars garage content
         this.carsUtils = new MyCarsUtils(this.app, this.garage);
         this.carsUtils.init();
@@ -140,6 +147,19 @@ class MyContents  {
 
         this.mainMenu = new MyMainMenu(130, 100, 0, this.app.scene);
         this.mainMenu.createMenu();
+    }
+
+    async startCountdown() {
+        while (this.countdown > 0) {
+            console.log(this.countdown); 
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
+            this.countdown--;
+        }
+    
+        console.log("Go!"); 
+        this.isRaceStarted = true;
+        this.car.start(); 
+        this.rival.start();
     }
 
     /**
