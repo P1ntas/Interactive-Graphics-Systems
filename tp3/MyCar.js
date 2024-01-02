@@ -60,8 +60,6 @@ class MyCar {
 
         this.camera.lookAt(this.model.position);
 
-        console.log(this.app.activeCameraName)
-
         if (this.app.activeCameraName == "Car" && this.app.controls !== null) {
             this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
@@ -184,8 +182,6 @@ class MyCar {
 
         if (!this.isCarOnTrack()) {
             this.maxSpeed = this.originalMaxSpeed * 0.6;
-        } else {
-            this.maxSpeed = this.originalMaxSpeed;
         }
 
         this.velocity.clampLength(0, this.maxSpeed);
