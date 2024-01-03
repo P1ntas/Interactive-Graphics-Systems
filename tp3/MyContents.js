@@ -636,13 +636,13 @@ class MyContents  {
        this.trafficCone.update();
        this.trafficCone2.update();
 
-       /*if (this.timerElement) {
+       if (this.timerElement) {
         this.timerElement.textContent = this.timer.getFormattedTime();
         }
 
         if (this.lapElement) {
             this.lapElement.textContent = this.car.passThroughCounter;
-            }*/
+        }
     }
 
     /**
