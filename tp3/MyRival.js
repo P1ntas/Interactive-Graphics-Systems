@@ -92,19 +92,22 @@ class MyRival {
         if (this.currentPointIndex >= this.points.length) {
             this.currentPointIndex = 0;
         }
-
-        // Obter o ponto atual e o próximo ponto
+    
         const currentPoint = this.points[Math.floor(this.currentPointIndex)];
         const nextPointIndex = (Math.floor(this.currentPointIndex) + 1) % this.points.length;
         const nextPoint = this.points[nextPointIndex];
-
-        // Definir a posição do modelo
-        this.model.position.copy(currentPoint).add(new THREE.Vector3(0, 1.5, 0));
-
-        // Calcular a direção de movimento e ajustar a rotação do modelo
+    
+        this.model.position.copy(currentPoint);
+    
         const direction = new THREE.Vector3().subVectors(nextPoint, currentPoint).normalize();
-        const angle = Math.atan2(direction.x, direction.z);
-        this.model.rotation.y = angle;
+    
+        const rotation = new THREE.Euler().setFromQuaternion(
+            new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction)
+        );
+ 
+        rotation.y += Math.PI; 
+    
+        this.model.rotation.copy(rotation);
     }
     
 
