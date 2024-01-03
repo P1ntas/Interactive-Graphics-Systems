@@ -54,6 +54,10 @@ class MyContents  {
         this.timer = new MyTimer();
         this.timer.start();
 
+        this.timerElement = document.getElementById('timerDisplay');
+
+        this.lapElement = document.getElementById('lapDisplay');
+
         this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
@@ -630,7 +634,14 @@ class MyContents  {
        this.timer.update();
        this.trafficCone.update();
        this.trafficCone2.update();
-       //console.log(this.timer.getFormattedTime());
+
+       if (this.timerElement) {
+        this.timerElement.textContent = this.timer.getFormattedTime();
+        }
+
+        if (this.lapElement) {
+            this.lapElement.textContent = this.car.passThroughCounter;
+            }
     }
 
     /**
