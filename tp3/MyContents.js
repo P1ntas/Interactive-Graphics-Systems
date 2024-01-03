@@ -24,7 +24,7 @@ import { MyLevelsMenu } from './Menus/MyLevelsMenu.js';
 import { MyWinMenu } from './Menus/MyWinMenu.js';
 import { MyLostMenu } from './Menus/MyLostMenu.js';
 import { MyStateMachine } from './MyStateMachine.js';
-
+import { MyDisplay } from './MyDisplay.js';
 /**
  *  This class contains the contents of out application
  */
@@ -68,14 +68,22 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        this.timer = new MyTimer();
+        this.timer = new MyTimer(this);
         this.timer.start();
+
+        this.timerElement = document.getElementById('timerDisplay');
+
+        this.lapElement = document.getElementById('lapDisplay');
 
         this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
 
-        this.finish = new MyFinishLine(0, 0, -50, this);
+        this.display2 = new MyDisplay(-40, 3, -20, this);
+        this.display2.init();
+        this.app.scene.add(this.display2.group);
+
+        this.finish = new MyFinishLine(0, 0, -60, this);
         this.finish.init();
         this.app.scene.add(this.finish.group);
 
@@ -683,6 +691,17 @@ class MyContents  {
         this.trafficCone.update();
         this.trafficCone2.update();
         //console.log(this.timer.getFormattedTime());
+       this.display.update();
+       this.trafficCone.update();
+       this.trafficCone2.update();
+
+       if (this.timerElement) {
+        this.timerElement.textContent = this.timer.getFormattedTime();
+        }
+
+        if (this.lapElement) {
+            this.lapElement.textContent = this.car.passThroughCounter;
+        }
     }
 
     /**
