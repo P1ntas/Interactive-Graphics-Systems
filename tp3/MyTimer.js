@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
 class MyTimer {
-    constructor() {
+    constructor(contents) {
+        this.contents = contents;
         this.elapsedTime = 0;
         this.lastUpdateTime = 0;
         this.running = false;
@@ -41,6 +42,7 @@ class MyTimer {
             this.elapsedTime += currentTime - this.lastUpdateTime;
             this.lastUpdateTime = currentTime;
         }
+        
     }
 
     addTime(seconds) {

@@ -51,7 +51,7 @@ class MyContents  {
             this.app.scene.add(this.axis)
         }
 
-        this.timer = new MyTimer();
+        this.timer = new MyTimer(this);
         this.timer.start();
 
         this.timerElement = document.getElementById('timerDisplay');
@@ -632,16 +632,17 @@ class MyContents  {
        this.car.checkCollisionWithRival(this.rival);
        if (!this.timer.paused) this.rival.update(deltaTime);
        this.timer.update();
+       this.display.update();
        this.trafficCone.update();
        this.trafficCone2.update();
 
-       if (this.timerElement) {
+       /*if (this.timerElement) {
         this.timerElement.textContent = this.timer.getFormattedTime();
         }
 
         if (this.lapElement) {
             this.lapElement.textContent = this.car.passThroughCounter;
-            }
+            }*/
     }
 
     /**

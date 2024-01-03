@@ -158,6 +158,10 @@ class MyCar {
 
         this.checkCollisionWithCones();
 
+        if (!this.isCarOnTrack()) {
+            this.maxSpeed = this.originalMaxSpeed * 0.6;
+        } else this.maxSpeed = this.originalMaxSpeed;
+
         if (this.inCollisionState) {
             if (Date.now() < this.collisionEndTime) {
                 this.maxSpeed = this.originalMaxSpeed / 2;
@@ -179,10 +183,6 @@ class MyCar {
         }
 
         this.checkCollisionWithClock();
-
-        if (!this.isCarOnTrack()) {
-            this.maxSpeed = this.originalMaxSpeed * 0.6;
-        }
 
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
