@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class MyPicking {
     constructor(app, label) {
@@ -11,7 +10,9 @@ class MyPicking {
 
         this.raycaster = new THREE.Raycaster()
         this.raycaster.near = 1
-        this.raycaster.far = 20
+        this.raycaster.far = 1000
+
+        this.objMeshes = [];
 
         this.pointer = new THREE.Vector2();
 
@@ -89,7 +90,7 @@ class MyPicking {
     transverseRaycastProperties(intersects) {
         for (var i = 0; i < intersects.length; i++) {
 
-            console.log(intersects[i]);
+            //console.log(intersects[i]);
 
             /*
             An intersection has the following properties :
@@ -119,7 +120,7 @@ class MyPicking {
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
         //3. compute intersections
-        console.log("this.intersectObjs: ", this.intersectObjs);
+        //console.log("this.intersectObjs: ", this.intersectObjs);
         var intersects = this.raycaster.intersectObjects(this.intersectObjs);
 
         this.pickingHelper(intersects)
@@ -142,21 +143,58 @@ class MyPicking {
             //2. set the picking ray from the camera position and mouse coordinates
             this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
-            //3. compute intersections
-            console.log("this.intersectObjs: " , this.intersectObjs);
-            var intersects = this.raycaster.intersectObjects(this.intersectObjs);
+            this.isClickEvent = true;
 
-            if (intersects.length > 0) {
-                const obj = intersects[0].object
-                console.log("Object: ", obj);
-                /* if (this.notPickableObjIds.includes(obj.name)) {
-                    console.log("Object cannot be picked !")
-                }
-                else
-                    console.log("Object: " + obj)
-                    console.log("Object picked: " + obj.name) */
+            // 3. compute intersections
+            if (this.intersectObjs) {
+                var intersects = this.raycaster.intersectObjects(this.intersectObjs, true);
+                this.handleLeftMouseClick(intersects);
             }
         }
+    }
+
+    handleLeftMouseClick(intersects) {
+        for (var i = 0; i < intersects.length; i++) {
+            var intersect = this.findObject(intersects[i].object);
+
+            console.log("intersect.name: ", intersect.name);
+            if (intersect.name.includes(this.label)) {
+                switch (this.label) {
+                    case "_button":
+                        this.processButtonClicked(intersect)
+                        break;
+                    case "car_rival_":
+                        console.log("Rival car! ", intersect);
+                        this.processCarClicked(intersect)
+                        break;
+                    case "car_":
+                        console.log("My car! ", intersect);
+                        this.processCarClicked(intersect)
+                        break;
+                }
+            }
+        }
+    }
+
+    findObject(intersect) {
+        if (intersect.name.includes(this.label)) {
+            return intersect;
+        }
+
+        if (intersect.parent) {
+            return this.findObject(intersect.parent);
+        }
+
+        return null; // Car object not found
+    }
+
+    processButtonClicked(intersect) {
+        //console.log("processButtonClicked: ", intersect);
+        this.app.contents.stateMachine.update(intersect.name);
+    }
+
+    processCarClicked(intersect) {
+        this.app.contents.stateMachine.update(intersect.name)
     }
 }
 

@@ -8,14 +8,19 @@ class MyMainMenu {
         this.scene = scene;
         this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+    
         this.startButton = null;
 
-        this.createMenu();
+        
     }
 
-    createMenu() {
+    async init() {
+        await this.createMenu();
+    }
+
+    async createMenu() {
         this.createMenuBackgroundPlane();
-        this.createStartButton();
+        await this.createStartButton(); // Use 'await' to wait for the Promise to resolve
 
         console.log("here: ", this.startButton);
     }
@@ -31,6 +36,7 @@ class MyMainMenu {
                 plane.rotateY(Math.PI/2);
                 plane.position.set(this.x, this.y, this.z);
                 this.scene.add(plane);
+                
             },
             // onProgress callback
             undefined,
@@ -52,9 +58,12 @@ class MyMainMenu {
                     this.startButton = new THREE.Mesh(geometry, material);
                     this.startButton.rotateY(Math.PI/2);
                     this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
-                    this.startButton.name = 'startButton';
+                    this.startButton.name = 'start_button';
                     this.scene.add(this.startButton);
+
+                    console.log("this.startButton: ", this.startButton);
     
+                    
                     resolve(texture);
                 },
                 undefined,

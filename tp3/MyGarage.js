@@ -25,7 +25,6 @@ class MyGarage {
                 this.model.scale.set(1.5, 1.5, 1.5);
                 this.model.name = "garage";
 
-                console.log("this.model: ", this.model);
                 this.scene.add(this.model);
 
                 resolve(this.model); // Resolve the promise with the loaded model

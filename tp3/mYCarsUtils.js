@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class MyCarsUtils {
-    constructor(app, garage) {
+    constructor(app, garage, label) {
         this.app = app;
+        this.label = label;
         this.garage = garage;
         this.car_meshes = [];
         this.colors = ["#ff0000", "#00ff00", "#0000ff"];
@@ -12,7 +13,7 @@ class MyCarsUtils {
 
     async init() {
         await this.loadWheelModel();
-        this.buildCarsColumn("car_");
+        this.buildCarsColumn(this.label);
     }
 
     async loadWheelModel() {
@@ -60,25 +61,28 @@ class MyCarsUtils {
 
         const loader = new GLTFLoader();
             loader.load('./scenes/models/myCar.glb', (glb) => {
-                glb.scene.position.x = xpos;
-                glb.scene.position.y = 1.7;
-                glb.scene.position.z = zPos;
-                glb.scene.rotation.y = - Math.PI / 2;
+                var model = glb.scene;
+                model.position.x = xpos;
+                model.position.y = 1.7;
+                model.position.z = zPos;
+                model.rotation.y = - Math.PI / 2;
 
-                glb.scene.children[0].children[2].material = boxMaterial;
-                glb.scene.children[0].children[3].material = boxMaterial;
-                glb.scene.children[0].children[4].material = boxMaterial;
-                glb.scene.children[0].children[5].material = boxMaterial;
-                glb.scene.children[0].children[6].material = boxMaterial;
-                glb.scene.children[0].children[7].material = boxMaterial;
+                model.children[0].children[2].material = boxMaterial;
+                model.children[0].children[3].material = boxMaterial;
+                model.children[0].children[4].material = boxMaterial;
+                model.children[0].children[5].material = boxMaterial;
+                model.children[0].children[6].material = boxMaterial;
+                model.children[0].children[7].material = boxMaterial;
 
-                console.log("glb.scene: ", glb.scene);
-                glb.scene.scale.set(2.7, 2.7, 2.7);
-                glb.scene.name = name;
+                //console.log("MODEL: ", model);
+                model.scale.set(2.7, 2.7, 2.7);
 
-                this.addWheelsToCar(glb.scene);
-                this.car_meshes.push(glb.scene);
-                this.app.scene.add(glb.scene);
+                this.addWheelsToCar(model);
+
+                model.name = name;
+                
+                this.car_meshes.push(model);
+                this.app.scene.add(model);
             }, undefined, (error) => {
                 console.error('An error happened while loading the model', error);
             }

@@ -23,7 +23,7 @@ import { MyMainMenu } from './Menus/MyMainMenu.js';
 import { MyLevelsMenu } from './Menus/MyLevelsMenu.js';
 import { MyWinMenu } from './Menus/MyWinMenu.js';
 import { MyLostMenu } from './Menus/MyLostMenu.js';
-import { StateMachine } from './StateMachine.js';
+import { MyStateMachine } from './MyStateMachine.js';
 
 /**
  *  This class contains the contents of out application
@@ -53,8 +53,8 @@ class MyContents  {
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");
 
-        console.log("this.app.cameras: ", this.app.cameras);
-        this.stateMachine = new StateMachine(this.app, this.app.cameras);
+        //console.log("this.app.cameras: ", this.app.cameras);
+        this.stateMachine = new MyStateMachine(this.app, this.app.cameras);
     }
 
     /**
@@ -141,17 +141,18 @@ class MyContents  {
         }
 
         // Init buttons picking
-        this.carsUtils = new MyCarsUtils(this.app, this.garage);
+        this.carsUtils = new MyCarsUtils(this.app, this.garage, "car_");
         this.carsUtils.init();
 
-        this.carsUtils = new MyCarsUtils(this.app, this.rivalGarage);
-        this.carsUtils.init();
+        this.carsRivalUtils = new MyCarsUtils(this.app, this.rivalGarage, "car_rival_");
+        this.carsRivalUtils.init();
 
         // Create services
-        //this.menuPicking = new MyPicking(this.app, "_button");
+        this.menuPicking = new MyPicking(this.app, "_button");
         this.carsPicking = new MyPicking(this.app, "car_");
-
-        this.init_content();
+        this.rivalCarsPicking = new MyPicking(this.app, "car_rival_");
+        
+        await this.init_content();
         this.init_services();
     }
 
@@ -164,37 +165,21 @@ class MyContents  {
 
         // Init menus
         this.mainMenu = new MyMainMenu(130, 100, 100, this.app.scene);
-        this.mainMenu.createMenu();
+        await this.mainMenu.init();
 
         this.levelsMenu = new MyLevelsMenu(130, 100, 0, this.app.scene);
-        this.mainMenu.createMenu();
 
         this.lostMenu = new MyLostMenu(130, 100, -100, this.app.scene);   
-        this.lostMenu.createMenu();
 
         this.winMenu = new MyWinMenu(130, 150, -100, this.app.scene);
-        this.winMenu.createMenu();
         
     }
 
     init_services() {
         // Init picking
-        console.log("this.mainMenu.startButton: ", this.mainMenu.startButton);
-        //this.menuPicking.init([this.mainMenu.startButton]);
+        this.menuPicking.init([this.mainMenu.startButton]);
         this.carsPicking.init(this.carsUtils.car_meshes);
-    }
-
-    async startCountdown() {
-        while (this.countdown > 0) {
-            console.log(this.countdown); 
-            await new Promise(resolve => setTimeout(resolve, 1000)); 
-            this.countdown--;
-        }
-    
-        console.log("Go!"); 
-        this.isRaceStarted = true;
-        this.car.start(); 
-        this.rival.start();
+        this.rivalCarsPicking.init(this.carsRivalUtils.car_meshes);
     }
 
     /**
@@ -225,7 +210,7 @@ class MyContents  {
         
         this.setupCameras(data.cameras);
 
-        console.log("DATA: ", data.cameras);
+        //console.log("DATA: ", data.cameras);
 
         for (var node in data.nodes) {
             if (data.nodes[node].id === "scene") {

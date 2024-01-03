@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 
 class MyWinMenu {
@@ -13,7 +11,7 @@ class MyWinMenu {
 
         this.startButton = null;
 
-        this.createWinText
+        this.createMenu();
     }
 
     createMenu() {
@@ -53,7 +51,7 @@ class MyWinMenu {
                     this.startButton = new THREE.Mesh(geometry, material);
                     this.startButton.rotateY(Math.PI/2);
                     this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
-                    this.startButton.name = 'restartButton';
+                    this.startButton.name = 'restart_button';
                     this.scene.add(this.startButton);
     
                     resolve(texture);
