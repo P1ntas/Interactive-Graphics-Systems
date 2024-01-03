@@ -29,7 +29,7 @@ class MyDisplay {
             uniforms: {
                 mapTexture: { value: mapTexture },
                 bumpMap: { value: bumpMap },
-                bumpScale: { value: 0.05 }
+                bumpScale: { value: 0.2 }
             },
             vertexShader: `
             uniform sampler2D bumpMap;
@@ -60,7 +60,7 @@ class MyDisplay {
             `
         });
 
-        const displayGeometry = new THREE.BoxGeometry(9.5, 4, 0.1);
+        const displayGeometry = new THREE.PlaneGeometry(9.5, 4, 300, 300);
         const display = new THREE.Mesh(displayGeometry, customMaterial);
         display.position.set(3, 5.5, 0);
         this.group.add(display);
