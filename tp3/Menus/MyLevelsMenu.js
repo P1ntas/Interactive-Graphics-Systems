@@ -19,7 +19,7 @@ class MyLevelsMenu {
 
     createMenuBackgroundPlane() {
         const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('scenes/textures/menuBackground.jpg', 
+        textureLoader.load('scenes/textures/menuBackground.png', 
             // onLoad callback
             (texture) => {
                 const geometry = new THREE.PlaneGeometry(50, 30);

@@ -15,11 +15,12 @@ class MyLostMenu {
 
     createMenu() {
         this.createMenuBackgroundPlane();
+        this.createRestartButton();
     }
 
     createMenuBackgroundPlane() {
         const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('scenes/textures/menuBackground.jpg', 
+        textureLoader.load('scenes/textures/lostMenuBackground.png', 
             // onLoad callback
             (texture) => {
                 const geometry = new THREE.PlaneGeometry(50, 30);
@@ -36,6 +37,31 @@ class MyLostMenu {
                 console.error('Error loading menu background texture:', err);
             }
         );
+    }
+
+    createRestartButton() {
+        return new Promise((resolve, reject) => {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(
+                'scenes/textures/restartButton.png',
+                (texture) => {
+                    const geometry = new THREE.PlaneGeometry(7,7);
+                    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+                    this.startButton = new THREE.Mesh(geometry, material);
+                    this.startButton.rotateY(Math.PI/2);
+                    this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
+                    this.startButton.name = 'restartButton';
+                    this.scene.add(this.startButton);
+    
+                    resolve(texture);
+                },
+                undefined,
+                (err) => {
+                    console.error('Error loading start button texture:', err);
+                    reject(err);
+                }
+            );
+        });
     }
 }
 

@@ -13,17 +13,17 @@ class MyWinMenu {
 
         this.startButton = null;
 
-        this.createMenu();
+        this.createWinText
     }
 
     createMenu() {
         this.createMenuBackgroundPlane();
-        this.createWinText();
+        this.createRestartButton();
     }
 
     createMenuBackgroundPlane() {
         const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('scenes/textures/menuBackground.jpg', 
+        textureLoader.load('scenes/textures/winMenuBackground.png', 
             // onLoad callback
             (texture) => {
                 const geometry = new THREE.PlaneGeometry(50, 30);
@@ -42,22 +42,31 @@ class MyWinMenu {
         );
     }
 
-    createWinText() {
-        const loader = new FontLoader();
-        loader.load('fonts/helvetiker_bold.typeface.json', (font) => {
-            const textGeometry = new TextGeometry('Congratulations!! You win the game', {
-                font: font,
-                size: 1,
-                height: 0.1,
-            });
-
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
-            textMesh.position.set(this.x - 10, this.y + 5, this.z); // Ajuste esses valores conforme necessário
-            this.scene.add(textMesh);
+    createRestartButton() {
+        return new Promise((resolve, reject) => {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(
+                'scenes/textures/restartButton.png',
+                (texture) => {
+                    const geometry = new THREE.PlaneGeometry(7,7);
+                    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+                    this.startButton = new THREE.Mesh(geometry, material);
+                    this.startButton.rotateY(Math.PI/2);
+                    this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
+                    this.startButton.name = 'restartButton';
+                    this.scene.add(this.startButton);
+    
+                    resolve(texture);
+                },
+                undefined,
+                (err) => {
+                    console.error('Error loading start button texture:', err);
+                    reject(err);
+                }
+            );
         });
     }
+
 }
 
 export { MyWinMenu };

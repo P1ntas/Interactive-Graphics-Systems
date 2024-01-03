@@ -122,7 +122,7 @@ class MyContents  {
         this.clocks.push(this.clock1)
 
         this.car = new MyCar(this.app, track);
-        this.car.init();
+
 
         this.clock = new THREE.Clock();
 

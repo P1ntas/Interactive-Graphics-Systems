@@ -72,19 +72,27 @@ class MyRival {
 
     update(deltaTime) {
         if (this.points.length === 0 || !this.model) return;
-
+    
+        // Atualizar o índice do ponto atual com base na velocidade e deltaTime
         this.currentPointIndex += this.speed * deltaTime;
         if (this.currentPointIndex >= this.points.length) {
-            this.currentPointIndex = 0; 
+            this.currentPointIndex = 0;
         }
-
+    
+        // Obter o ponto atual e o próximo ponto
         const currentPoint = this.points[Math.floor(this.currentPointIndex)];
         const nextPointIndex = (Math.floor(this.currentPointIndex) + 1) % this.points.length;
         const nextPoint = this.points[nextPointIndex];
-
+    
+        // Definir a posição do modelo
         this.model.position.copy(currentPoint).add(new THREE.Vector3(0, 1.5, 0));
-        //this.model.lookAt(nextPoint);
+    
+        // Calcular a direção de movimento e ajustar a rotação do modelo
+        const direction = new THREE.Vector3().subVectors(nextPoint, currentPoint).normalize();
+        const angle = Math.atan2(direction.x, direction.z);
+        this.model.rotation.y = angle;
     }
+    
 
     // inverse direction
     /*update(deltaTime) {

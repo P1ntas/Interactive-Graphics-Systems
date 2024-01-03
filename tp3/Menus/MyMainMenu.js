@@ -22,7 +22,7 @@ class MyMainMenu {
 
     createMenuBackgroundPlane() {
         const textureLoader = new THREE.TextureLoader();
-        textureLoader.load('scenes/textures/menuBackground.jpg', 
+        textureLoader.load('scenes/textures/mainMenuBackground.png', 
             // onLoad callback
             (texture) => {
                 const geometry = new THREE.PlaneGeometry(50, 30);
@@ -47,11 +47,11 @@ class MyMainMenu {
             textureLoader.load(
                 'scenes/textures/startButton.png',
                 (texture) => {
-                    const geometry = new THREE.PlaneGeometry(10, 5); // Adjust size as needed
+                    const geometry = new THREE.PlaneGeometry(8, 8);
                     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
                     this.startButton = new THREE.Mesh(geometry, material);
                     this.startButton.rotateY(Math.PI/2);
-                    this.startButton.position.set(this.x + 0.2, this.y, this.z);
+                    this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
                     this.startButton.name = 'startButton';
                     this.scene.add(this.startButton);
     
