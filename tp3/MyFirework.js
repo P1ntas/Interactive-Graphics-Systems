@@ -15,7 +15,7 @@ class MyFirework {
         this.points   = null
         
         this.material = new THREE.PointsMaterial({
-            size: 0.3,
+            size: 0.5,
             color: 0xffffff,
             opacity: 1,
             vertexColors: true,
@@ -35,24 +35,27 @@ class MyFirework {
      */
 
     launch() {
-        let color = new THREE.Color()
-        color.setHSL( THREE.MathUtils.randFloat( 0.1, 0.9 ), 1, 0.9 )
-        let colors = [ color.r, color.g, color.b ]
+        let colors = [];
+        let x = THREE.MathUtils.randFloat(-5, 5);
+        let y = THREE.MathUtils.randFloat(this.height * 0.9, this.height * 1.1);
+        let z = THREE.MathUtils.randFloat(-5, 5);
+        this.dest.push(x, y, z - 40);
+        let vertices = [0, 0, -40];
 
-        let x = THREE.MathUtils.randFloat( -5, 5 ) 
-        let y = THREE.MathUtils.randFloat( this.height * 0.9, this.height * 1.1)
-        let z = THREE.MathUtils.randFloat( -5, 5 ) 
-        this.dest.push( x, y, z ) 
-        let vertices = [0,0,0]
-        
-        this.geometry = new THREE.BufferGeometry()
-        this.geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(vertices), 3 ) );
-        this.geometry.setAttribute( 'color', new THREE.BufferAttribute( new Float32Array(colors), 3 ) );
-        this.points = new THREE.Points( this.geometry, this.material )
+        // Generate random colors for each particle
+        for (let i = 0; i < vertices.length / 3; i++) {
+            let color = new THREE.Color();
+            color.setHSL(THREE.MathUtils.randFloat(0.1, 0.9), 1, 0.5);
+            colors.push(color.r, color.g, color.b);
+        }
+
+        this.geometry = new THREE.BufferGeometry();
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+        this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+        this.points = new THREE.Points(this.geometry, this.material);
         this.points.castShadow = true;
         this.points.receiveShadow = true;
-        this.app.scene.add( this.points )  
-        //console.log("firework launched")
+        this.app.scene.add(this.points);
     }
 
     /**
@@ -62,8 +65,18 @@ class MyFirework {
     explode(origin, n, rangeBegin, rangeEnd) {
 
        
-        this.app.scene.remove( this.points )
-        this.points.geometry.dispose()
+        this.app.scene.remove( this.points)
+        this.points.geometry.dispose();
+
+        let colors = [];
+        for (let i = 0; i < n; i++) {
+            let color = new THREE.Color();
+            color.setHSL(THREE.MathUtils.randFloat(0.1, 0.9), 1, 0.5);
+            colors.push(color.r, color.g, color.b);
+        }
+
+        // Update geometry with new colors
+        this.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
     }
     
     /**

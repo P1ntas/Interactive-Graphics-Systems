@@ -8,7 +8,7 @@ class MyLostMenu {
         this.scene = scene;
         this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-        this.startButton = null;
+        this.restartButton = null;
 
         this.createMenu();
     }
@@ -47,11 +47,11 @@ class MyLostMenu {
                 (texture) => {
                     const geometry = new THREE.PlaneGeometry(7,7);
                     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
-                    this.startButton = new THREE.Mesh(geometry, material);
-                    this.startButton.rotateY(Math.PI/2);
-                    this.startButton.position.set(this.x + 0.2, this.y+4, this.z);
-                    this.startButton.name = 'restart_button';
-                    this.scene.add(this.startButton);
+                    this.restartButton = new THREE.Mesh(geometry, material);
+                    this.restartButton.rotateY(Math.PI/2);
+                    this.restartButton.position.set(this.x + 0.2, this.y+4, this.z);
+                    this.restartButton.name = 'restart_button';
+                    this.scene.add(this.restartButton);
     
                     resolve(texture);
                 },
