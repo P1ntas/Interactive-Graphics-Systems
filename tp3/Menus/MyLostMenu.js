@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-class MyMainMenu {
+class MyLostMenu {
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -15,9 +15,6 @@ class MyMainMenu {
 
     createMenu() {
         this.createMenuBackgroundPlane();
-        this.createStartButton();
-
-        console.log("here: ", this.startButton);
     }
 
     createMenuBackgroundPlane() {
@@ -40,31 +37,6 @@ class MyMainMenu {
             }
         );
     }
-
-    createStartButton() {
-        return new Promise((resolve, reject) => {
-            const textureLoader = new THREE.TextureLoader();
-            textureLoader.load(
-                'scenes/textures/startButton.png',
-                (texture) => {
-                    const geometry = new THREE.PlaneGeometry(10, 5); // Adjust size as needed
-                    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
-                    this.startButton = new THREE.Mesh(geometry, material);
-                    this.startButton.rotateY(Math.PI/2);
-                    this.startButton.position.set(this.x + 0.2, this.y, this.z);
-                    this.startButton.name = 'startButton';
-                    this.scene.add(this.startButton);
-    
-                    resolve(texture);
-                },
-                undefined,
-                (err) => {
-                    console.error('Error loading start button texture:', err);
-                    reject(err);
-                }
-            );
-        });
-    }
 }
 
-export { MyMainMenu };
+export { MyLostMenu };

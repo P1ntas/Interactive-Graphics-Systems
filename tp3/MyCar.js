@@ -38,7 +38,7 @@ class MyCar {
         this.trackPoints = this.track.path.getPoints(200).map(point => 
             new THREE.Vector3(point.x * -10, point.y * -1, point.z * 10));
         this.loadModel();
-        this.createCamera();
+        // this.createCamera();
         this.initEventListeners();
     }
 
@@ -162,7 +162,7 @@ class MyCar {
     animate() {
         requestAnimationFrame(this.animate);
         this.updateMovement();
-        this.updateCamera();
+        // this.updateCamera();
         this.updateWheelRotation();
     }
 

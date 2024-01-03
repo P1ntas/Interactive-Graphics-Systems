@@ -8,6 +8,7 @@ let app = new MyApp()
 // initializes the application
 app.init()
 
+console.log("app: ", app);
 // create the contents object
 let contents = new MyContents(app)
 // initializes the contents

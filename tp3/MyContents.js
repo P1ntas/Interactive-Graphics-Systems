@@ -20,6 +20,10 @@ import { MyFirework } from './MyFirework.js';
 import { MyCarsUtils } from './MyCarsUtils.js';
 import { MyPicking } from './MyPicking.js';
 import { MyMainMenu } from './Menus/MyMainMenu.js';
+import { MyLevelsMenu } from './Menus/MyLevelsMenu.js';
+import { MyWinMenu } from './Menus/MyWinMenu.js';
+import { MyLostMenu } from './Menus/MyLostMenu.js';
+import { StateMachine } from './StateMachine.js';
 
 /**
  *  This class contains the contents of out application
@@ -48,6 +52,9 @@ class MyContents  {
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");
+
+        console.log("this.app.cameras: ", this.app.cameras);
+        this.stateMachine = new StateMachine(this.app, this.app.cameras);
     }
 
     /**
@@ -123,30 +130,58 @@ class MyContents  {
         this.rival.init();
 
         this.garage = new MyGarage(-90, 0, 120, this.app.scene);
+        this.rivalGarage = new MyGarage(-90, 0, -120, this.app.scene);
 
         try {
             await this.garage.init();
+            await this.rivalGarage.init();
             //console.log("this.garage: ", this.garage.model);
         } catch (error) {
             console.error(error);
         }
 
+        // Init buttons picking
+        this.carsUtils = new MyCarsUtils(this.app, this.garage);
+        this.carsUtils.init();
+
+        this.carsUtils = new MyCarsUtils(this.app, this.rivalGarage);
+        this.carsUtils.init();
+
+        // Create services
+        //this.menuPicking = new MyPicking(this.app, "_button");
+        this.carsPicking = new MyPicking(this.app, "car_");
+
+        this.init_content();
+        this.init_services();
+    }
+
+    async init_content() {
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
 
         this.stands = new MyStands(40, 0, 40, this.app.scene);
         this.stands.init();
 
-        // Init cars garage content
-        this.carsUtils = new MyCarsUtils(this.app, this.garage);
-        this.carsUtils.init();
-
-        // Init cars picking
-        this.carsPicking = new MyPicking(this.app, "car_");
-        this.carsPicking.init(this.carsUtils.car_meshes);
-
-        this.mainMenu = new MyMainMenu(130, 100, 0, this.app.scene);
+        // Init menus
+        this.mainMenu = new MyMainMenu(130, 100, 100, this.app.scene);
         this.mainMenu.createMenu();
+
+        this.levelsMenu = new MyLevelsMenu(130, 100, 0, this.app.scene);
+        this.mainMenu.createMenu();
+
+        this.lostMenu = new MyLostMenu(130, 100, -100, this.app.scene);   
+        this.lostMenu.createMenu();
+
+        this.winMenu = new MyWinMenu(130, 150, -100, this.app.scene);
+        this.winMenu.createMenu();
+        
+    }
+
+    init_services() {
+        // Init picking
+        console.log("this.mainMenu.startButton: ", this.mainMenu.startButton);
+        //this.menuPicking.init([this.mainMenu.startButton]);
+        this.carsPicking.init(this.carsUtils.car_meshes);
     }
 
     async startCountdown() {
@@ -167,7 +202,7 @@ class MyContents  {
      * @param {MySceneData} data the entire scene data object
      */
     onSceneLoaded(data) {
-        console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
+        console.info("scene data loaded ", data, ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
     }
 
@@ -187,8 +222,11 @@ class MyContents  {
     onAfterSceneLoadedAndBeforeRender(data) {
 
         this.setupMaterials(data);
+        
+        this.setupCameras(data.cameras);
 
-        this.setupCameras(data);
+        console.log("DATA: ", data.cameras);
+
         for (var node in data.nodes) {
             if (data.nodes[node].id === "scene") {
                 this.traverseNode(data, node, 1);
@@ -621,44 +659,11 @@ class MyContents  {
      * Sets up cameras for the scene using provided data.
      * @param {MySceneData} data The scene data containing camera information.
      */
-    setupCameras(data) {
- 
-        for (var key in data.cameras) {
-            let cameraData = data.cameras[key];
-
-            let camera;
-
-            switch (cameraData.type) {
-                case "perspective":
-                    camera = new THREE.PerspectiveCamera(cameraData.angle, window.innerWidth / window.innerHeight, cameraData.near, cameraData.far);
-
-                    if(cameraData.location.length > 0) {
-                        camera.position.set(cameraData.location[0], cameraData.location[1], cameraData.location[2]);
-                    }
-        
-                    if(cameraData.target) {
-                        camera.lookAt(new THREE.Vector3(cameraData.target[0], cameraData.target[1], cameraData.target[2]));
-                    }
-                    this.app.cameras['XML Perspective'] = camera;
-                    break;
-
-                case "orthogonal":
-                    camera = new THREE.OrthographicCamera(cameraData.left, cameraData.right, cameraData.top, cameraData.bottom, cameraData.near, cameraData.far);
-
-                    if(cameraData.location.length > 0) {
-                        camera.position.set(cameraData.location[0], cameraData.location[1], cameraData.location[2]);
-                    }
-        
-                    if(cameraData.target) {
-                        camera.lookAt(new THREE.Vector3(cameraData.target[0], cameraData.target[1], cameraData.target[2]));
-                    }
-                    this.app.cameras['XML Orthogonal'] = camera;
-                    break;
-
-                default:
-                    break;
-            }
+    setupCameras(cameras) {
+        if (cameras) {
+            this.app.init_cameras(cameras);
         }
+        
     }
 
     /**

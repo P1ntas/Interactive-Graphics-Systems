@@ -28,6 +28,7 @@ class MyPicking {
     }
 
     init(meshes) {
+        console.log("meshes: ", meshes);
         this.intersectObjs = meshes;
     }
     
@@ -118,6 +119,7 @@ class MyPicking {
         this.raycaster.setFromCamera(this.pointer, this.app.getActiveCamera());
 
         //3. compute intersections
+        console.log("this.intersectObjs: ", this.intersectObjs);
         var intersects = this.raycaster.intersectObjects(this.intersectObjs);
 
         this.pickingHelper(intersects)

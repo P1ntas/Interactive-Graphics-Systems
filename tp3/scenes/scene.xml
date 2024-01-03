@@ -5,13 +5,37 @@
 
     <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
 
-    <cameras initial="cam1" > 
-        <perspective id="cam1" 
-            angle="0" 
+    <cameras initial="cameras" > 
+        <perspective id="MainMenuCam" 
+            angle="60" 
             near="0.1" 
             far="1000" 
-            location="15 15 15" 
-            target="0 0.0 0" /> 
+            location="180 100 -100" 
+            target="0 100 0" /> 
+        <perspective id="LostCam" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="180 100 0" 
+            target="0 100 0" /> 
+        <perspective id="WinCam" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="180 100 0" 
+            target="0 100 0" /> 
+        <perspective id="MyGarageCam"
+            angle="70" 
+            near="0.2" 
+            far="1000" 
+            location="-110 5 130" 
+            target="0 -100 0" /> 
+         <perspective id="MyRivalGarageCam"
+            angle="70" 
+            near="0.1" 
+            far="1000" 
+            location="-110 5 -130" 
+            target="-50 -100 0" /> 
     </cameras> 
 
     <textures>  
