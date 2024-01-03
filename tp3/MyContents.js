@@ -15,6 +15,7 @@ import { MyTimer } from './MyTimer.js';
 import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
+import { MyDisplay } from './MyDisplay.js';
 /**
  *  This class contains the contents of out application
  */
@@ -61,6 +62,10 @@ class MyContents  {
         this.display = new MyBillboard(35, 3, -30, this.timer, this);
         this.display.init();
         this.app.scene.add(this.display.group);
+
+        this.display2 = new MyDisplay(-40, 3, -20, this);
+        this.display2.init();
+        this.app.scene.add(this.display2.group);
 
         this.finish = new MyFinishLine(0, 0, -60, this);
         this.finish.init();
