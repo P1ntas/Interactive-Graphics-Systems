@@ -49,7 +49,7 @@ class MyBillboard {
 
         this.timerSprite = new THREE.Sprite(this.timerMaterial);
 
-        this.timerSprite.position.set(0, 6.5, 1);
+        this.timerSprite.position.set(3, 6, 1);
         this.timerSprite.scale.set(5, 1.25, 1);
 
         this.group.add(this.timerSprite);
@@ -60,7 +60,11 @@ class MyBillboard {
     update() {
         let timeString = this.timer.getFormattedTime();
 
-        if (this.contents.car) timeString += "                  " + this.contents.car.passThroughCounter;
+        if (this.contents.car) timeString += " " + this.contents.car.passThroughCounter
+                    + " " + this.contents.car.maxSpeed;
+
+        if (this.contents.timer.paused) timeString += " PAUSED";
+        else timeString += " PLAYING";
 
         this.timerContext.clearRect(0, 0, this.timerCanvas.width, this.timerCanvas.height);
 
