@@ -80,6 +80,7 @@ class MyCarsUtils {
                 this.addWheelsToCar(model);
 
                 model.name = name;
+                model.userData.originalColor = color;
                 
                 this.car_meshes.push(model);
                 this.app.scene.add(model);

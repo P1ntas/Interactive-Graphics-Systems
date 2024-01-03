@@ -38,7 +38,7 @@ class MyCar {
         this.trackPoints = this.track.path.getPoints(200).map(point => 
             new THREE.Vector3(point.x * -10, point.y * -1, point.z * 10));
         this.loadModel();
-        // this.createCamera();
+        this.createCamera();
         this.initEventListeners();
     }
 
@@ -51,14 +51,13 @@ class MyCar {
     }
 
     createCamera() {
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.app.cameras['Car'] = this.camera;
+        this.camera = this.app.cameras['GameCam'];
     }
 
     updateCamera() {
         if (!this.model) return;
 
-        const cameraOffset = new THREE.Vector3(0, 2, 5); // Ajuste esses valores conforme necessário
+        const cameraOffset = new THREE.Vector3(5, 2, 0); // Ajuste esses valores conforme necessário
         const cameraPosition = this.model.position.clone().add(cameraOffset.applyQuaternion(this.model.quaternion));
 
         this.camera.position.copy(cameraPosition);
@@ -95,7 +94,7 @@ class MyCar {
                 this.model = glb.scene;
                 this.model.position.y = 0.5;
                 this.model.position.set(12, 1.7, -47);
-                glb.scene.scale.set(2.7, 2.7, 2.7);
+                this.model.scale.set(2.7, 2.7, 2.7);
                 this.scene.add(this.model);
                 this.loadWheels();
                 this.model.name = "player_car";
@@ -475,7 +474,24 @@ class MyCar {
         return minDistance < threshold;
     }
     
-    
+    changeColor(color) {
+        let boxMaterial = new THREE.MeshPhongMaterial({
+                color: color,
+                specular: "#000000",
+                emissive: "#000000",
+                shininess: 90,
+            }
+        );
+
+        this.model.children[0].children[2].material = boxMaterial;
+        this.model.children[0].children[3].material = boxMaterial;
+        this.model.children[0].children[4].material = boxMaterial;
+        this.model.children[0].children[5].material = boxMaterial;
+        this.model.children[0].children[6].material = boxMaterial;
+        this.model.children[0].children[7].material = boxMaterial;
+
+        this.model.userData.originalColor = color;
+    }
     
 }
 

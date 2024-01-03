@@ -5,7 +5,6 @@ class MyRival {
     constructor(curve, scene) {
         this.curve = curve;
         this.scene = scene;
-        this.carMesh = null;
         const transformedPoints = this.curve.getPoints(50).map(p => 
             this.applyTransformations(p.clone())
         );
@@ -135,6 +134,25 @@ class MyRival {
         point.z *= 10;
     
         return point;
+    }
+
+    changeColor(color) {
+        let boxMaterial = new THREE.MeshPhongMaterial({
+                color: color,
+                specular: "#000000",
+                emissive: "#000000",
+                shininess: 90,
+            }
+        );
+
+        this.model.children[0].children[2].material = boxMaterial;
+        this.model.children[0].children[3].material = boxMaterial;
+        this.model.children[0].children[4].material = boxMaterial;
+        this.model.children[0].children[5].material = boxMaterial;
+        this.model.children[0].children[6].material = boxMaterial;
+        this.model.children[0].children[7].material = boxMaterial;
+
+        this.model.userData.originalColor = color;
     }
     
 }

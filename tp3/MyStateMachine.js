@@ -25,17 +25,24 @@ class MyStateMachine {
             case 'restart_button':
                 this.currentState = this.states['intial'];
                 break;
+            case 'car_0':
             case 'car_1':
             case 'car_2':
-            case 'car_3':
                 this.player_car_selected = btn_pressed;
                 this.currentState = this.states['rivalGarageCam'];
+                this.app.contents.car.changeColor(this.app.contents.carsUtils.car_meshes.find(carMesh => carMesh.name === btn_pressed).userData.originalColor);
                 break;
+            case 'car_rival_0':
             case 'car_rival_1':
             case 'car_rival_2':
-            case 'car_rival_3':
                 this.rival_car_selected = btn_pressed;
                 this.currentState = this.states['game'];
+                this.app.contents.timer.start();
+
+                // Update the player car and the opponent car colors
+                // this.app.contents.rival.changeColor()
+                this.app.contents.rival.changeColor(this.app.contents.carsRivalUtils.car_meshes.find(carMesh => carMesh.name === btn_pressed).userData.originalColor);
+                
                 break;
             default:
                 break;

@@ -53,7 +53,6 @@ class MyContents  {
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
 		this.reader.open("scenes/scene.xml");
 
-        //console.log("this.app.cameras: ", this.app.cameras);
         this.stateMachine = new MyStateMachine(this.app, this.app.cameras);
     }
 
@@ -69,7 +68,6 @@ class MyContents  {
         }
 
         this.timer = new MyTimer(this);
-        this.timer.start();
 
         this.timerElement = document.getElementById('timerDisplay');
 
@@ -83,7 +81,7 @@ class MyContents  {
         this.display2.init();
         this.app.scene.add(this.display2.group);
 
-        this.finish = new MyFinishLine(0, 0, -60, this);
+        this.finish = new MyFinishLine(0, 0, -50, this);
         this.finish.init();
         this.app.scene.add(this.finish.group);
 
@@ -130,13 +128,11 @@ class MyContents  {
         this.clocks.push(this.clock1)
 
         this.car = new MyCar(this.app, track);
-
-
-        this.clock = new THREE.Clock();
-
+        
         this.rival = new MyRival(track.path, this.app.scene);
         this.rival.init();
-
+        
+        this.clock = new THREE.Clock();
         this.garage = new MyGarage(-90, 0, 120, this.app.scene);
         this.rivalGarage = new MyGarage(-90, 0, -120, this.app.scene);
 
@@ -663,12 +659,13 @@ class MyContents  {
      * Update function, to be called for updating the state of contents, if necessary.
      */
     update() {
-       //this.display.update(); 
-       let deltaTime = this.clock.getDelta();
-       this.car.checkCollisionWithRival(this.rival);
-       if (!this.timer.paused) this.rival.update(deltaTime);
-       this.timer.update();
-       //console.log(this.timer.getFormattedTime());
+        if (this.stateMachine.currentState === this.stateMachine.states['game']) {
+            this.car.checkCollisionWithRival(this.rival);
+
+            let deltaTime = this.clock.getDelta();
+            this.rival.update(deltaTime);
+            this.timer.update();
+        }
 
         if(Math.random()  < 0.05 ) {
             this.fireworks.push(new MyFirework(this.app, this))

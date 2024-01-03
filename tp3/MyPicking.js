@@ -29,7 +29,6 @@ class MyPicking {
     }
 
     init(meshes) {
-        console.log("meshes: ", meshes);
         this.intersectObjs = meshes;
     }
     
@@ -157,7 +156,7 @@ class MyPicking {
         for (var i = 0; i < intersects.length; i++) {
             var intersect = this.findObject(intersects[i].object);
 
-            console.log("intersect.name: ", intersect.name);
+            //console.log("intersect.name: ", intersect.name);
             if (intersect.name.includes(this.label)) {
                 switch (this.label) {
                     case "_button":

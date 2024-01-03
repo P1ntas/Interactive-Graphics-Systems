@@ -181,6 +181,10 @@ class MyApp  {
             this.contents.update()
         }
 
+        if (this.contents.stateMachine.currentState === this.contents.stateMachine.states['game']) {
+            requestAnimationFrame(() => this.contents.car.updateCamera());
+        }
+
         // required if controls.enableDamping or controls.autoRotate are set to true
         this.controls.update();
 
