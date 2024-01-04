@@ -170,7 +170,9 @@ class MyCar {
 
         if (this.app.contents.timer.paused) return;
 
-        this.checkPositionForWin();
+        if (this.app.contents.stateMachine.currentState === this.app.contents.stateMachine.states['game']) {
+            this.checkPositionForWin();
+        }
 
         let forward = new THREE.Vector3(-1, 0, 0);
         forward.applyQuaternion(this.model.quaternion);
@@ -261,14 +263,14 @@ class MyCar {
         const currentTime = Date.now();
         const carX = this.model.position.x;
         const carZ = this.model.position.z;
-
-        if (carX >= -1 && carX <= 1 && carZ >= -70 && carZ <= -50) {
+        if (carX >= 0 && carX <= 15 && carZ >= -55 && carZ <= -40) {
             if (currentTime - this.lastIncrementTime > this.incrementCooldown) {
                 this.passThroughCounter++;
                 this.lastIncrementTime = currentTime; 
     
-                if (this.passThroughCounter === 3) {
+                if (this.passThroughCounter > 3) {
                     console.log("Game win");
+                    this.app.contents.stateMachine.currentState = this.app.contents.stateMachine.states['win'];
                 }
             }
         }
