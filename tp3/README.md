@@ -45,3 +45,12 @@ The picking system, as well as the shader of the outdoor display, gave us partic
 
 ## Screenshots
 
+Here are some screenshots of the scene:
+![startMenu](./scenes/screenshots/startMenu.png)
+
+![PickingCar](./scenes/screenshots/garage.png)
+
+![Game](./scenes/screenshots/game.png)
+
+![GameWin](./scenes/screenshots/gameWin.png)
+
