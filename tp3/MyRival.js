@@ -19,7 +19,7 @@ class MyRival {
 
     loadModel() {
         const loader = new GLTFLoader();
-        loader.load('./scenes/models/car1_rival.glb', (glb) => {
+        loader.load('./scenes/models/car1.glb', (glb) => {
             this.model = glb.scene;
             
             this.model.scale.set(1, 1, 1);
@@ -32,18 +32,30 @@ class MyRival {
 
     update(deltaTime) {
         if (this.points.length === 0 || !this.model) return;
-
+    
         this.currentPointIndex += this.speed * deltaTime;
         if (this.currentPointIndex >= this.points.length) {
-            this.currentPointIndex = 0; 
+            this.currentPointIndex = 0;
         }
-
+    
         const currentPoint = this.points[Math.floor(this.currentPointIndex)];
         const nextPointIndex = (Math.floor(this.currentPointIndex) + 1) % this.points.length;
         const nextPoint = this.points[nextPointIndex];
-
+    
         this.model.position.copy(currentPoint);
-        this.model.lookAt(nextPoint);
+    
+        // Calculate the direction vector
+        const direction = new THREE.Vector3().subVectors(nextPoint, currentPoint).normalize();
+    
+        // Calculate the rotation
+        const rotation = new THREE.Euler().setFromQuaternion(
+            new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction)
+        );
+    
+        // Adjust for the original orientation of the model if needed
+        rotation.y += Math.PI; // Adjust this as per the model's original orientation
+    
+        this.model.rotation.copy(rotation);
     }
 
     // inverse direction
