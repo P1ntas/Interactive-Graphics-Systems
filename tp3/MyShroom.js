@@ -1,8 +1,17 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+/**
+ * Represents a mushroom object in a 3D environment, handling its loading, scaling, and positioning.
+ */
 class MyShroom {
-
+    /**
+     * Constructs a MyShroom object.
+     * @param {number} x The x-coordinate of the mushroom in the 3D world.
+     * @param {number} y The y-coordinate of the mushroom in the 3D world.
+     * @param {number} z The z-coordinate of the mushroom in the 3D world.
+     * @param {THREE.Scene} scene The scene to which the mushroom will be added.
+     */
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -12,6 +21,9 @@ class MyShroom {
         this.model = null;
     }
 
+    /**
+     * Initializes the mushroom by loading the model and setting its position and scale.
+     */
     init() {
         const loader = new GLTFLoader();
 

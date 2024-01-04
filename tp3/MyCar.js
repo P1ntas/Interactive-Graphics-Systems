@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+/**
+ * Represents a car in a 3D environment, handling its movement, collisions,
+ * and interactions with the environment.
+ */
 class MyCar {
+     /**
+     * Constructs a MyCar object.
+     * @param {Object} app The main application context.
+     * @param {Object} track The track on which the car will move.
+     */
     constructor(app, track) {
         this.scene = app.scene;
         this.app = app;
@@ -42,6 +51,9 @@ class MyCar {
         this.initEventListeners();
     }
 
+    /**
+     * Initializes the car model asynchronously.
+     */
     async init() {
         try {
             await this.loadModel();
@@ -50,20 +62,25 @@ class MyCar {
         }
     }
 
+    /**
+     * Creates the camera associated with the car.
+     */
     createCamera() {
         this.camera = this.app.cameras['GameCam'];
     }
 
+    /**
+     * Updates the camera position and orientation based on the car's position.
+     */
     updateCamera() {
         if (!this.model) return;
 
-        const cameraOffset = new THREE.Vector3(5, 2, 0); // Ajuste esses valores conforme necessário
+        const cameraOffset = new THREE.Vector3(5, 2, 0);
         const cameraPosition = this.model.position.clone().add(cameraOffset.applyQuaternion(this.model.quaternion));
 
         this.camera.position.copy(cameraPosition);
         this.camera.lookAt(this.model.position);
     
-        // Se estiver usando OrbitControls ou algo similar, atualize-os aqui
         if (this.app.controls) {
             this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
@@ -86,6 +103,10 @@ class MyCar {
         } */
     }
 
+    /**
+     * Asynchronously loads the car model from a specified path.
+     * @returns {Promise<THREE.Group>} A promise that resolves with the loaded model.
+     */
     async loadModel() {
         const loader = new GLTFLoader();
 
@@ -98,21 +119,24 @@ class MyCar {
                 this.scene.add(this.model);
                 this.loadWheels();
                 this.model.name = "player_car";
-                resolve(this.model); // Resolve the promise with the loaded model
+                resolve(this.model);
             }, undefined, (error) => {
                 console.error('An error happened while loading the model', error);
-                reject(error); // Reject the promise on error
+                reject(error);
             });
         });
     }
 
+    /**
+     * Loads the wheels of the car from a specified model.
+     */
     loadWheels() {
         const loader = new GLTFLoader();
         loader.load('./scenes/models/wheels.glb', (gltf) => {
             const wheelModel = gltf.scene;
             gltf.scene.scale.set(0.15, 0.15, 0.15);
             gltf.scene.rotation.y=Math.PI /2;
-            // Create and position wheels
+          
             this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, 0.45)); // Back-Left
             this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, 0.45)); // Front-Left
             this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, -0.45)); // Back-Right
@@ -122,6 +146,11 @@ class MyCar {
         });
     }
 
+    /**
+     * Creates a wheel at a specified position.
+     * @param {THREE.Group} wheelModel The 3D model of the wheel.
+     * @param {THREE.Vector3} position The position to place the wheel at.
+     */
     createWheel(wheelModel, position) {
         const wheel = wheelModel.clone();
         wheel.position.copy(position);
@@ -129,12 +158,19 @@ class MyCar {
         this.wheels.push(wheel);
     }
 
+    /**
+     * Initializes the event listeners for keyboard input.
+     */
     initEventListeners() {
         document.addEventListener('keydown', this.onKeyDown);
         document.addEventListener('keyup', this.onKeyUp);
         this.animate();
     }
 
+    /**
+     * Handles the keydown event for car control.
+     * @param {Event} event The keydown event.
+     */
     onKeyDown(event) {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = true;
@@ -152,12 +188,19 @@ class MyCar {
         }
     }
 
+    /**
+     * Handles the keyup event for car control.
+     * @param {Event} event The keyup event.
+     */
     onKeyUp(event) {
         if (['w', 'a', 's', 'd'].includes(event.key)) {
             this.keyStates[event.key] = false;
         }
     }
 
+    /**
+     * Animation loop to update the car's position and actions.
+     */
     animate() {
         requestAnimationFrame(this.animate);
         this.updateMovement();
@@ -165,6 +208,9 @@ class MyCar {
         this.updateWheelRotation();
     }
 
+    /**
+     * Updates the car's movement based on user input and physics.
+     */
     updateMovement() {
         if (!this.model) return;
 
@@ -243,6 +289,9 @@ class MyCar {
         this.model.position.add(this.velocity);
     }
 
+    /**
+     * Updates the rotation of the car's wheels based on movement.
+     */
     updateWheelRotation() {
         const wheelCircumference = 2 * Math.PI * 0.3; 
         const distanceTravelled = this.velocity.length(); 
@@ -254,6 +303,9 @@ class MyCar {
         });
     }
 
+    /**
+     * Checks if the car has reached a winning position on the track.
+     */
     checkPositionForWin() {
         if (!this.model) return;
 
@@ -276,7 +328,9 @@ class MyCar {
         }
     }
     
-
+    /**
+     * Checks for collision with cones on the track.
+     */
     checkCollisionWithCones() {
         if (!this.model || !this.app.contents || !this.app.contents.cones) {
             return;
@@ -306,6 +360,9 @@ class MyCar {
         }
     }
 
+    /**
+     * Handles the actions to be taken when a collision occurs.
+     */
     handleCollision() {
         //console.log("Handling collision"); 
         this.velocity.multiplyScalar(this.collisionDecelerationFactor); 
@@ -313,6 +370,9 @@ class MyCar {
         this.lastCollisionTime = Date.now();
     }
 
+    /**
+     * Checks for collision with signposts on the track and handles control switching.
+     */
     checkCollisionWithSign() {
         if (!this.model || !this.app.contents || !this.app.contents.signs) {
             return;
@@ -340,11 +400,16 @@ class MyCar {
         }
     }
     
-
+    /**
+     * Switches the control scheme for the car.
+     */
     handleControlSwitch() {
         this.controlsSwitched = true;
     }
 
+    /**
+     * Checks for collision with 'shroom' objects on the track.
+     */
     checkCollisionWithShroom() {
         if (!this.model || !this.app.contents || !this.app.contents.shrooms) {
             return;
@@ -376,12 +441,18 @@ class MyCar {
         }
     }
     
-
+    /**
+     * Handles the effect when the car collides with a 'shroom'.
+     */
     handleShroomCollision() {
         this.lastShroomCollisionTime = Date.now();
         this.underShroomEffect = true;
     }
 
+    /**
+     * Checks for collisions with a rival car.
+     * @param {Object} rival The rival car to check for collision against.
+     */
     checkCollisionWithRival(rival) {
         if (!this.model || !rival.model) return;
     
@@ -402,6 +473,9 @@ class MyCar {
         }
     }
 
+    /**
+     * Handles the effects when the car collides with rival.
+     */
     handleCollision() {
         this.velocity.multiplyScalar(this.collisionDecelerationFactor);
         this.isCollided = true;
@@ -409,6 +483,9 @@ class MyCar {
         this.collisionEndTime = Date.now() + this.slowdownDuration;
     }
 
+    /**
+     * Checks for collision with clock objects on the track.
+     */
     checkCollisionWithClock() {
         if (!this.model || !this.app.contents || !this.app.contents.clocks) {
             return;
@@ -441,13 +518,20 @@ class MyCar {
     }
     
     
-
+    /**
+     * Handles the effects when the car collides with a clock.
+     */
     handleClockCollision() {
         if (this.app.contents.timer) {
             this.app.contents.timer.takeTime(5); 
         }
     }
 
+    /**
+     * Checks if the car is on the track.
+     * @param {number} threshold The distance threshold to consider the car off track.
+     * @returns {boolean} True if the car is on track, false otherwise.
+     */
     isCarOnTrack(threshold = 10) {
         if (!this.model || !this.track || !this.track.path) {
             console.error('Car or track not properly initialized.');
@@ -476,6 +560,10 @@ class MyCar {
         return minDistance < threshold;
     }
     
+    /**
+     * Changes the color of the car.
+     * @param {string} color The new color for the car.
+     */
     changeColor(color) {
         let boxMaterial = new THREE.MeshPhongMaterial({
                 color: color,

@@ -1,6 +1,16 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a traffic cone in a 3D environment with a shader effect.
+ */
 class MyTrafficCone {
+    /**
+     * Constructs a MyTrafficCone object.
+     * @param {number} x The x-coordinate of the cone in the 3D world.
+     * @param {number} y The y-coordinate of the cone in the 3D world.
+     * @param {number} z The z-coordinate of the cone in the 3D world.
+     * @param {Object} contents Contains additional data and resources needed for the cone, like textures.
+     */
     constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
@@ -15,6 +25,9 @@ class MyTrafficCone {
         };
     }
 
+    /**
+     * Initializes the cone's geometry and shader material.
+     */
     init() {
         let cone = new THREE.ConeGeometry(1, 3, 32);
 
@@ -31,6 +44,9 @@ class MyTrafficCone {
         this.mesh.position.set(this.x, this.y, this.z);
     }
 
+    /**
+     * Updates the cone's shader material based on the elapsed time.
+     */
     update() {
         this.uniforms.time.value = this.clock.getElapsedTime();
     }

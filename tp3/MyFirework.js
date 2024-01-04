@@ -1,7 +1,14 @@
 import * as THREE from 'three'
 
+/**
+ * Represents a firework effect in a 3D environment, managing its animation, explosion, and lifecycle.
+ */
 class MyFirework {
-
+    /**
+     * Constructs a MyFirework object.
+     * @param {Object} app The main application context, containing the scene where the firework will be added.
+     * @param {THREE.Scene} scene The 3D scene to which the firework will be added.
+     */
     constructor(app, scene) {
         this.app = app
         this.scene = scene
@@ -33,7 +40,6 @@ class MyFirework {
     /**
      * compute particle launch
      */
-
     launch() {
         let colors = [];
         let x = THREE.MathUtils.randFloat(-5, 5);

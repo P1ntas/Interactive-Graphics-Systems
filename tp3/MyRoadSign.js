@@ -1,7 +1,17 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a road sign in a 3D environment, handling its creation, positioning, and orientation.
+ */
 class MyRoadSign {
 
+    /**
+     * Constructs a MyRoadSign object.
+     * @param {number} x The x-coordinate of the road sign in the 3D world.
+     * @param {number} y The y-coordinate of the road sign in the 3D world.
+     * @param {number} z The z-coordinate of the road sign in the 3D world.
+     * @param {Object} contents Contains additional data and resources like materials for the road sign.
+     */
     constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
@@ -9,6 +19,9 @@ class MyRoadSign {
         this.contents = contents;
     }
 
+    /**
+     * Initializes the road sign by creating and positioning its components.
+     */
     init() {
         let barGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 5, 32 );
         let bar = new THREE.Mesh(barGeometry, this.contents.materials["barApp"]);

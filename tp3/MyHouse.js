@@ -1,8 +1,17 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+/**
+ * Represents a house in a 3D environment, managing its loading, scaling, and positioning.
+ */
 class MyHouse {
-
+    /**
+     * Constructs a MyHouse object.
+     * @param {number} x The x-coordinate of the house in the 3D world.
+     * @param {number} y The y-coordinate of the house in the 3D world.
+     * @param {number} z The z-coordinate of the house in the 3D world.
+     * @param {THREE.Scene} scene The scene to which the house will be added.
+     */ 
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -12,6 +21,9 @@ class MyHouse {
         this.model = null;
     }
 
+    /**
+     * Initializes the house by loading the model and setting its position and scale.
+     */
     init() {
         const loader = new GLTFLoader();
 

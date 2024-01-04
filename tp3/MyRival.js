@@ -1,7 +1,15 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+/**
+ * Represents a rival car in a 3D environment, managing its movement along a predefined path and visual appearance.
+ */
 class MyRival {
+    /**
+     * Constructs a MyRival object.
+     * @param {THREE.Curve} curve The path along which the rival will move.
+     * @param {THREE.Scene} scene The scene to which the rival will be added.
+     */
     constructor(curve, scene) {
         this.curve = curve;
         this.scene = scene;
@@ -19,6 +27,9 @@ class MyRival {
         this.startedMoving = false; 
     }
 
+    /**
+     * Initializes the rival by loading the model and setting up its path.
+     */
     async init() {
         try {
             await this.loadModel();
@@ -27,6 +38,10 @@ class MyRival {
         }
     }
 
+    /**
+     * Asynchronously loads the rival car model.
+     * @returns {Promise<THREE.Group>} A promise that resolves with the loaded model.
+     */
     async loadModel() {
         const loader = new GLTFLoader();
 
@@ -47,6 +62,9 @@ class MyRival {
         });
     } 
 
+    /**
+     * Loads the wheels for the rival car.
+     */
     loadWheels() {
         const loader = new GLTFLoader();
         loader.load('./scenes/models/wheels.glb', (gltf) => {
@@ -63,6 +81,11 @@ class MyRival {
         });
     }
 
+    /**
+     * Creates a wheel at a specified position.
+     * @param {THREE.Group} wheelModel The 3D model of the wheel.
+     * @param {THREE.Vector3} position The position to place the wheel at.
+     */
     createWheel(wheelModel, position) {
         const wheel = wheelModel.clone();
         wheel.position.copy(position);
@@ -70,6 +93,10 @@ class MyRival {
         this.wheels.push(wheel);
     }
 
+    /**
+     * Updates the rival car's position and orientation based on the time elapsed.
+     * @param {number} deltaTime The time elapsed since the last update.
+     */
     update(deltaTime) {
         if (this.points.length === 0 || !this.model) return;
     
@@ -103,7 +130,11 @@ class MyRival {
         this.model.rotation.y += Math.PI / 2;
     }
     
-
+    /**
+     * Applies transformations to a point in the rival car's path.
+     * @param {THREE.Vector3} point The point to transform.
+     * @returns {THREE.Vector3} The transformed point.
+     */
     applyTransformations(point) {
         point.x *= 10;
         point.y += 0.5;
@@ -112,6 +143,10 @@ class MyRival {
         return point;
     }
 
+    /**
+     * Changes the color of the rival car.
+     * @param {string} color The new color for the rival car.
+     */
     changeColor(color) {
         let boxMaterial = new THREE.MeshPhongMaterial({
             color: color,

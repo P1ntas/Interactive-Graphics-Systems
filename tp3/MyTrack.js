@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a 3D track in a virtual environment, handling its creation, textures, and geometry.
+ */
 class MyTrack {
+    /**
+     * Constructs a MyTrack object.
+     * @param {Object} app The main application context.
+     * @param {Object} contents Contains additional data and resources needed for the track, like textures and materials.
+     */
     constructor(app, contents) {
         this.app = app;
         this.contents = contents;
@@ -27,12 +35,21 @@ class MyTrack {
         ]);
     }
 
+    /**
+     * Loads a texture from a given path.
+     * @returns {THREE.Texture} The loaded texture.
+     */
     loadTexture() {
         const texture = new THREE.TextureLoader().load("./scenes/textures/rainbow.jpeg");
         texture.wrapS = THREE.RepeatWrapping;
         return texture;
     }
 
+    /**
+     * Creates a material using a given texture.
+     * @param {THREE.Texture} texture The texture to use for the material.
+     * @returns {THREE.MeshBasicMaterial} The created material.
+     */
     createMaterial(texture) {
         let material = new THREE.MeshBasicMaterial({ map: texture });
         material.map.repeat.set(3, 3);
@@ -42,6 +59,10 @@ class MyTrack {
         return material;
     }
 
+    /**
+     * Creates a wireframe material.
+     * @returns {THREE.MeshBasicMaterial} The created wireframe material.
+     */
     createWireframeMaterial() {
         return new THREE.MeshBasicMaterial({
             color: 0x0000ff,
@@ -51,10 +72,18 @@ class MyTrack {
         });
     }
 
+    /**
+     * Creates a line material.
+     * @returns {THREE.LineBasicMaterial} The created line material.
+     */
     createLineMaterial() {
         return new THREE.LineBasicMaterial({ color: 0xff0000 });
     }
 
+    /**
+     * Creates the geometry for the track based on the defined path.
+     * @returns {THREE.TubeGeometry} The created geometry.
+     */
     createGeometry() {
         return new THREE.TubeGeometry(
             this.path,
@@ -65,10 +94,20 @@ class MyTrack {
         );
     }
 
+    /**
+     * Creates a mesh using the given geometry and material.
+     * @param {THREE.Geometry} geometry The geometry for the mesh.
+     * @param {THREE.Material} material The material for the mesh.
+     * @returns {THREE.Mesh} The created mesh.
+     */
     createMesh(geometry, material) {
         return new THREE.Mesh(geometry, material);
     }
 
+    /**
+     * Creates a line representing the track's path.
+     * @returns {THREE.Line} The created line.
+     */
     createLine() {
         let points = this.path.getPoints(this.segments);
         let geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -76,6 +115,9 @@ class MyTrack {
         return new THREE.Line(geometry, material);
     }
 
+    /**
+     * Creates the complete track with its geometry, mesh, and line.
+     */
     createTrack() {
         const wireframeMaterial = this.createWireframeMaterial();
         const geometry = this.createGeometry(this.path);

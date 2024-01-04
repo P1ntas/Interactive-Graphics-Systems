@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a finish line in a 3D environment, managing its creation and positioning.
+ */
 class MyFinishLine {
-
+    /**
+     * Constructs a MyFinishLine object.
+     * @param {number} x The x-coordinate of the finish line in the 3D world.
+     * @param {number} y The y-coordinate of the finish line in the 3D world.
+     * @param {number} z The z-coordinate of the finish line in the 3D world.
+     * @param {Object} contents Contains additional data and resources like materials for the finish line.
+     */
     constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
@@ -9,6 +18,9 @@ class MyFinishLine {
         this.contents = contents;
     }
 
+    /**
+     * Initializes the finish line by creating and positioning its components.
+     */
     init() {
         this.group = new THREE.Group();
 

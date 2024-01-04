@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 
+/**
+ * Manages the state transitions within an application, particularly for switching between different camera views.
+ */
 class MyStateMachine {
+    /**
+     * Constructs a MyStateMachine object.
+     * @param {Object} app The main application context, containing contents and functionalities.
+     * @param {Object} cameras An object containing different camera setups for various states.
+     */
     constructor(app, cameras) {
         this.app = app;
         this.cameras = cameras;
@@ -17,6 +25,10 @@ class MyStateMachine {
         this.currentState = this.states['initial'];
     }
 
+    /**
+     * Updates the current state based on a button press.
+     * @param {string} btn_pressed The identifier of the button pressed.
+     */
     update(btn_pressed) {
         switch(btn_pressed) {
             case 'start_button':

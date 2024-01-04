@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 
+/**
+ * Manages object picking in a 3D environment, handling interactions and visual changes on selected objects.
+ */
 class MyPicking {
+    /**
+     * Constructs a MyPicking object.
+     * @param {Object} app The main application context, containing contents and functionalities.
+     * @param {string} label The label to identify pickable objects.
+     */
     constructor(app, label) {
         this.app = app;
         this.label = label;
@@ -28,6 +36,10 @@ class MyPicking {
         );
     }
 
+    /**
+     * Initializes the picking functionality with specified meshes.
+     * @param {Array<THREE.Mesh>} meshes Array of meshes that are interactable.
+     */
     init(meshes) {
         this.intersectObjs = meshes;
     }
@@ -103,7 +115,10 @@ class MyPicking {
         }
     }
 
-
+    /**
+     * Handles pointer movement events for picking objects.
+     * @param {Event} event The pointer move event.
+     */
     onPointerMove(event) {
 
         // calculate pointer position in normalized device coordinates
@@ -127,6 +142,10 @@ class MyPicking {
         this.transverseRaycastProperties(intersects)
     }
 
+    /**
+     * Handles mouse down events for selecting objects.
+     * @param {Event} event The mouse down event.
+     */
     onMouseDown(event) {
         if (event.button === 0) { // left mouse button clicked
             
@@ -152,6 +171,10 @@ class MyPicking {
         }
     }
 
+    /**
+     * Handles the left mouse click event to process picking logic.
+     * @param {Array} intersects Array of intersected objects.
+     */
     handleLeftMouseClick(intersects) {
         for (var i = 0; i < intersects.length; i++) {
             var intersect = this.findObject(intersects[i].object);
@@ -175,6 +198,11 @@ class MyPicking {
         }
     }
 
+    /**
+     * Recursively finds an object with a specific label in the intersected object's hierarchy.
+     * @param {THREE.Object3D} intersect The intersected object.
+     * @returns {THREE.Object3D} The found object or null.
+     */
     findObject(intersect) {
         if (intersect.name.includes(this.label)) {
             return intersect;
@@ -187,11 +215,19 @@ class MyPicking {
         return null; // Car object not found
     }
 
+    /**
+     * Processes logic when a button object is clicked.
+     * @param {THREE.Object3D} intersect The intersected button object.
+     */
     processButtonClicked(intersect) {
         //console.log("processButtonClicked: ", intersect);
         this.app.contents.stateMachine.update(intersect.name);
     }
 
+    /**
+     * Processes logic when a car object is clicked.
+     * @param {THREE.Object3D} intersect The intersected car object.
+     */
     processCarClicked(intersect) {
         this.app.contents.stateMachine.update(intersect.name)
     }

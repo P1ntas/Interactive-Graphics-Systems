@@ -1,6 +1,16 @@
 import * as THREE from 'three';
 
+/**
+ * Represents a customizable display object in a 3D environment, managing its creation, texturing, and positioning.
+ */
 class MyDisplay {
+    /**
+     * Constructs a MyDisplay object.
+     * @param {number} x The x-coordinate of the display in the 3D world.
+     * @param {number} y The y-coordinate of the display in the 3D world.
+     * @param {number} z The z-coordinate of the display in the 3D world.
+     * @param {Object} contents Contains additional data and resources like materials for the display.
+     */
     constructor(x, y, z, contents) {
         this.x = x;
         this.y = y;
@@ -8,6 +18,9 @@ class MyDisplay {
         this.contents = contents;
     }
 
+    /**
+     * Initializes the display by creating and positioning its components.
+     */
     init() {
         this.group = new THREE.Group();
 
@@ -71,6 +84,10 @@ class MyDisplay {
         this.group.position.y += 1.5;
     }
 
+    /**
+     * Returns the mesh group of the display.
+     * @returns {THREE.Group} The group containing all components of the display.
+     */
     getMesh() {
         return this.group;
     }

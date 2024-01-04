@@ -1,8 +1,17 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+/**
+ * Represents a garage in a 3D environment, managing its loading, scaling, and positioning.
+ */
 class MyGarage {
-
+    /**
+     * Constructs a MyGarage object.
+     * @param {number} x The x-coordinate of the garage in the 3D world.
+     * @param {number} y The y-coordinate of the garage in the 3D world.
+     * @param {number} z The z-coordinate of the garage in the 3D world.
+     * @param {THREE.Scene} scene The scene to which the garage will be added.
+     */
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -12,6 +21,10 @@ class MyGarage {
         this.model = null;
     }
 
+    /**
+     * Initializes the garage by asynchronously loading the model and setting its position and scale.
+     * @returns {Promise<THREE.Group>} A promise that resolves with the loaded model.
+     */
     async init() {
         const loader = new GLTFLoader();
 
