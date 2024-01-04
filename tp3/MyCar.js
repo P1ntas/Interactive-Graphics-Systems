@@ -20,7 +20,7 @@ class MyCar {
         this.keyStates = { w: false, a: false, s: false, d: false };
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.acceleration = 0.5;
-        this.maxSpeed = 0.2;
+        this.maxSpeed = 0.8;
         this.deceleration = 0.03;
         this.cameraDistance = -5;
         this.collisionCooldown = 1000;

@@ -18,7 +18,7 @@ class MyRival {
         );
         this.curve = new THREE.CatmullRomCurve3(transformedPoints);
         this.points = this.curve.getPoints(100);
-        this.speed = 8; 
+        this.speed = 2; 
         this.currentPointIndex = 0;
         this.model = null;
         this.wheels = [];
