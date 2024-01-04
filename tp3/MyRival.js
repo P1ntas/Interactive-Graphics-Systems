@@ -44,16 +44,13 @@ class MyRival {
     
         this.model.position.copy(currentPoint);
     
-        // Calculate the direction vector
         const direction = new THREE.Vector3().subVectors(nextPoint, currentPoint).normalize();
     
-        // Calculate the rotation
         const rotation = new THREE.Euler().setFromQuaternion(
             new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction)
         );
-    
-        // Adjust for the original orientation of the model if needed
-        rotation.y += Math.PI; // Adjust this as per the model's original orientation
+ 
+        rotation.y += Math.PI; 
     
         this.model.rotation.copy(rotation);
     }
