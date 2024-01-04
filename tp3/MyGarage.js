@@ -12,18 +12,26 @@ class MyGarage {
         this.model = null;
     }
 
-    init() {
+    async init() {
         const loader = new GLTFLoader();
 
-        loader.load(this.modelPath, (gltf) => {
-            this.model = gltf.scene;
-            this.model.rotation.y = Math.PI / 2;
-            this.model.position.set(this.x, this.y, this.z);
-            this.model.position.y += 0.5
-            this.model.scale.set(1, 1, 1);
-            this.scene.add(this.model);
-        }, undefined, (error) => {
-            console.error('An error happened while loading the model:', error);
+        // Return a promise that resolves when the model is loaded
+        return new Promise((resolve, reject) => {
+            loader.load(this.modelPath, (gltf) => {
+                this.model = gltf.scene;
+                this.model.rotation.y = Math.PI / 2;
+                this.model.position.set(this.x, this.y, this.z);
+                this.model.position.y += 0.5;
+                this.model.scale.set(1.5, 1.5, 1.5);
+                this.model.name = "garage";
+
+                this.scene.add(this.model);
+
+                resolve(this.model); // Resolve the promise with the loaded model
+            }, undefined, (error) => {
+                console.error('An error happened while loading the model:', error);
+                reject(error); // Reject the promise on error
+            });
         });
     }
 }

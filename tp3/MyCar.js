@@ -34,6 +34,7 @@ class MyCar {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);
+        this.wheels= [];
         this.trackPoints = this.track.path.getPoints(200).map(point => 
             new THREE.Vector3(point.x * -10, point.y * -1, point.z * 10));
         this.loadModel();
@@ -41,15 +42,34 @@ class MyCar {
         this.initEventListeners();
     }
 
+    async init() {
+        try {
+            await this.loadModel();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     createCamera() {
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 5, -10);
-        this.app.cameras['Car'] = this.camera;
+        this.camera = this.app.cameras['GameCam'];
     }
 
     updateCamera() {
         if (!this.model) return;
 
+        const cameraOffset = new THREE.Vector3(5, 2, 0); // Ajuste esses valores conforme necessário
+        const cameraPosition = this.model.position.clone().add(cameraOffset.applyQuaternion(this.model.quaternion));
+
+        this.camera.position.copy(cameraPosition);
+        this.camera.lookAt(this.model.position);
+    
+        // Se estiver usando OrbitControls ou algo similar, atualize-os aqui
+        if (this.app.controls) {
+            this.app.controls.target.copy(this.model.position);
+            this.app.controls.update();
+        }
+
+        /*
         const offset = new THREE.Vector3(0, 5, -this.cameraDistance);
 
         offset.applyQuaternion(this.model.quaternion);
@@ -63,18 +83,50 @@ class MyCar {
         if (this.app.activeCameraName == "Car" && this.app.controls !== null) {
             this.app.controls.target.copy(this.model.position);
             this.app.controls.update();
-        }
+        } */
     }
 
-    loadModel() {
+    async loadModel() {
         const loader = new GLTFLoader();
-        loader.load('./scenes/models/car1.glb', (glb) => {
-            this.model = glb.scene;
-            this.model.position.y = 0.5;
-            this.scene.add(this.model);
-        }, undefined, (error) => {
-            console.error('An error happened while loading the model', error);
+
+        return new Promise((resolve, reject) => {
+            loader.load('./scenes/models/myCar.glb', (glb) => {
+                this.model = glb.scene;
+                this.model.position.y = 0.5;
+                this.model.position.set(12, 1.7, -47);
+                this.model.scale.set(2.7, 2.7, 2.7);
+                this.scene.add(this.model);
+                this.loadWheels();
+                this.model.name = "player_car";
+                resolve(this.model); // Resolve the promise with the loaded model
+            }, undefined, (error) => {
+                console.error('An error happened while loading the model', error);
+                reject(error); // Reject the promise on error
+            });
         });
+    }
+
+    loadWheels() {
+        const loader = new GLTFLoader();
+        loader.load('./scenes/models/wheels.glb', (gltf) => {
+            const wheelModel = gltf.scene;
+            gltf.scene.scale.set(0.15, 0.15, 0.15);
+            gltf.scene.rotation.y=Math.PI /2;
+            // Create and position wheels
+            this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, 0.45)); // Back-Left
+            this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, 0.45)); // Front-Left
+            this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, -0.45)); // Back-Right
+            this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, -0.45)); // Front-Left
+        }, undefined, (error) => {
+            console.error('An error happened while loading the wheel model', error);
+        });
+    }
+
+    createWheel(wheelModel, position) {
+        const wheel = wheelModel.clone();
+        wheel.position.copy(position);
+        this.model.add(wheel);
+        this.wheels.push(wheel);
     }
 
     initEventListeners() {
@@ -109,7 +161,8 @@ class MyCar {
     animate() {
         requestAnimationFrame(this.animate);
         this.updateMovement();
-        this.updateCamera();
+        // this.updateCamera();
+        this.updateWheelRotation();
     }
 
     updateMovement() {
@@ -119,7 +172,7 @@ class MyCar {
 
         this.checkPositionForWin();
 
-        let forward = new THREE.Vector3(0, 0, -1);
+        let forward = new THREE.Vector3(-1, 0, 0);
         forward.applyQuaternion(this.model.quaternion);
 
         let turnAngle = 0;
@@ -186,6 +239,17 @@ class MyCar {
 
         this.velocity.clampLength(0, this.maxSpeed);
         this.model.position.add(this.velocity);
+    }
+
+    updateWheelRotation() {
+        const wheelCircumference = 2 * Math.PI * 0.3; 
+        const distanceTravelled = this.velocity.length(); 
+
+        const wheelRotation = distanceTravelled / wheelCircumference * 2 * Math.PI;
+
+        this.wheels.forEach(wheel => {
+            wheel.rotateX(wheelRotation); 
+        });
     }
 
     checkPositionForWin() {
@@ -310,7 +374,6 @@ class MyCar {
         }
     }
     
-    
 
     handleShroomCollision() {
         this.lastShroomCollisionTime = Date.now();
@@ -411,7 +474,24 @@ class MyCar {
         return minDistance < threshold;
     }
     
-    
+    changeColor(color) {
+        let boxMaterial = new THREE.MeshPhongMaterial({
+                color: color,
+                specular: "#000000",
+                emissive: "#000000",
+                shininess: 90,
+            }
+        );
+
+        this.model.children[0].children[2].material = boxMaterial;
+        this.model.children[0].children[3].material = boxMaterial;
+        this.model.children[0].children[4].material = boxMaterial;
+        this.model.children[0].children[5].material = boxMaterial;
+        this.model.children[0].children[6].material = boxMaterial;
+        this.model.children[0].children[7].material = boxMaterial;
+
+        this.model.userData.originalColor = color;
+    }
     
 }
 

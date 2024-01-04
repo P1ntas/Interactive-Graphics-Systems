@@ -5,13 +5,45 @@
 
     <fog color="1.0 1.0 1.0 1.0" near="0.0" far="10000.0" />
 
-    <cameras initial="cam1" > 
-        <perspective id="cam1" 
+    <cameras initial="cameras" > 
+        <perspective id="MainMenuCam" 
             angle="60" 
             near="0.1" 
             far="1000" 
-            location="15 15 15" 
-            target="0 0.0 0" /> 
+            location="180 100 100" 
+            target="0 100 100" /> 
+
+        <perspective id="GameCam" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="20 5.7 -47" 
+            target="12 1.7 -47" /> 
+
+        <perspective id="LostCam" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="180 100 0" 
+            target="0 100 0" /> 
+        <perspective id="WinCam" 
+            angle="60" 
+            near="0.1" 
+            far="1000" 
+            location="180 100 0" 
+            target="0 100 0" /> 
+        <perspective id="GarageCam"
+            angle="70" 
+            near="0.2" 
+            far="1000" 
+            location="-110 5 130" 
+            target="0 -100 0" /> 
+        <perspective id="RivalGarageCam"
+            angle="70" 
+            near="0.1" 
+            far="1000" 
+            location="-110 5 -130" 
+            target="-50 -100 0" />
     </cameras> 
 
     <textures>  
@@ -22,7 +54,7 @@
         <texture id="trafficConeTex" filepath="scenes/textures/trafficCone.jpeg" />
     </textures> 
 
-    <skybox size="300 250 300" center="0 125 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/dark_sky.jpeg" down="./scenes/textures/dark_sky.jpeg" left="./scenes/textures/dark_sky.jpeg" right="./scenes/textures/dirt.avif" front="./scenes/textures/dark_sky.jpeg" back="./scenes/textures/dark_sky.jpeg"/>
+    <skybox size="300 250 300" center="0 125 0" emissive="1.0 1.0 1.0 1.0" intensity="1.0" up="./scenes/textures/dark_sky.jpeg" down="./scenes/textures/dark_sky.jpeg" left="./scenes/textures/dark_sky.jpeg" right="./scenes/textures/dark_sky.jpeg" front="./scenes/textures/dark_sky.jpeg" back="./scenes/textures/dark_sky.jpeg"/>
 
     <materials> 
 		<material id="arrowsApp" 

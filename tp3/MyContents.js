@@ -15,6 +15,15 @@ import { MyTimer } from './MyTimer.js';
 import { MyClock } from './MyClock.js';
 import { MyGarage } from './MyGarage.js';
 import { MyHouse } from './MyHouse.js';
+import { MyStands } from './MyStands.js';
+import { MyFirework } from './MyFirework.js';
+import { MyCarsUtils } from './MyCarsUtils.js';
+import { MyPicking } from './MyPicking.js';
+import { MyMainMenu } from './Menus/MyMainMenu.js';
+import { MyLevelsMenu } from './Menus/MyLevelsMenu.js';
+import { MyWinMenu } from './Menus/MyWinMenu.js';
+import { MyLostMenu } from './Menus/MyLostMenu.js';
+import { MyStateMachine } from './MyStateMachine.js';
 import { MyDisplay } from './MyDisplay.js';
 /**
  *  This class contains the contents of out application
@@ -36,15 +45,21 @@ class MyContents  {
         this.signs = []
         this.cones = []
         this.clocks = []
+        this.fireworks = []
+
+        this.countdown = 3; 
+        this.isRaceStarted = false;
 
         this.reader = new MyFileReader(app, this, this.onSceneLoaded);
-		this.reader.open("scenes/scene.xml");	
+		this.reader.open("scenes/scene.xml");
+
+        this.stateMachine = new MyStateMachine(this.app, this.app.cameras);
     }
 
     /**
      * initializes the contents
      */
-    init() {
+    async init() {
         // create once 
         if (this.axis === null) {
             // create and attach the axis to the scene
@@ -53,7 +68,6 @@ class MyContents  {
         }
 
         this.timer = new MyTimer(this);
-        this.timer.start();
 
         this.timerElement = document.getElementById('timerDisplay');
 
@@ -67,7 +81,7 @@ class MyContents  {
         this.display2.init();
         this.app.scene.add(this.display2.group);
 
-        this.finish = new MyFinishLine(0, 0, -60, this);
+        this.finish = new MyFinishLine(0, 0, -50, this);
         this.finish.init();
         this.app.scene.add(this.finish.group);
 
@@ -114,19 +128,62 @@ class MyContents  {
         this.clocks.push(this.clock1)
 
         this.car = new MyCar(this.app, track);
-
-        this.clock = new THREE.Clock();
-
+        
         this.rival = new MyRival(track.path, this.app.scene);
+        this.rival.init();
+        
+        this.clock = new THREE.Clock();
+        this.garage = new MyGarage(-90, 0, 120, this.app.scene);
+        this.rivalGarage = new MyGarage(-90, 0, -120, this.app.scene);
 
-        this.garage1 = new MyGarage(-90, 0, 120, this.app.scene);
-        this.garage1.init();
+        try {
+            await this.garage.init();
+            await this.rivalGarage.init();
+            //console.log("this.garage: ", this.garage.model);
+        } catch (error) {
+            console.error(error);
+        }
 
-        this.garage2 = new MyGarage(-90, 0, -120, this.app.scene);
-        this.garage2.init();
+        // Init buttons picking
+        this.carsUtils = new MyCarsUtils(this.app, this.garage, "car_");
+        this.carsUtils.init();
 
+        this.carsRivalUtils = new MyCarsUtils(this.app, this.rivalGarage, "car_rival_");
+        this.carsRivalUtils.init();
+
+        // Create services
+        this.menuPicking = new MyPicking(this.app, "_button");
+        this.carsPicking = new MyPicking(this.app, "car_");
+        this.rivalCarsPicking = new MyPicking(this.app, "car_rival_");
+        
+        await this.init_content();
+        this.init_services();
+    }
+
+    async init_content() {
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
+
+        this.stands = new MyStands(40, 0, 40, this.app.scene);
+        this.stands.init();
+
+        // Init menus
+        this.mainMenu = new MyMainMenu(130, 100, 100, this.app.scene);
+        await this.mainMenu.init();
+
+        this.levelsMenu = new MyLevelsMenu(130, 100, 0, this.app.scene);
+
+        this.lostMenu = new MyLostMenu(130, 100, -100, this.app.scene);   
+
+        this.winMenu = new MyWinMenu(130, 150, -100, this.app.scene);
+        
+    }
+
+    init_services() {
+        // Init picking
+        this.menuPicking.init([this.mainMenu.startButton]);
+        this.carsPicking.init(this.carsUtils.car_meshes);
+        this.rivalCarsPicking.init(this.carsRivalUtils.car_meshes);
     }
 
     /**
@@ -134,7 +191,7 @@ class MyContents  {
      * @param {MySceneData} data the entire scene data object
      */
     onSceneLoaded(data) {
-        console.info("scene data loaded " + data + ". visit MySceneData javascript class to check contents for each data item.")
+        console.info("scene data loaded ", data, ". visit MySceneData javascript class to check contents for each data item.")
         this.onAfterSceneLoadedAndBeforeRender(data);
     }
 
@@ -154,8 +211,11 @@ class MyContents  {
     onAfterSceneLoadedAndBeforeRender(data) {
 
         this.setupMaterials(data);
+        
+        this.setupCameras(data.cameras);
 
-        this.setupCameras(data);
+        //console.log("DATA: ", data.cameras);
+
         for (var node in data.nodes) {
             if (data.nodes[node].id === "scene") {
                 this.traverseNode(data, node, 1);
@@ -588,55 +648,46 @@ class MyContents  {
      * Sets up cameras for the scene using provided data.
      * @param {MySceneData} data The scene data containing camera information.
      */
-    setupCameras(data) {
- 
-        for (var key in data.cameras) {
-            let cameraData = data.cameras[key];
-
-            let camera;
-
-            switch (cameraData.type) {
-                case "perspective":
-                    camera = new THREE.PerspectiveCamera(cameraData.angle, window.innerWidth / window.innerHeight, cameraData.near, cameraData.far);
-
-                    if(cameraData.location.length > 0) {
-                        camera.position.set(cameraData.location[0], cameraData.location[1], cameraData.location[2]);
-                    }
-        
-                    if(cameraData.target) {
-                        camera.lookAt(new THREE.Vector3(cameraData.target[0], cameraData.target[1], cameraData.target[2]));
-                    }
-                    this.app.cameras['XML Perspective'] = camera;
-                    break;
-
-                case "orthogonal":
-                    camera = new THREE.OrthographicCamera(cameraData.left, cameraData.right, cameraData.top, cameraData.bottom, cameraData.near, cameraData.far);
-
-                    if(cameraData.location.length > 0) {
-                        camera.position.set(cameraData.location[0], cameraData.location[1], cameraData.location[2]);
-                    }
-        
-                    if(cameraData.target) {
-                        camera.lookAt(new THREE.Vector3(cameraData.target[0], cameraData.target[1], cameraData.target[2]));
-                    }
-                    this.app.cameras['XML Orthogonal'] = camera;
-                    break;
-
-                default:
-                    break;
-            }
+    setupCameras(cameras) {
+        if (cameras) {
+            this.app.init_cameras(cameras);
         }
+        
     }
 
     /**
      * Update function, to be called for updating the state of contents, if necessary.
      */
     update() {
-       //this.display.update(); 
-       let deltaTime = this.clock.getDelta();
-       this.car.checkCollisionWithRival(this.rival);
-       if (!this.timer.paused) this.rival.update(deltaTime);
-       this.timer.update();
+        if (this.stateMachine.currentState === this.stateMachine.states['game']) {
+            this.car.checkCollisionWithRival(this.rival);
+
+            let deltaTime = this.clock.getDelta();
+            this.rival.update(deltaTime);
+            this.timer.update();
+        }
+
+        if(Math.random()  < 0.05 ) {
+            this.fireworks.push(new MyFirework(this.app, this))
+            //console.log("firework added")
+        }
+
+        // for each fireworks 
+        for( let i = 0; i < this.fireworks.length; i++ ) {
+            // is firework finished?
+            if (this.fireworks[i].done) {
+                // remove firework 
+                this.fireworks.splice(i,1) 
+                //console.log("firework removed")
+                continue 
+            }
+            // otherwise upsdate  firework
+            this.fireworks[i].update()
+        }
+
+        this.trafficCone.update();
+        this.trafficCone2.update();
+        //console.log(this.timer.getFormattedTime());
        this.display.update();
        this.trafficCone.update();
        this.trafficCone2.update();

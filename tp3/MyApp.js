@@ -34,7 +34,6 @@ class MyApp  {
      * initializes the application
      */
     init() {
-                
         // Create an empty scene
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0x101010 );
@@ -42,9 +41,6 @@ class MyApp  {
         this.stats = new Stats()
         this.stats.showPanel(1) // 0: fps, 1: ms, 2: mb, 3+: custom
         document.body.appendChild(this.stats.dom)
-
-        this.initCameras();
-        this.setActiveCamera('Perspective')
 
         // Create a renderer with Antialiasing
         this.renderer = new THREE.WebGLRenderer({antialias:true});
@@ -64,53 +60,17 @@ class MyApp  {
     }
 
     /**
-     * initializes all the cameras
-     */
-    initCameras() {
-        const aspect = window.innerWidth / window.innerHeight;
-
-        // Create a basic perspective camera
-        const perspective1 = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 )
-        perspective1.position.set(10,10,3)
-        this.cameras['Perspective'] = perspective1
-
-        // defines the frustum size for the orthographic cameras
-        const left = -this.frustumSize / 2 * aspect
-        const right = this.frustumSize /2 * aspect 
-        const top = this.frustumSize / 2 
-        const bottom = -this.frustumSize / 2
-        const near = -this.frustumSize /2
-        const far =  this.frustumSize
-
-        // create a left view orthographic camera
-        const orthoLeft = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoLeft.up = new THREE.Vector3(0,1,0);
-        orthoLeft.position.set(-this.frustumSize /4,0,0) 
-        orthoLeft.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Left'] = orthoLeft
-
-        // create a top view orthographic camera
-        const orthoTop = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoTop.up = new THREE.Vector3(0,0,1);
-        orthoTop.position.set(0, this.frustumSize /4, 0) 
-        orthoTop.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Top'] = orthoTop
-
-        // create a front view orthographic camera
-        const orthoFront = new THREE.OrthographicCamera( left, right, top, bottom, near, far);
-        orthoFront.up = new THREE.Vector3(0,1,0);
-        orthoFront.position.set(0,0, this.frustumSize /4) 
-        orthoFront.lookAt( new THREE.Vector3(0,0,0) );
-        this.cameras['Front'] = orthoFront
-    }
-
-    /**
      * sets the active camera by name
      * @param {String} cameraName 
      */
     setActiveCamera(cameraName) {   
         this.activeCameraName = cameraName
         this.activeCamera = this.cameras[this.activeCameraName]
+    }
+
+    
+    getActiveCamera() {
+        return this.cameras[this.activeCameraName]
     }
 
     /**
@@ -120,6 +80,9 @@ class MyApp  {
      * it updates the active camera and the controls
      */
     updateCameraIfRequired() {
+        if (this.contents.stateMachine.currentState.name !== this.activeCameraName) {
+            this.activeCameraName = this.contents.stateMachine.currentState.name;
+        }
 
         // camera changed?
         if (this.lastCameraName !== this.activeCameraName) {
@@ -141,7 +104,44 @@ class MyApp  {
             else {
                 this.controls.object = this.activeCamera
             }
+
+            this.controls.target.copy(this.activeCamera.target.position);
+        }   
+
+        
+    }
+
+    init_cameras(cameras) {
+        const aspectRatio = window.innerWidth / window.innerHeight;
+
+        for (let cameraID in cameras) {
+            let cameraInfo = cameras[cameraID];
+
+            switch(cameraInfo.type) {
+                case "perspective":
+                    const perspectiveCamera = new THREE.PerspectiveCamera(cameraInfo.angle, aspectRatio, cameraInfo.near, cameraInfo.far);
+                    perspectiveCamera.position.set(cameraInfo.location[0], cameraInfo.location[1], cameraInfo.location[2]);
+                    perspectiveCamera.initialPosition = perspectiveCamera.position.clone()
+                    const targetObject = new THREE.Object3D()
+                    this.scene.add(targetObject)
+                    perspectiveCamera.target = targetObject
+                    perspectiveCamera.target.position.set(cameraInfo.target[0], cameraInfo.target[1], cameraInfo.target[2])
+                    perspectiveCamera.name = cameraID;
+                    this.cameras[cameraID] = perspectiveCamera;
+                    break;
+                case "orthogonal":
+                    const orthogonalCamera = new THREE.OrthographicCamera(cameraInfo.left, cameraInfo.right, cameraInfo.top, cameraInfo.bottom, cameraInfo.near, cameraInfo.far);
+                    orthogonalCamera.position.set(cameraInfo.location[0], cameraInfo.location[1], cameraInfo.location[2]);
+                    orthogonalCamera.lookAt(cameraInfo.target[0], cameraInfo.target[1], cameraInfo.target[2]);
+                    orthogonalCamera.up = new THREE.Vector3(0,0,1);
+                    this.cameras[cameraID] = orthogonalCamera;
+                    break;
+                default:
+                    console.log("Camera type not recognized");
+            }
         }
+
+        this.setActiveCamera('MainMenuCam');
     }
 
     /**
@@ -179,6 +179,10 @@ class MyApp  {
         // update the animation if contents were provided
         if (this.activeCamera !== undefined && this.activeCamera !== null) {
             this.contents.update()
+        }
+
+        if (this.contents.stateMachine.currentState === this.contents.stateMachine.states['game']) {
+            requestAnimationFrame(() => this.contents.car.updateCamera());
         }
 
         // required if controls.enableDamping or controls.autoRotate are set to true
