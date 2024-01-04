@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class MyClock {
 
+    // Constructs a MyClock object.
     constructor(x, y, z, scene) {
         this.x = x;
         this.y = y;
@@ -12,6 +13,10 @@ class MyClock {
         this.model = null;
     }
 
+    /**
+     * Initializes the clock by loading its 3D model and adding it to the scene.
+     * Handles the asynchronous loading of the model and sets its position and scale.
+     */
     init() {
         const loader = new GLTFLoader();
 

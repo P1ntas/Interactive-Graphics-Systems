@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+
 class MyCarsUtils {
+    // Constructs the MyCarsUtils object.
     constructor(app, garage, label) {
         this.app = app;
         this.label = label;
@@ -11,11 +13,19 @@ class MyCarsUtils {
         this.wheelModel = null;
     }
 
+    /**
+     * Initializes the utility by loading the wheel model and building the cars.
+     * @returns {Promise<void>} A promise that resolves when initialization is complete.
+     */
     async init() {
         await this.loadWheelModel();
         this.buildCarsColumn(this.label);
     }
 
+    /**
+     * Loads the wheel model for the cars.
+     * @returns {Promise<void>} A promise that resolves when the wheel model is loaded.
+     */
     async loadWheelModel() {
         const loader = new GLTFLoader();
         return new Promise((resolve, reject) => {
@@ -32,11 +42,10 @@ class MyCarsUtils {
     }
 
 
-    /*
-    *
-    * Build a colums full of boxes
-    *
-    */
+    /**
+     * Builds a column of cars with different colors.
+     * @param {string} name - The base name for the cars.
+     */
     buildCarsColumn(name) {
         //console.log("this.garage.modelllll: ", this.garage.model);
         for (let i = 0; i < 3; i++) {
@@ -89,20 +98,12 @@ class MyCarsUtils {
             }
         );
 
-
-        // Create a Cube Mesh with basic material
-        /* let box = new THREE.BoxGeometry(
-            this.boxMeshSize,
-            this.boxMeshSize,
-            this.boxMeshSize
-        );
-        this.boxMesh = new THREE.Mesh(box, boxMaterial);
-        this.boxMesh.name = name
-        this.boxMesh.position.x = xpos;
-        this.boxMesh.position.y = 0.5;
-        this.boxMesh.position.z = 0; */
     }
 
+    /**
+     * Adds wheels to a car model.
+     * @param {THREE.Object3D} car - The car to which wheels are to be added.
+     */
     addWheelsToCar(car) {
         const wheelPositions = [
             new THREE.Vector3(0.67, -0.25, 0.45),

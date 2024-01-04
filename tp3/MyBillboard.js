@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 class MyBillboard {
 
+    // Constructs a MyBillboard object.
     constructor(x, y, z, timer, contents) {
         this.x = x;
         this.y = y;
@@ -10,6 +11,10 @@ class MyBillboard {
         this.contents = contents;
     }
 
+    /**
+     * Initializes the billboard by creating its geometry, material, and texture.
+     * Sets up the billboard in the 3D space with the specified properties.
+     */
     init() {
         this.group = new THREE.Group();
 
@@ -57,6 +62,10 @@ class MyBillboard {
         this.update();
     }
 
+    /**
+     * Updates the display of the billboard with the current game time and other information.
+     * This method is called frequently to ensure the displayed information is current.
+     */
     update() {
         let timeString = this.timer.getFormattedTime();
 
@@ -78,6 +87,10 @@ class MyBillboard {
         this.timerTexture.needsUpdate = true;
     }
 
+    /**
+     * Gets the THREE.Group mesh of the billboard for adding to the 3D scene.
+     * @returns {THREE.Group} The group mesh of the billboard.
+     */
     getMesh() {
         return this.group;
     }

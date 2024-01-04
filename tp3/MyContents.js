@@ -160,6 +160,9 @@ class MyContents  {
         this.init_services();
     }
 
+    /**
+     * Initializes additional content for the application, such as houses and stands.
+     */
     async init_content() {
         this.house = new MyHouse(70, 0, -110, this.app.scene);
         this.house.init();
@@ -179,6 +182,9 @@ class MyContents  {
         
     }
 
+    /**
+     * Initializes services required by the application, like picking for interactive elements.
+     */
     init_services() {
         // Init picking
         this.menuPicking.init([this.mainMenu.startButton]);
@@ -434,7 +440,7 @@ class MyContents  {
                                         points.push([point.xx, point.yy, point.zz, 1]);
                                 }
                                 controlpoints.push(points);
-            }
+                            }
                             /* for (let i = 0; i < child.representations[0].controlpoints.length; i++) {
                                 let points = [child.representations[0].controlpoints[i].xx, 
                                             child.representations[0].controlpoints[i].yy,
