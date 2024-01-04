@@ -29,8 +29,8 @@ class MyCar {
         this.lastShroomCollisionTime = 0;
         this.underShroomEffect = false;
         this.lastIncrementTime = 0;
-        this.incrementCooldown = 10000;
-        this.passThroughCounter = 0;
+        this.incrementCooldown = 20000;
+        this.passThroughCounter = -1;
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.animate = this.animate.bind(this);

@@ -663,8 +663,8 @@ class MyContents  {
             this.car.checkCollisionWithRival(this.rival);
 
             let deltaTime = this.clock.getDelta();
-            this.rival.update(deltaTime);
             this.timer.update();
+            if (!this.timer.paused) this.rival.update(deltaTime);
         }
 
         if(Math.random()  < 0.05 ) {

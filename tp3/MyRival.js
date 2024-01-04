@@ -13,7 +13,7 @@ class MyRival {
         this.speed = 8; 
         this.currentPointIndex = 0;
         this.model = null;
-        this.wheels= [];
+        this.wheels = [];
         this.startTime = 2; 
         this.elapsedTime = 0;
         this.startedMoving = false; 
@@ -33,9 +33,7 @@ class MyRival {
         return new Promise((resolve, reject) => {
             loader.load('./scenes/models/myCar.glb', (glb) => {
                 this.model = glb.scene;
-                console.log("this.points[0]: ", this.points);
                 this.model.position.copy(this.points[0]).add(new THREE.Vector3(0, 1.5, 0));
-                console.log("glb.scene: ", glb.scene);
                 glb.scene.scale.set(2.7, 2.7, 2.7);
                 this.scene.add(this.model);
                 this.loadWheels();
@@ -54,7 +52,7 @@ class MyRival {
         loader.load('./scenes/models/wheels.glb', (gltf) => {
             const wheelModel = gltf.scene;
             gltf.scene.scale.set(0.15, 0.15, 0.15);
-            gltf.scene.rotation.y = Math.PI /2;
+            gltf.scene.rotation.y = Math.PI / 2;
             // Create and position wheels
             this.createWheel(wheelModel, new THREE.Vector3(0.67, -0.25, 0.45)); // Back-Left
             this.createWheel(wheelModel, new THREE.Vector3(-0.75, -0.25, 0.45)); // Front-Left
@@ -74,62 +72,37 @@ class MyRival {
 
     update(deltaTime) {
         if (this.points.length === 0 || !this.model) return;
-
-        // Incrementar o tempo decorrido
+    
         this.elapsedTime += deltaTime;
-
-        // Verificar se o carro já pode começar a se mover
+    
         if (!this.startedMoving) {
             if (this.elapsedTime >= this.startTime) {
                 this.startedMoving = true;
             } else {
-                return; // Não atualizar a posição se ainda não for hora de se mover
+                return;
             }
         }
-
-        // Atualizar o índice do ponto atual com base na velocidade e deltaTime
+    
         this.currentPointIndex += this.speed * deltaTime;
         if (this.currentPointIndex >= this.points.length) {
             this.currentPointIndex = 0;
         }
     
-        const currentPoint = this.points[Math.floor(this.currentPointIndex)];
-        const nextPointIndex = (Math.floor(this.currentPointIndex) + 1) % this.points.length;
+        const currentPointIndexFloored = Math.floor(this.currentPointIndex);
+        const currentPoint = this.points[currentPointIndexFloored];
+        const nextPointIndex = (currentPointIndexFloored + 1) % this.points.length;
         const nextPoint = this.points[nextPointIndex];
     
-        this.model.position.copy(currentPoint);
+        // Set the position with an additional 1 unit in the Y-axis
+        this.model.position.copy(currentPoint).add(new THREE.Vector3(0, 1, 0));
     
-        const direction = new THREE.Vector3().subVectors(nextPoint, currentPoint).normalize();
+        // Adjust the car's orientation to face forward
+        this.model.lookAt(nextPoint.clone().add(new THREE.Vector3(0, 1, 0)));
     
-        const rotation = new THREE.Euler().setFromQuaternion(
-            new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction)
-        );
- 
-        rotation.y += Math.PI; 
-    
-        this.model.rotation.copy(rotation);
+        this.model.rotation.y += Math.PI; 
+        this.model.rotation.y += Math.PI / 2;
     }
     
-
-    // inverse direction
-    /*update(deltaTime) {
-        if (this.points.length === 0 || !this.model) return;
-
-        this.currentPointIndex -= this.speed * deltaTime;
-    
-        if (this.currentPointIndex < 0) {
-            this.currentPointIndex += this.points.length;
-        }
-    
-        const currentPointIndexFloored = Math.floor(this.currentPointIndex) % this.points.length;
-        const nextPointIndex = (currentPointIndexFloored - 1 + this.points.length) % this.points.length;
-    
-        const currentPoint = this.points[currentPointIndexFloored];
-        const nextPoint = this.points[nextPointIndex];
-    
-        this.model.position.copy(currentPoint);
-        this.model.lookAt(nextPoint);
-    }*/
 
     applyTransformations(point) {
         point.x *= 10;
@@ -141,12 +114,11 @@ class MyRival {
 
     changeColor(color) {
         let boxMaterial = new THREE.MeshPhongMaterial({
-                color: color,
-                specular: "#000000",
-                emissive: "#000000",
-                shininess: 90,
-            }
-        );
+            color: color,
+            specular: "#000000",
+            emissive: "#000000",
+            shininess: 90,
+        });
 
         this.model.children[0].children[2].material = boxMaterial;
         this.model.children[0].children[3].material = boxMaterial;
@@ -156,10 +128,7 @@ class MyRival {
         this.model.children[0].children[7].material = boxMaterial;
 
         this.model.userData.originalColor = color;
-    }
-    
+    } 
 }
 
-
-
-export { MyRival }
+export { MyRival };
